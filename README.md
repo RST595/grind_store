@@ -1,6 +1,6 @@
 # Maksim_Rostislavskiy
 
-
+e commerce application for bicycle store
 
 ## Getting started
 
