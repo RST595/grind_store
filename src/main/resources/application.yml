@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/parts-store
+    username: postgres
+    password: postgres
+
+variables:
+  currency: USD
