@@ -1,5 +1,7 @@
 package com.bmxstore.grindStore.web;
 
+import com.bmxstore.grindStore.db.Entity.CategoryEntity;
+import com.bmxstore.grindStore.db.Repository.CategoryRepo;
 import com.bmxstore.grindStore.db.Repository.UserRepo;
 import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
 import com.bmxstore.grindStore.dto.Category.CategoryRequest;
@@ -11,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,6 +25,9 @@ class CategoryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    CategoryRepo categoryRepo;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -37,12 +44,33 @@ class CategoryControllerTest {
     }
 
     @Test
-    void addCategory() throws Exception {
+    void addCategoryAndExpectOk() throws Exception {
         this.mockMvc.perform(post("/category/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
+        CategoryEntity testEntity = new CategoryEntity();
+        for(CategoryEntity category : categoryRepo.findAll()){
+            if(category.getTitle().equals("stem")){
+                testEntity = category;
+            }
+        }
+        assert(testEntity.getTitle().equals("stem"));
+    }
+
+    @Test
+    void addSameCategoryTwiceAndExpectFail() throws Exception {
+        this.mockMvc.perform(post("/category/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+        this.mockMvc.perform(post("/category/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test

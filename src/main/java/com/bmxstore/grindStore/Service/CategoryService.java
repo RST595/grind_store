@@ -46,7 +46,7 @@ public class CategoryService {
         CategoryEntity categoryEntity = objectMapper.convertValue(newCategory, CategoryEntity.class);
         for (CategoryEntity category : categoryRepo.findAll()) {
             if (category.getTitle().equals(newCategory.getTitle())) {
-                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.DUPLICATED);
+                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED"));
             }
         }
         categoryRepo.save(categoryEntity);
@@ -67,7 +67,7 @@ public class CategoryService {
                 return new ResponseEntity<>(new ResponseApi(true, "category updated"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.CATEGORY_NOT_EXIST);
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
     }
 
 
@@ -76,14 +76,14 @@ public class CategoryService {
             if (category.getTitle().equals(title)) {
                 for (ProductEntity product : productRepo.findAll()) {
                     if (product.getCategoryEntity().getTitle().equals(category.getTitle())) {
-                        throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.NOT_EMPTY);
+                        throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("NOT_EMPTY"));
                     }
                 }
                 categoryRepo.deleteById(category.getId());
                 return new ResponseEntity<>(new ResponseApi(true, "category deleted"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.CATEGORY_NOT_EXIST);
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
     }
 }
 

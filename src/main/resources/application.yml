@@ -12,4 +12,5 @@ spring:
     password: postgres
 
 variables:
-  currency: USD
+  currencyFrom: RUB
+  currencyTo: USD

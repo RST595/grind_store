@@ -41,15 +41,15 @@ public class OrderService {
     @Autowired
     private CartRepo cartRepo;
 
-    @Value("${variables.currency}")
-    private String currency;
+    @Value("${variables.currencyTo}")
+    private String currencyTo;
 
 //TODO Fix order_items save, add new Feign client;
     @SneakyThrows
     public ResponseEntity<ResponseApi> createOrder(Long userId) {
-        Double rate = currencyService.getCurrencyRate(currency);
+        Double rate = currencyService.getCurrencyRate(currencyTo);
         Optional<UserEntity> user = userRepo.findById(userId);
-        UserEntity userEntity = user.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.USER_ID_NOT_FOUND));
+        UserEntity userEntity = user.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND")));
         OrderEntity order = new OrderEntity();
         order.setStatus(OrderStatus.NEW);
         order.setDeliveryAddress(userEntity.getAddress());
@@ -79,7 +79,7 @@ public class OrderService {
         LocalDate now = LocalDate.now();
         LocalDate cardExp = LocalDate.of(card.getExpYear(), card.getExpMonth(), 1);
         Optional<OrderEntity> orderById = orderRepo.findById(orderId);
-        OrderEntity order = orderById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.ORDER_NOT_FOUND));
+        OrderEntity order = orderById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("ORDER_NOT_FOUND")));
         if(!order.getStatus().equals(OrderStatus.NEW) && !order.getStatus().equals(OrderStatus.PAYMENT_FAILED)) {
             return new ResponseEntity<>(new ResponseApi(false, "Order payed/canceled"), HttpStatus.OK);
         }
@@ -98,7 +98,7 @@ public class OrderService {
 
     public ResponseEntity<ResponseApi> changeOrderStatus(OrderStatus status, Long orderId) {
         Optional<OrderEntity> orderById = orderRepo.findById(orderId);
-        OrderEntity order = orderById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.ORDER_NOT_FOUND));
+        OrderEntity order = orderById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("ORDER_NOT_FOUND")));
         order.setStatus(status);
         orderRepo.save(order);
         return new ResponseEntity<>(new ResponseApi(true, "Order " + status), HttpStatus.OK);

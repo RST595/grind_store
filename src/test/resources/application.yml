@@ -11,4 +11,5 @@ spring:
 
 
 variables:
-  currency: USD
+  currencyFrom: RUB
+  currencyTo: USD

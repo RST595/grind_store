@@ -11,14 +11,13 @@ public enum ErrorMessage {
     EMAIL_IS_ALREADY_TAKEN("Email is already taken"),
     USER_ID_NOT_FOUND("User wasn't founded"),
     BAD_REQUEST("Bad request"),
-    WRONG_CREDENTIALS("Wrong Credentials"),
-    FORBIDDEN("Forbidden"),
     NOT_FOUND("Not found"),
     CART_ITEM_NOT_FOUND("Cart item not found"),
     ORDER_NOT_FOUND("Order not found"),
     SERVER_ERROR("Server error"),
     DUPLICATED("Already exits"),
-    DUPLICATED_EMAIL("e-mail already exists");
+    DUPLICATED_EMAIL("e-mail already exists"),
+    RATES_WASNT_FOUNDED("Fail to get currency rates");
 
     private final String message;
 

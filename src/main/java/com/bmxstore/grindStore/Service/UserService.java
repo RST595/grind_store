@@ -42,7 +42,7 @@ public class UserService {
         UserEntity userEntity = objectMapper.convertValue(newUser, UserEntity.class);
         for (UserEntity user : userRepo.findAll()) {
             if (user.getEmail().equals(newUser.getEmail()) && user.getStatus().equals(UserStatus.ACTIVE)) {
-                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.DUPLICATED_EMAIL);
+                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED_EMAIL"));
             }
         }
         userEntity.setStatus(UserStatus.ACTIVE);
@@ -75,7 +75,7 @@ public class UserService {
                 return new ResponseEntity<>(new ResponseApi(true, "user updated"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_EXIST);
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST"));
     }
 
     public ResponseEntity<ResponseApi> deleteUser(Long userId) {
@@ -87,7 +87,7 @@ public class UserService {
                 return new ResponseEntity<>(new ResponseApi(true, "deleted deleted"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.NOT_FOUND);
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("NOT_FOUND"));
     }
 
 }

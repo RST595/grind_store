@@ -45,7 +45,7 @@ public class ProductService {
         ProductEntity productEntity = objectMapper.convertValue(newProduct, ProductEntity.class);
         for (ProductEntity product : productRepo.findAll()) {
             if (product.getProductCode().equals(newProduct.getProductCode())) {
-                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.DUPLICATED);
+                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED"));
             }
         }
         for(CategoryEntity category : categoryRepo.findAll()) {
@@ -53,7 +53,7 @@ public class ProductService {
                 productEntity.setCategoryEntity(category);
                 break;
             } else {
-                throw new ServiceError(HttpStatus.BAD_REQUEST, ErrorMessage.CATEGORY_NOT_EXIST);
+                throw new ServiceError(HttpStatus.BAD_REQUEST, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
             }
         }
         productRepo.save(productEntity);
@@ -85,7 +85,7 @@ public class ProductService {
                 return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.PRODUCT_NOT_EXIST);
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("PRODUCT_NOT_EXIST"));
     }
 
 
@@ -96,6 +96,6 @@ public class ProductService {
                 return new ResponseEntity<>(new ResponseApi(true, "product deleted"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.NOT_FOUND);
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("NOT_FOUND"));
     }
 }

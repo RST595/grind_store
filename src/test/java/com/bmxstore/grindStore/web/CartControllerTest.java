@@ -38,7 +38,7 @@ class CartControllerTest {
     }
 
     @Test
-    void addToCart() throws Exception {
+    void addToCartAndExpectOk() throws Exception {
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(1L,1)))

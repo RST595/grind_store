@@ -1,12 +1,11 @@
 package com.bmxstore.grindStore.web;
 
-import com.bmxstore.grindStore.FeignClient.Currency;
 import com.bmxstore.grindStore.ResponseApi.ResponseApi;
 import com.bmxstore.grindStore.Service.CartService;
-import com.bmxstore.grindStore.Service.CurrencyService;
 import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
 import com.bmxstore.grindStore.dto.Cart.CartResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Tag(name = "Shopping Cart", description = "Add item to cart, update, delete.")
 @RequestMapping("/cart")
 public class CartController {
 
@@ -22,23 +22,28 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+
+    @Operation(summary = "Show all items in user cart")
     @GetMapping("/list")
     public List<CartResponse> getUserCartItems(@RequestParam Long userId) {
         return this.cartService.getUserCartItems(userId);
     }
 
+    @Operation(summary = "Add items to user cart")
     @PostMapping("/add")
     public ResponseEntity<ResponseApi> addToCart(@RequestBody AddToCartRequest addToCartRequest,
                                                  @RequestParam Long userId) {
         return this.cartService.addToCart(addToCartRequest, userId);
     }
 
+    @Operation(summary = "Remove items from user cart")
     @DeleteMapping("/remove")
     public ResponseEntity<ResponseApi> removeFromCart(@RequestParam Long cartId,
                                                  @RequestParam Long userId) {
         return this.cartService.removeFromCart(cartId, userId);
     }
 
+    @Operation(summary = "Update quantity of item in user cart")
     @PutMapping("/update/{quantity}")
     public ResponseEntity<ResponseApi> updateItemQuantity(@PathVariable int quantity,
                                                       @RequestParam Long cartId) {

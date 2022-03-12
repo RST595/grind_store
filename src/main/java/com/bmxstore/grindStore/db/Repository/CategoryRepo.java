@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepo extends JpaRepository<CategoryEntity, Long> {
     void deleteById(Long id);
+    void findByTitle(String title);
 }
