@@ -1,13 +1,69 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>main page of my project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>GrindStore</title>
+    <style>
+        #rider {
+            position: absolute;
+            top: 150px;
+            left: 580px;
+            width: 400px;
+            height: 400px;
+        }
+        .btn {
+            background: #22d505; /* Цвет фона */
+            cursor: pointer;
+            color: #114e7c; /* Цвет текста */
+            padding: 7px 12px; /* Поля */
+            margin-bottom: 2em; /* Отступ снизу */
+            font: 16px/1 Arial, sans-serif; /* Рубленый шрифт */
+        }
+        .btn:hover {
+            background: #114e7c; /* Цвет фона при наведении курсора */
+            color: #22d505; /* Цвет текста при наведении курсора */
+        }
+        .btn-flat {
+            border: 2px solid #01040a; /* Рамка */
+        }
+        .btn-round {
+            border-radius: 5px; /* Радиус скругления */
+        }
+        .form-selector {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Main page</h1>
-    <img src="https://cdn-icons-png.flaticon.com/512/25/25333.png" height="100px"><br>
-    <strong>short help</strong><br>
-    <a href="https://www.google.ru/" target="_blank">PRESS (If you have a question)</a>
+<img id="rider" src="https://c.tenor.com/frFSVgY_mBAAAAAC/cycling-bike.gif">
+<h1 style="margin-left: 600px" class="form-selector" >
+    <span style="font-family: Arial; color: #277227; ">Welcome to GrindStore</span></h1>
+<h3 style="margin-left: 310px" class="form-selector" >
+    <span style="font-family: Arial; color: #000000; ">Currently our new site is under construction.
+You could go to previous version, or try to test our new one.</span></h3>
+<div>
+    <form style="margin-top: 400px  " action="http://raenshop.ru/"  class = "form-selector">
+        <p>
+            <button style="margin-left: 365px" class="btn btn-flat btn-round">
+                OLD VERSION
+            </button>
+        </p>
+    </form>
+    <form  class="form-selector" action="http://localhost:8080/swagger-ui/index.html" target="_blank" class="form-selector">
+        <p>
+            <button style="margin-left: 175px" class="btn btn-flat btn-round" >
+                TEY NEW VERSION
+            </button>
+        </p>
+    </form>
+    <form class="form-selector" action="https://www.google.ru/" target="_blank" >
+        <p>
+            <button style="margin-left: 175px" class="btn btn-flat btn-round" >
+                HELP
+            </button>
+        </p>
+    </form>
+</div>
 </body>
+
 </html>
