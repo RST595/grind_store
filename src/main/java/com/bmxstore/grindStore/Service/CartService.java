@@ -2,6 +2,7 @@ package com.bmxstore.grindStore.Service;
 
 import com.bmxstore.grindStore.ExHandler.ErrorMessage;
 import com.bmxstore.grindStore.ExHandler.ServiceError;
+import com.bmxstore.grindStore.FeignClient.Currency;
 import com.bmxstore.grindStore.ResponseApi.ResponseApi;
 import com.bmxstore.grindStore.db.Entity.CartEntity;
 import com.bmxstore.grindStore.db.Entity.ProductEntity;
@@ -11,6 +12,7 @@ import com.bmxstore.grindStore.db.Repository.ProductRepo;
 import com.bmxstore.grindStore.db.Repository.UserRepo;
 import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
 import com.bmxstore.grindStore.dto.Cart.CartResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,4 +81,5 @@ public class CartService {
         cartRepo.save(cartEntity);
         return new ResponseEntity<>(new ResponseApi(true, "Quantity edited"), HttpStatus.CREATED);
     }
+
 }

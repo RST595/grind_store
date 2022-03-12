@@ -47,6 +47,7 @@ public class OrderService {
 //TODO Fix order_items save, add new Feign client;
     @SneakyThrows
     public ResponseEntity<ResponseApi> createOrder(Long userId) {
+        Double rate = currencyService.getCurrencyRate(currency);
         Optional<UserEntity> user = userRepo.findById(userId);
         UserEntity userEntity = user.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.USER_ID_NOT_FOUND));
         OrderEntity order = new OrderEntity();
@@ -59,7 +60,7 @@ public class OrderService {
                 OrderItemEntity orderItem = new OrderItemEntity();
                 orderItem.setProductEntity(cart.getProductEntity());
                 orderItem.setQuantity(cart.getQuantity());
-                orderItem.setPrice(cart.getProductEntity().getPrice()*cart.getQuantity());
+                orderItem.setPrice(cart.getProductEntity().getPrice() * cart.getQuantity() / rate);
                 orderItem.setOrderEntity(order);
                 order.setOrderItems(Arrays.asList(orderItem));
                 if(order.getTotalPrice() == null){

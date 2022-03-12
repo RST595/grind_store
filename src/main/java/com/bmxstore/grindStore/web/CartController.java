@@ -1,9 +1,12 @@
 package com.bmxstore.grindStore.web;
 
+import com.bmxstore.grindStore.FeignClient.Currency;
 import com.bmxstore.grindStore.ResponseApi.ResponseApi;
 import com.bmxstore.grindStore.Service.CartService;
+import com.bmxstore.grindStore.Service.CurrencyService;
 import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
 import com.bmxstore.grindStore.dto.Cart.CartResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/cart")
 public class CartController {
+
+
 
     @Autowired
     private CartService cartService;
@@ -39,5 +44,6 @@ public class CartController {
                                                       @RequestParam Long cartId) {
         return this.cartService.updateItemQuantity(cartId, quantity);
     }
+
 }
 
