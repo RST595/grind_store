@@ -44,6 +44,9 @@ public class CategoryService {
 
     public ResponseEntity<ResponseApi> addCategory(CategoryRequest newCategory) {
         CategoryEntity categoryEntity = objectMapper.convertValue(newCategory, CategoryEntity.class);
+        if(categoryEntity.getTitle().isEmpty()){
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
+        }
         for (CategoryEntity category : categoryRepo.findAll()) {
             if (category.getTitle().equals(newCategory.getTitle())) {
                 throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED"));
