@@ -2,10 +2,10 @@ package com.bmxstore.grindStore.web;
 
 import com.bmxstore.grindStore.ExHandler.ErrorMessage;
 import com.bmxstore.grindStore.ExHandler.ServiceError;
+import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.db.Entity.ProductEntity;
 import com.bmxstore.grindStore.db.Repository.CategoryRepo;
 import com.bmxstore.grindStore.db.Repository.ProductRepo;
-import com.bmxstore.grindStore.dto.Category.CategoryRequest;
 import com.bmxstore.grindStore.dto.Enums.Color;
 import com.bmxstore.grindStore.dto.Product.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,11 +58,8 @@ class ProductControllerTest {
 
     @Test
     void addProductAndExpectOk() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem",
+                "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
@@ -80,18 +79,12 @@ class ProductControllerTest {
 
     @Test
     void addProductWithSameCodeTwiceAndExpectFail() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        this.mockMvc.perform(post("/product/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
-                                "PCODE123", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar",
+                "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss V2",
@@ -103,11 +96,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithEmptyNameAndExpectFail() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("",
@@ -119,11 +108,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithNameFromSpacesAndExpectFail() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("    ",
@@ -135,11 +120,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithEmptyCodeAndExpectFail() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
@@ -151,11 +132,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithCodeFromSpacesAndExpectFail() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
@@ -167,18 +144,11 @@ class ProductControllerTest {
 
     @Test
     void updateProductInfoAndExpectOk() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        this.mockMvc.perform(post("/product/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
-                                "PCODE123", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
         this.mockMvc.perform(post("/product/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
@@ -199,18 +169,11 @@ class ProductControllerTest {
 
     @Test
     void updateProductWhichNotExist() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        this.mockMvc.perform(post("/product/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
-                                "PCODE123", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
         this.mockMvc.perform(post("/product/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
@@ -223,18 +186,11 @@ class ProductControllerTest {
 
     @Test
     void deleteProductAndExpectOk() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        this.mockMvc.perform(post("/product/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
-                                "PCODE123", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
         this.mockMvc.perform(delete("/product/delete/{productId}",
                 Long.toString(productRepo.findAll().get(0).getId()))
                         .contentType(MediaType.APPLICATION_JSON))

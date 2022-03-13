@@ -5,6 +5,7 @@ import com.bmxstore.grindStore.ExHandler.ServiceError;
 import com.bmxstore.grindStore.FeignClient.Currency;
 import com.bmxstore.grindStore.ResponseApi.ResponseApi;
 import com.bmxstore.grindStore.db.Entity.CartEntity;
+import com.bmxstore.grindStore.db.Entity.OrderEntity;
 import com.bmxstore.grindStore.db.Entity.ProductEntity;
 import com.bmxstore.grindStore.db.Entity.UserEntity;
 import com.bmxstore.grindStore.db.Repository.CartRepo;
@@ -40,9 +41,11 @@ public class CartService {
     private ProductRepo productRepo;
 
     public List<CartResponse> getUserCartItems(Long userId) {
+        Optional<UserEntity> userById = userRepo.findById(userId);
+        UserEntity user = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
         List<CartResponse> userCartItems = new ArrayList<>();
         for(CartEntity cartElement : cartRepo.findAll()){
-            if(cartElement.getUserEntity() == userRepo.getById(userId)) {
+            if(cartElement.getUserEntity() == user) {
                 CartResponse cartResponse = objectMapper.convertValue(cartElement, CartResponse.class);
                 cartResponse.setCreateDate(cartElement.getCreatedDate());
                 cartResponse.setProduct(cartElement.getProductEntity().getName());
@@ -57,8 +60,16 @@ public class CartService {
         UserEntity userEntity = user.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND")));
         Optional<ProductEntity> product = productRepo.findById(addToCartRequest.getProductId());
         ProductEntity productEntity = product.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));
-        CartEntity cartEntity = new CartEntity(productEntity, addToCartRequest.getQuantity(), userEntity);
-        cartRepo.save(cartEntity);
+        CartEntity newCartItem = new CartEntity(productEntity, addToCartRequest.getQuantity(), userEntity);
+        for(CartEntity cartItem : cartRepo.findAll()){
+            if(cartItem.getProductEntity().getId().equals(newCartItem.getProductEntity().getId())
+            && cartItem.getUserEntity().getId().equals(newCartItem.getUserEntity().getId())){
+                cartItem.setQuantity(cartItem.getQuantity() + newCartItem.getQuantity());
+                cartRepo.save(cartItem);
+                return new ResponseEntity<>(new ResponseApi(true, "Added to cart"), HttpStatus.CREATED);
+            }
+        }
+        cartRepo.save(newCartItem);
         return new ResponseEntity<>(new ResponseApi(true, "Added to cart"), HttpStatus.CREATED);
     }
 

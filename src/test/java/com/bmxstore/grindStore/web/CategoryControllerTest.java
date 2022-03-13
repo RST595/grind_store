@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashSet;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,11 +65,7 @@ class CategoryControllerTest {
 
     @Test
     void addSameCategoryTwiceAndExpectFail() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(post("/category/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
@@ -95,11 +93,7 @@ class CategoryControllerTest {
 
     @Test
     void updateCategoryInfoAndExpectOk() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(post("/category/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "New description", "    "))))
@@ -126,11 +120,7 @@ class CategoryControllerTest {
 
     @Test
     void deleteCategoryAndExpectOk() throws Exception {
-        this.mockMvc.perform(post("/category/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
         this.mockMvc.perform(delete("/category/delete/{title}", "stem")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

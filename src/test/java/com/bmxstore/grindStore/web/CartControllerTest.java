@@ -1,15 +1,34 @@
 package com.bmxstore.grindStore.web;
 
+import com.bmxstore.grindStore.ExHandler.ErrorMessage;
+import com.bmxstore.grindStore.ExHandler.ServiceError;
+import com.bmxstore.grindStore.db.Entity.CartEntity;
+import com.bmxstore.grindStore.db.Entity.CategoryEntity;
+import com.bmxstore.grindStore.db.Entity.ProductEntity;
+import com.bmxstore.grindStore.db.Entity.UserEntity;
+import com.bmxstore.grindStore.db.Repository.CartRepo;
+import com.bmxstore.grindStore.db.Repository.CategoryRepo;
+import com.bmxstore.grindStore.db.Repository.ProductRepo;
 import com.bmxstore.grindStore.db.Repository.UserRepo;
 import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
+import com.bmxstore.grindStore.dto.Enums.Color;
+import com.bmxstore.grindStore.dto.Enums.Role;
+import com.bmxstore.grindStore.dto.Enums.UserStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,21 +47,107 @@ class CartControllerTest {
     @Autowired
     UserRepo userRepo;
 
+    @Autowired
+    CartRepo cartRepo;
+
+    @Autowired
+    CategoryRepo categoryRepo;
+
+    @Autowired
+    ProductRepo productRepo;
+
     @Test
-    void getUserCartItems() throws Exception {
+    void getUserCartItemsWhichNotExists() throws Exception {
         this.mockMvc.perform(get("/cart/list")
                     .contentType(MediaType.APPLICATION_JSON)
                     .param("userId", String.valueOf(1)))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void getUserCartItemsAndExpectOk() throws Exception {
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        this.mockMvc.perform(get("/cart/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void addToCartAndExpectOk() throws Exception {
+            userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                    "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+            categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+            List<CategoryEntity> categories = categoryRepo.findAll();
+            productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                    "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                    categories.get(0)));
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new AddToCartRequest(1L,1)))
+                        .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),5)))
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+        if(cartRepo.findAll().isEmpty()) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+        }
+    }
+
+    @Test
+    void addToCartWithSameUserAndProductAndExpectOk() throws Exception {
+        int qnt = 5;
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
+        List<ProductEntity> products = productRepo.findAll();
+        List<UserEntity> users = userRepo.findAll();
+        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        this.mockMvc.perform(post("/cart/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),qnt)))
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+        if(cartRepo.findAll().isEmpty()) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+        }
+        for(CartEntity cartItems : cartRepo.findAll()){
+            if(cartItems.getQuantity() != qnt * 2) {
+                throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+            }
+        }
+    }
+
+    @Test
+    void addToCartWithNoSuchUserAndExpectFail() throws Exception {
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
+        this.mockMvc.perform(post("/cart/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),5)))
                         .param("userId", String.valueOf(1)))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void addToCartWithNoSuchProductAndExpectFail() throws Exception {
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        this.mockMvc.perform(post("/cart/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AddToCartRequest(1L,5)))
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }

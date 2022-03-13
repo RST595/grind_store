@@ -23,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,12 +75,8 @@ class UserControllerTest {
 
     @Test
     void addPUserWithSameEmailTwiceAndExpectFail() throws Exception {
-        this.mockMvc.perform(post("/user/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserRequest("Ivan", "Ivanov",
-                                "Saint Petersburg", "ivanov@mail.ru", Role.USER, "12345"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
         this.mockMvc.perform(post("/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
@@ -130,12 +128,8 @@ class UserControllerTest {
 
     @Test
     void updateUserInfoAndExpectOk() throws Exception {
-        this.mockMvc.perform(post("/user/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserRequest("Ivan", "Ivanov",
-                                "Saint Petersburg", "ivanov@mail.ru", Role.USER, "12345"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
         this.mockMvc.perform(post("/user/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Jeff", "Carrot",
@@ -155,12 +149,8 @@ class UserControllerTest {
 
     @Test
     void updateUserWhichNotExist() throws Exception {
-        this.mockMvc.perform(post("/user/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserRequest("Ivan", "Ivanov",
-                                "Saint Petersburg", "ivanov@mail.ru", Role.USER, "12345"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
         this.mockMvc.perform(post("/user/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Jeff", "Carrot",
@@ -172,12 +162,8 @@ class UserControllerTest {
 
     @Test
     void deleteProductAndExpectOk() throws Exception {
-        this.mockMvc.perform(post("/user/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new UserRequest("Ivan", "Ivanov",
-                                "Saint Petersburg", "ivanov@mail.ru", Role.USER, "12345"))))
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
         this.mockMvc.perform(delete("/user/delete/{userId}",
                 Long.toString(userRepo.findAll().get(0).getId()))
                         .contentType(MediaType.APPLICATION_JSON))
