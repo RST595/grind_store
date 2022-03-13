@@ -15,7 +15,6 @@ import com.bmxstore.grindStore.dto.Enums.Color;
 import com.bmxstore.grindStore.dto.Enums.Role;
 import com.bmxstore.grindStore.dto.Enums.UserStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +52,13 @@ class CartControllerTest {
 
     @Autowired
     ProductRepo productRepo;
+
+    @BeforeEach
+    void cleanRepo(){
+        cartRepo.deleteAll();
+        productRepo.deleteAll();
+        userRepo.deleteAll();
+    }
 
     @Test
     void getUserCartItemsWhichNotExists() throws Exception {
@@ -115,9 +119,6 @@ class CartControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        if(cartRepo.findAll().isEmpty()) {
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
-        }
         for(CartEntity cartItems : cartRepo.findAll()){
             if(cartItems.getQuantity() != qnt * 2) {
                 throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
@@ -153,20 +154,114 @@ class CartControllerTest {
     }
 
     @Test
-    void removeFromCart() throws Exception {
+    void removeFromCartAndExpectOk() throws Exception {
+        int qnt = 5;
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
+        List<ProductEntity> products = productRepo.findAll();
+        List<UserEntity> users = userRepo.findAll();
+        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
         this.mockMvc.perform(delete("/cart/remove")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", String.valueOf(1))
-                        .param("cartId", String.valueOf(1)))
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
+                        .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is2xxSuccessful());
+        if(!cartRepo.findAll().isEmpty()) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+        }
     }
 
     @Test
-    void updateItemQuantity() throws Exception {
+    void removeFromCartItemWhichNotExistAndExpectFail() throws Exception {
+        int qnt = 5;
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
+        List<ProductEntity> products = productRepo.findAll();
+        List<UserEntity> users = userRepo.findAll();
+        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        this.mockMvc.perform(delete("/cart/remove")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
+                        .param("cartId", String.valueOf(2)))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+        if(cartRepo.findAll().isEmpty()) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+        }
+    }
+
+    @Test
+    void removeFromUserWhichNotExistCartItemAndExpectFail() throws Exception {
+        int qnt = 5;
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
+        List<ProductEntity> products = productRepo.findAll();
+        List<UserEntity> users = userRepo.findAll();
+        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        this.mockMvc.perform(delete("/cart/remove")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", String.valueOf(3))
+                        .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+        if(cartRepo.findAll().isEmpty()) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+        }
+    }
+
+    @Test
+    void updateItemQuantityAndExpectOk() throws Exception {
+        int qnt = 5;
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
+        List<ProductEntity> products = productRepo.findAll();
+        List<UserEntity> users = userRepo.findAll();
+        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        this.mockMvc.perform(put("/cart/update/{quantity}", qnt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+        for(CartEntity cartItems : cartRepo.findAll()){
+            if(cartItems.getQuantity() != qnt) {
+                throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+            }
+        }
+    }
+
+    @Test
+    void updateCartItemQuantityWhichNotExistAndExpectFail() throws Exception {
+        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        List<CategoryEntity> categories = categoryRepo.findAll();
+        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
+                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
+                categories.get(0)));
         this.mockMvc.perform(put("/cart/update/{quantity}", 5)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("cartId", String.valueOf(1)))
+                        .param("cartId", String.valueOf(2)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
