@@ -68,7 +68,7 @@ public class ProductService {
         for (ProductEntity product : productRepo.findAll()) {
             if (product.getId().equals(productId)) {
                 if(!updatedProduct.getName().replace(" ", "").isEmpty()) {
-                    product.setDescription(updatedProduct.getName());
+                    product.setName(updatedProduct.getName());
                 }
                 if(!updatedProduct.getProductCode().replace(" ", "").isEmpty()) {
                     product.setProductCode(updatedProduct.getProductCode());

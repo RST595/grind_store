@@ -39,6 +39,10 @@ public class UserService {
     }
 
     public ResponseEntity<ResponseApi> addUser(UserRequest newUser) {
+        if(newUser.getEmail().replace(" ", "").isEmpty() ||
+                newUser.getPassword().replace(" ", "").isEmpty()){
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_NOT_EXIST"));
+        }
         UserEntity userEntity = objectMapper.convertValue(newUser, UserEntity.class);
         for (UserEntity user : userRepo.findAll()) {
             if (user.getEmail().equals(newUser.getEmail()) && user.getStatus().equals(UserStatus.ACTIVE)) {
@@ -53,19 +57,19 @@ public class UserService {
     public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) {
         for (UserEntity user : userRepo.findAll()) {
             if(user.getId().equals(userId) && user.getStatus().equals(UserStatus.ACTIVE)) {
-                if(!updatedUser.getFirstName().isEmpty()) {
+                if(!updatedUser.getFirstName().replace(" ", "").isEmpty()) {
                     user.setFirstName(updatedUser.getFirstName());
                 }
-                if(!updatedUser.getLastName().isEmpty()) {
+                if(!updatedUser.getLastName().replace(" ", "").isEmpty()) {
                     user.setLastName(updatedUser.getLastName());
                 }
-                if(!updatedUser.getAddress().isEmpty()) {
+                if(!updatedUser.getAddress().replace(" ", "").isEmpty()) {
                     user.setAddress(updatedUser.getAddress());
                 }
-                if(!updatedUser.getEmail().isEmpty()) {
+                if(!updatedUser.getEmail().replace(" ", "").isEmpty()) {
                     user.setEmail((updatedUser.getEmail()));
                 }
-                if(!updatedUser.getPassword().isEmpty()) {
+                if(!updatedUser.getPassword().replace(" ", "").isEmpty()) {
                     user.setPassword(updatedUser.getPassword());
                 }
                 if(updatedUser.getRole().equals(Role.USER) || updatedUser.getRole().equals(Role.ADMIN)){

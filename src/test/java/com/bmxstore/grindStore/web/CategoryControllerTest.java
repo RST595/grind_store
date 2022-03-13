@@ -102,12 +102,13 @@ class CategoryControllerTest {
                 .andExpect(status().is2xxSuccessful());
         this.mockMvc.perform(post("/category/update/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "New description", "stem.jpg"))))
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "New description", "    "))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
         CategoryEntity testEntity = new CategoryEntity();
         for(CategoryEntity category : categoryRepo.findAll()){
-            if(category.getDescription().equals("New description")){
+            if(category.getDescription().equals("New description") && category.getPicUrl().equals("stem.jpg")
+            && category.getTitle().equals("stem")){
                 testEntity = category;
             }
         }

@@ -2,7 +2,6 @@ package com.bmxstore.grindStore.web;
 
 import com.bmxstore.grindStore.ExHandler.ErrorMessage;
 import com.bmxstore.grindStore.ExHandler.ServiceError;
-import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.db.Entity.ProductEntity;
 import com.bmxstore.grindStore.db.Repository.CategoryRepo;
 import com.bmxstore.grindStore.db.Repository.ProductRepo;
@@ -18,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -182,13 +183,14 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
                                 "UPDATED", "stem6.jpg", 7000, 350,
-                                "To fix bar", Color.BLACK, "stem" )))
+                                "     ", Color.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
         ProductEntity testEntity = new ProductEntity();
         for(ProductEntity product : productRepo.findAll()){
-            if(product.getProductCode().equals("UPDATED")){
+            if(product.getProductCode().equals("UPDATED") && product.getDescription().equals("To fix bar")
+             && product.getName().equals("Odyssey Boss")){
                 testEntity = product;
             }
         }

@@ -60,10 +60,10 @@ public class CategoryService {
     public ResponseEntity<ResponseApi> updateCategory(CategoryRequest updatedCategory) {
         for (CategoryEntity category : categoryRepo.findAll()) {
             if (category.getTitle().equals(updatedCategory.getTitle())) {
-                if(!updatedCategory.getDescription().isEmpty()) {
+                if(!updatedCategory.getDescription().replace(" ", "").isEmpty()) {
                     category.setDescription(updatedCategory.getDescription());
                 }
-                if(!updatedCategory.getPicUrl().isEmpty()) {
+                if(!updatedCategory.getPicUrl().replace(" ", "").isEmpty()) {
                     category.setPicUrl(updatedCategory.getPicUrl());
                 }
                 categoryRepo.save(category);
