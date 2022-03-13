@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "Delete category. Category should be empty")
-    @DeleteMapping("/delete{title}")
+    @DeleteMapping("/delete/{title}")
     public ResponseEntity<ResponseApi> deleteCategory(@PathVariable String title) {
         return this.categoryService.deleteCategory(title);
     }

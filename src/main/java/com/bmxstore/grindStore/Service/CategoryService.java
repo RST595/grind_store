@@ -44,7 +44,7 @@ public class CategoryService {
 
     public ResponseEntity<ResponseApi> addCategory(CategoryRequest newCategory) {
         CategoryEntity categoryEntity = objectMapper.convertValue(newCategory, CategoryEntity.class);
-        if(categoryEntity.getTitle().isEmpty()){
+        if(categoryEntity.getTitle().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
         }
         for (CategoryEntity category : categoryRepo.findAll()) {

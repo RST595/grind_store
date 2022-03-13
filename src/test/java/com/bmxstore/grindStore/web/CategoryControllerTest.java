@@ -4,8 +4,6 @@ import com.bmxstore.grindStore.ExHandler.ErrorMessage;
 import com.bmxstore.grindStore.ExHandler.ServiceError;
 import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.db.Repository.CategoryRepo;
-import com.bmxstore.grindStore.db.Repository.UserRepo;
-import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
 import com.bmxstore.grindStore.dto.Category.CategoryRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,9 +31,6 @@ class CategoryControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
-
-    @Autowired
-    UserRepo userRepo;
 
     @BeforeEach
     void clearRepo() {
@@ -92,6 +85,15 @@ class CategoryControllerTest {
     }
 
     @Test
+    void addCategoryWithTitleFromSpacesAndExpectFail() throws Exception {
+        this.mockMvc.perform(post("/category/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("    ", "To fix bar", "stem.jpg"))))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void updateCategoryInfoAndExpectOk() throws Exception {
         this.mockMvc.perform(post("/category/add")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -128,7 +130,7 @@ class CategoryControllerTest {
                         .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        this.mockMvc.perform(delete("/category/delete{title}", "stem")
+        this.mockMvc.perform(delete("/category/delete/{title}", "stem")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
@@ -141,7 +143,7 @@ class CategoryControllerTest {
 
     @Test
     void deleteCategoryWhichNotExist() throws Exception {
-        this.mockMvc.perform(delete("/category/delete{title}", "stem")
+        this.mockMvc.perform(delete("/category/delete/{title}", "stem")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());

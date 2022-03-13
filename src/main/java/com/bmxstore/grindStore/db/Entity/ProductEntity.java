@@ -22,7 +22,9 @@ public class ProductEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String productCode;
+
     private String imageURL;
     private double price;
     private double weight;

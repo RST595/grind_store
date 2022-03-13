@@ -42,6 +42,10 @@ public class ProductService {
     }
 
     public ResponseEntity<ResponseApi> addProduct(ProductRequest newProduct) {
+        if(newProduct.getName().replace(" ", "").isEmpty() ||
+                newProduct.getProductCode().replace(" ", "").isEmpty()){
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST"));
+        }
         ProductEntity productEntity = objectMapper.convertValue(newProduct, ProductEntity.class);
         for (ProductEntity product : productRepo.findAll()) {
             if (product.getProductCode().equals(newProduct.getProductCode())) {
@@ -63,16 +67,16 @@ public class ProductService {
     public ResponseEntity<ResponseApi> updateProduct(ProductRequest updatedProduct, Long productId) {
         for (ProductEntity product : productRepo.findAll()) {
             if (product.getId().equals(productId)) {
-                if(!updatedProduct.getName().isEmpty()) {
+                if(!updatedProduct.getName().replace(" ", "").isEmpty()) {
                     product.setDescription(updatedProduct.getName());
                 }
-                if(!updatedProduct.getProductCode().isEmpty()) {
+                if(!updatedProduct.getProductCode().replace(" ", "").isEmpty()) {
                     product.setProductCode(updatedProduct.getProductCode());
                 }
-                if(!updatedProduct.getDescription().isEmpty()) {
+                if(!updatedProduct.getDescription().replace(" ", "").isEmpty()) {
                     product.setDescription((updatedProduct.getDescription()));
                 }
-                if(!updatedProduct.getImageURL().isEmpty()) {
+                if(!updatedProduct.getImageURL().replace(" ", "").isEmpty()) {
                     product.setImageURL(updatedProduct.getImageURL());
                 }
                 if(updatedProduct.getPrice() != 0){
