@@ -51,10 +51,10 @@ class OrderControllerTest {
 
     @BeforeEach
     void cleanRepo() {
+        orderRepo.deleteAll();
         cartRepo.deleteAll();
         productRepo.deleteAll();
         userRepo.deleteAll();
-
     }
 
     @Test

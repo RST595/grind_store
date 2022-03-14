@@ -87,7 +87,6 @@ public class UserService {
             if(user.getId().equals(userId)){
                 user.setStatus(UserStatus.WAS_DROP);
                 userRepo.save(user);
-                //userRepo.deleteById(userId);
                 return new ResponseEntity<>(new ResponseApi(true, "deleted deleted"), HttpStatus.OK);
             }
         }
