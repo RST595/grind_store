@@ -4,9 +4,7 @@ import com.bmxstore.grindStore.ExHandler.ErrorMessage;
 import com.bmxstore.grindStore.ExHandler.ServiceError;
 import com.bmxstore.grindStore.db.Entity.ProductEntity;
 import com.bmxstore.grindStore.db.Entity.UserEntity;
-import com.bmxstore.grindStore.db.Repository.CategoryRepo;
-import com.bmxstore.grindStore.db.Repository.ProductRepo;
-import com.bmxstore.grindStore.db.Repository.UserRepo;
+import com.bmxstore.grindStore.db.Repository.*;
 import com.bmxstore.grindStore.dto.Category.CategoryRequest;
 import com.bmxstore.grindStore.dto.Enums.Color;
 import com.bmxstore.grindStore.dto.Enums.Role;
@@ -37,13 +35,25 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
+    OrderRepo orderRepo;
+
+    @Autowired
+    CartRepo cartRepo;
+
+    @Autowired
+    ProductRepo productRepo;
+
+    @Autowired
     UserRepo userRepo;
 
     @Autowired
     ObjectMapper objectMapper;
 
     @BeforeEach
-    void clearRepo() {
+    void cleanRepo() {
+        orderRepo.deleteAll();
+        cartRepo.deleteAll();
+        productRepo.deleteAll();
         userRepo.deleteAll();
     }
 

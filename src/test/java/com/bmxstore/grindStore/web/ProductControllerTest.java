@@ -4,8 +4,7 @@ import com.bmxstore.grindStore.ExHandler.ErrorMessage;
 import com.bmxstore.grindStore.ExHandler.ServiceError;
 import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.db.Entity.ProductEntity;
-import com.bmxstore.grindStore.db.Repository.CategoryRepo;
-import com.bmxstore.grindStore.db.Repository.ProductRepo;
+import com.bmxstore.grindStore.db.Repository.*;
 import com.bmxstore.grindStore.dto.Enums.Color;
 import com.bmxstore.grindStore.dto.Product.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,12 +39,23 @@ class ProductControllerTest {
     CategoryRepo categoryRepo;
 
     @Autowired
+    OrderRepo orderRepo;
+
+    @Autowired
+    CartRepo cartRepo;
+
+    @Autowired
+    UserRepo userRepo;
+
+    @Autowired
     ObjectMapper objectMapper;
 
     @BeforeEach
-    void clearRepo() {
+    void cleanRepo() {
+        orderRepo.deleteAll();
+        cartRepo.deleteAll();
         productRepo.deleteAll();
-        categoryRepo.deleteAll();
+        userRepo.deleteAll();
     }
 
     @Test
