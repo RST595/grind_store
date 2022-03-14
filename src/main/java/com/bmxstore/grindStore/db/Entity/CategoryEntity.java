@@ -30,4 +30,13 @@ public class CategoryEntity {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     Set<ProductEntity> products;
+
+    @Override
+    public String toString() {
+        return  "\n" + "Client {" +
+                "id=" + id + "  " +
+                "title=" + title + "  " +
+                "picUrl=" + picUrl +  '}';
+    }
+
 }

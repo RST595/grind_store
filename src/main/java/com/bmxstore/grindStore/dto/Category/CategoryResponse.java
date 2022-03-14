@@ -15,5 +15,4 @@ public class CategoryResponse {
     private String title;
     private String description;
     private String picUrl;
-    private Set<ProductEntity> products;
 }

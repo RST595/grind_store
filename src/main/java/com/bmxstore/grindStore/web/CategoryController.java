@@ -2,11 +2,14 @@ package com.bmxstore.grindStore.web;
 
 import com.bmxstore.grindStore.ResponseApi.ResponseApi;
 import com.bmxstore.grindStore.Service.CategoryService;
+import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.dto.Category.CategoryRequest;
 import com.bmxstore.grindStore.dto.Category.CategoryResponse;
+import com.bmxstore.grindStore.dto.Enums.OrderStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,21 @@ public class CategoryController {
     @GetMapping("/list")
     public List<CategoryResponse> getAllCategories() {
         return this.categoryService.getAllCategories();
+    }
+
+    @Operation(summary = "Show all available categories with sorting")
+    @GetMapping("/paginationAndSort/{field}")
+    private Page<CategoryEntity> getCategoriesWithPaginationAndSort(@RequestParam int offset,
+                                                                    @RequestParam int pageSize,
+                                                                    @PathVariable String field) {
+        return categoryService.findCategoriesWithPaginationAndSorting(offset, pageSize, field);
+    }
+
+    @Operation(summary = "Show all available categories with sorting")
+    @GetMapping("/paginationAndSort/")
+    private List<CategoryEntity> getCategoriesWithPaginationAndSortSecond(@RequestParam int offset,
+                                                                    @RequestParam int pageSize) {
+        return categoryService.findCategoriesWithPaginationAndSortingSecond(offset, pageSize);
     }
 
     @Operation(summary = "Add new category")
