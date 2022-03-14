@@ -65,6 +65,9 @@ public class OrderService {
                 cartRepo.deleteById(cart.getId());
             }
         }
+        if(userOrderItems.isEmpty()){
+            throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
+        }
         order.setTotalPrice(totalOrderPrice);
         order.setOrderItems(userOrderItems);
         orderRepo.save(order);
