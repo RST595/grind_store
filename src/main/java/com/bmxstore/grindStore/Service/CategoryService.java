@@ -25,6 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
 
+    private static final String TYPICAL_ERROR_MESSAGE = "CATEGORY_NOT_EXIST";
+
     private final CategoryRepo categoryRepo;
 
     @Autowired
@@ -45,7 +47,7 @@ public class CategoryService {
     public ResponseEntity<ResponseApi> addCategory(CategoryRequest newCategory) {
         CategoryEntity categoryEntity = objectMapper.convertValue(newCategory, CategoryEntity.class);
         if(categoryEntity.getTitle().replace(" ", "").isEmpty()){
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf(TYPICAL_ERROR_MESSAGE));
         }
         for (CategoryEntity category : categoryRepo.findAll()) {
             if (category.getTitle().equals(newCategory.getTitle())) {
@@ -70,7 +72,7 @@ public class CategoryService {
                 return new ResponseEntity<>(new ResponseApi(true, "category updated"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf(TYPICAL_ERROR_MESSAGE));
     }
 
 
@@ -86,7 +88,7 @@ public class CategoryService {
                 return new ResponseEntity<>(new ResponseApi(true, "category deleted"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
+        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf(TYPICAL_ERROR_MESSAGE));
     }
 }
 

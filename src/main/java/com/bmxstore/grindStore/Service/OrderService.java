@@ -18,7 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,6 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepo orderRepo;
-    private final OrderItemRepo orderItemRepo;
     private final CurrencyService currencyService;
 
     @Autowired
@@ -36,41 +36,37 @@ public class OrderService {
     private UserRepo userRepo;
 
     @Autowired
-    private ProductRepo productRepo;
-
-    @Autowired
     private CartRepo cartRepo;
 
     @Value("${variables.currencyTo}")
     private String currencyTo;
 
-//TODO Fix order_items save, add new Feign client;
     @SneakyThrows
     public ResponseEntity<ResponseApi> createOrder(Long userId) {
         Double rate = currencyService.getCurrencyRate(currencyTo);
         Optional<UserEntity> user = userRepo.findById(userId);
         UserEntity userEntity = user.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND")));
         OrderEntity order = new OrderEntity();
+        List<OrderItemEntity> userOrderItems = new ArrayList<>();
+        Double totalOrderPrice = 0.0;
         order.setStatus(OrderStatus.NEW);
         order.setDeliveryAddress(userEntity.getAddress());
         order.setCreatedDate(LocalDate.now());
         order.setUserEntity(userEntity);
         for(CartEntity cart : cartRepo.findAll()){
-            if(cart.getUserEntity().getId().equals(userId)){
+            if(cart.getUserEntity().equals(userEntity)){
                 OrderItemEntity orderItem = new OrderItemEntity();
                 orderItem.setProductEntity(cart.getProductEntity());
                 orderItem.setQuantity(cart.getQuantity());
                 orderItem.setPrice(cart.getProductEntity().getPrice() * cart.getQuantity() / rate);
                 orderItem.setOrderEntity(order);
-                order.setOrderItems(Arrays.asList(orderItem));
-                if(order.getTotalPrice() == null){
-                    order.setTotalPrice(orderItem.getPrice());
-                } else {
-                    order.setTotalPrice(order.getTotalPrice() + orderItem.getPrice());
-                }
-                //cartRepo.deleteById(cart.getId());
+                userOrderItems.add(orderItem);
+                totalOrderPrice += orderItem.getPrice();
+                cartRepo.deleteById(cart.getId());
             }
         }
+        order.setTotalPrice(totalOrderPrice);
+        order.setOrderItems(userOrderItems);
         orderRepo.save(order);
         return new ResponseEntity<>(new ResponseApi(true, "Order Created"), HttpStatus.CREATED);
     }
