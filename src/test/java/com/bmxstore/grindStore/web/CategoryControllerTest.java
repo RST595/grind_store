@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashSet;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,6 +61,7 @@ class CategoryControllerTest {
                 testEntity = category;
             }
         }
+        assert(!categoryRepo.findByTitle("stem").equals(null));
         assert(testEntity.getTitle().equals("stem"));
     }
 

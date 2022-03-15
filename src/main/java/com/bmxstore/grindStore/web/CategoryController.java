@@ -5,7 +5,6 @@ import com.bmxstore.grindStore.Service.CategoryService;
 import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.dto.Category.CategoryRequest;
 import com.bmxstore.grindStore.dto.Category.CategoryResponse;
-import com.bmxstore.grindStore.dto.Enums.OrderStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
