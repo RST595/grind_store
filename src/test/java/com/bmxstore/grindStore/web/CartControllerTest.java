@@ -3,7 +3,6 @@ package com.bmxstore.grindStore.web;
 import com.bmxstore.grindStore.ExHandler.ErrorMessage;
 import com.bmxstore.grindStore.ExHandler.ServiceError;
 import com.bmxstore.grindStore.db.Entity.CartEntity;
-import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.db.Entity.ProductEntity;
 import com.bmxstore.grindStore.db.Entity.UserEntity;
 import com.bmxstore.grindStore.db.Repository.CartRepo;
@@ -11,7 +10,6 @@ import com.bmxstore.grindStore.db.Repository.CategoryRepo;
 import com.bmxstore.grindStore.db.Repository.ProductRepo;
 import com.bmxstore.grindStore.db.Repository.UserRepo;
 import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
-import com.bmxstore.grindStore.dto.Enums.Color;
 import com.bmxstore.grindStore.validObjects.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,10 +78,7 @@ class CartControllerTest {
     void addToCartAndExpectOk() throws Exception {
             userRepo.save(ReturnValidObject.getValidUser());
             categoryRepo.save(ReturnValidObject.getValidCategory());
-            List<CategoryEntity> categories = categoryRepo.findAll();
-            productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                    "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                    categories.get(0)));
+            productRepo.save(ReturnValidObject.getValidProduct());
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),5)))
@@ -97,24 +92,20 @@ class CartControllerTest {
 
     @Test
     void addToCartWithSameUserAndProductAndExpectOk() throws Exception {
-        int qnt = 5;
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        productRepo.save(ReturnValidObject.getValidProduct());
         List<ProductEntity> products = productRepo.findAll();
         List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),qnt)))
+                        .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),ReturnValidObject.quantity)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
         for(CartEntity cartItems : cartRepo.findAll()){
-            if(cartItems.getQuantity() != qnt * 2) {
+            if(cartItems.getQuantity() != ReturnValidObject.quantity * 2) {
                 throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
             }
         }
@@ -123,10 +114,7 @@ class CartControllerTest {
     @Test
     void addToCartWithNoSuchUserAndExpectFail() throws Exception {
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        productRepo.save(ReturnValidObject.getValidProduct());
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),5)))
@@ -148,16 +136,12 @@ class CartControllerTest {
 
     @Test
     void removeFromCartAndExpectOk() throws Exception {
-        int qnt = 5;
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        productRepo.save(ReturnValidObject.getValidProduct());
         List<ProductEntity> products = productRepo.findAll();
         List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
         this.mockMvc.perform(delete("/cart/remove")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
@@ -171,16 +155,12 @@ class CartControllerTest {
 
     @Test
     void removeFromCartItemWhichNotExistAndExpectFail() throws Exception {
-        int qnt = 5;
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        productRepo.save(ReturnValidObject.getValidProduct());
         List<ProductEntity> products = productRepo.findAll();
         List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
         this.mockMvc.perform(delete("/cart/remove")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
@@ -194,16 +174,12 @@ class CartControllerTest {
 
     @Test
     void removeFromUserWhichNotExistCartItemAndExpectFail() throws Exception {
-        int qnt = 5;
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        productRepo.save(ReturnValidObject.getValidProduct());
         List<ProductEntity> products = productRepo.findAll();
         List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
         this.mockMvc.perform(delete("/cart/remove")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(3))
@@ -217,23 +193,19 @@ class CartControllerTest {
 
     @Test
     void updateItemQuantityAndExpectOk() throws Exception {
-        int qnt = 5;
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        productRepo.save(ReturnValidObject.getValidProduct());
         List<ProductEntity> products = productRepo.findAll();
         List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
-        this.mockMvc.perform(put("/cart/update/{quantity}", qnt)
+        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
+        this.mockMvc.perform(put("/cart/update/{quantity}", ReturnValidObject.quantity)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
         for(CartEntity cartItems : cartRepo.findAll()){
-            if(cartItems.getQuantity() != qnt) {
+            if(cartItems.getQuantity() != ReturnValidObject.quantity) {
                 throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
             }
         }
@@ -243,10 +215,7 @@ class CartControllerTest {
     void updateCartItemQuantityWhichNotExistAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        productRepo.save(ReturnValidObject.getValidProduct());
         this.mockMvc.perform(put("/cart/update/{quantity}", 5)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("cartId", String.valueOf(2)))
