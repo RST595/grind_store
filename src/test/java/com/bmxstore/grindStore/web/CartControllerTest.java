@@ -95,9 +95,7 @@ class CartControllerTest {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
         productRepo.save(ReturnValidObject.getValidProduct());
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
+        cartRepo.save(ReturnValidObject.getValidCart());
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),ReturnValidObject.quantity)))
