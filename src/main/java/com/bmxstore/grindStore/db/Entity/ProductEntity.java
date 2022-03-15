@@ -36,4 +36,13 @@ public class ProductEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity categoryEntity;
+
+    @Override
+    public String toString() {
+        return  "\n" + "Client {" +
+                "id=" + id + "  " +
+                "name=" + name + "  " +
+                "productCode=" + productCode +
+                "imageURL=" + imageURL + '}';
+    }
 }

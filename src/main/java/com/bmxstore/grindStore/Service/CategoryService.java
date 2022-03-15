@@ -28,6 +28,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.springframework.data.domain.Sort.Direction.ASC;
+
 
 @Service
 @RequiredArgsConstructor
@@ -63,21 +65,14 @@ public class CategoryService {
         return allCategories;
     }
 
-    public Page<CategoryEntity> findCategoriesWithPaginationAndSorting(int offset, int pageSize, String field){
-        Page<CategoryEntity> products = categoryRepo.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field)));
-        return  products;
+    public Page<CategoryEntity> findCategoriesWithPaginationAndSorting(int pageNumber, int pageSize, String field){
+        return categoryRepo.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(field)));
     }
-
-    public List<CategoryEntity> findCategoriesWithPaginationAndSortingSecond(int offset, int pageSize){
-        Page<CategoryEntity> products = categoryRepo.findAll(PageRequest.of(offset, pageSize));
-        return  products.toList();
-    }
-
 
     public ResponseEntity<ResponseApi> addCategory(CategoryRequest newCategory) {
         CategoryEntity categoryEntity = objectMapper.convertValue(newCategory, CategoryEntity.class);
         if(categoryEntity.getTitle().replace(" ", "").isEmpty()){
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf(TYPICAL_ERROR_MESSAGE));
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
         }
         for (CategoryEntity category : categoryRepo.findAll()) {
             if (category.getTitle().equals(newCategory.getTitle())) {

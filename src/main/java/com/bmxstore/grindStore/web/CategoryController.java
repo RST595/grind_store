@@ -30,18 +30,12 @@ public class CategoryController {
     }
 
     @Operation(summary = "Show all available categories with sorting")
-    @GetMapping("/paginationAndSort/{field}")
-    private Page<CategoryEntity> getCategoriesWithPaginationAndSort(@RequestParam int offset,
-                                                                    @RequestParam int pageSize,
-                                                                    @PathVariable String field) {
-        return categoryService.findCategoriesWithPaginationAndSorting(offset, pageSize, field);
-    }
-
-    @Operation(summary = "Show all available categories with sorting")
-    @GetMapping("/paginationAndSort/")
-    private List<CategoryEntity> getCategoriesWithPaginationAndSortSecond(@RequestParam int offset,
-                                                                    @RequestParam int pageSize) {
-        return categoryService.findCategoriesWithPaginationAndSortingSecond(offset, pageSize);
+    @GetMapping("/sort/{field}")
+    public Page<CategoryEntity> getCategoriesWithPaginationAndSort(
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+            @PathVariable String field) {
+        return categoryService.findCategoriesWithPaginationAndSorting(pageNumber, pageSize, field);
     }
 
     @Operation(summary = "Add new category")
