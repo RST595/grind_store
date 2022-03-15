@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 
@@ -29,7 +30,7 @@ public class CategoryEntity {
     @OneToMany(mappedBy = "categoryEntity",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    Set<ProductEntity> products;
+    List<ProductEntity> products;
 
     @Override
     public String toString() {

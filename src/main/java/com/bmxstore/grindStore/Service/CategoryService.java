@@ -20,15 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.springframework.data.domain.Sort.Direction.ASC;
 
 
 @Service
@@ -65,8 +58,9 @@ public class CategoryService {
         return allCategories;
     }
 
-    public Page<CategoryEntity> findCategoriesWithPaginationAndSorting(int pageNumber, int pageSize, String field){
-        return categoryRepo.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(field)));
+    public Page<CategoryResponse> findCategoriesWithPaginationAndSorting(int pageNumber, int pageSize, String field){
+        Page<CategoryEntity> page = categoryRepo.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(field)));
+        return page.map(category -> objectMapper.convertValue(category, CategoryResponse.class));
     }
 
     public ResponseEntity<ResponseApi> addCategory(CategoryRequest newCategory) {

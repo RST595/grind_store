@@ -45,4 +45,5 @@ public class ProductEntity {
                 "productCode=" + productCode +
                 "imageURL=" + imageURL + '}';
     }
+    //override equals
 }

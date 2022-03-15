@@ -62,7 +62,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -84,7 +84,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -105,7 +105,7 @@ class OrderControllerTest {
     void tryCreateOrderWithNoItemsUserAndExpectFail() throws Exception {
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -124,7 +124,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -159,7 +159,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -194,7 +194,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -229,7 +229,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -263,7 +263,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -297,7 +297,7 @@ class OrderControllerTest {
         int qnt = 5;
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,

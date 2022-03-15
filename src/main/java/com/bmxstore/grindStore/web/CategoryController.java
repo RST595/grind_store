@@ -2,7 +2,6 @@ package com.bmxstore.grindStore.web;
 
 import com.bmxstore.grindStore.ResponseApi.ResponseApi;
 import com.bmxstore.grindStore.Service.CategoryService;
-import com.bmxstore.grindStore.db.Entity.CategoryEntity;
 import com.bmxstore.grindStore.dto.Category.CategoryRequest;
 import com.bmxstore.grindStore.dto.Category.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +29,7 @@ public class CategoryController {
 
     @Operation(summary = "Show all available categories with sorting")
     @GetMapping("/sort/{field}")
-    public Page<CategoryEntity> getCategoriesWithPaginationAndSort(
+    public Page<CategoryResponse> getCategoriesWithPaginationAndSort(
             @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
             @PathVariable String field) {

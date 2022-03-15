@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +70,7 @@ class ProductControllerTest {
     @Test
     void addProductAndExpectOk() throws Exception {
         categoryRepo.save(new CategoryEntity(1L, "stem",
-                "To fix bar", "stem.jpg", new HashSet<>()));
+                "To fix bar", "stem.jpg", new ArrayList<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
@@ -90,7 +91,7 @@ class ProductControllerTest {
     @Test
     void addProductWithSameCodeTwiceAndExpectFail() throws Exception {
         categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar",
-                "stem.jpg", new HashSet<>()));
+                "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -106,7 +107,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithEmptyNameAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("",
@@ -118,7 +119,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithNameFromSpacesAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("    ",
@@ -130,7 +131,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithEmptyCodeAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
@@ -142,7 +143,7 @@ class ProductControllerTest {
 
     @Test
     void addProductWithCodeFromSpacesAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
@@ -154,7 +155,7 @@ class ProductControllerTest {
 
     @Test
     void updateProductInfoAndExpectOk() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -179,7 +180,7 @@ class ProductControllerTest {
 
     @Test
     void updateProductWhichNotExist() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -196,7 +197,7 @@ class ProductControllerTest {
 
     @Test
     void deleteProductAndExpectOk() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new HashSet<>()));
+        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
