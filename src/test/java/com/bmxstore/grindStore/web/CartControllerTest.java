@@ -12,8 +12,7 @@ import com.bmxstore.grindStore.db.Repository.ProductRepo;
 import com.bmxstore.grindStore.db.Repository.UserRepo;
 import com.bmxstore.grindStore.dto.Cart.AddToCartRequest;
 import com.bmxstore.grindStore.dto.Enums.Color;
-import com.bmxstore.grindStore.dto.Enums.Role;
-import com.bmxstore.grindStore.dto.Enums.UserStatus;
+import com.bmxstore.grindStore.validObjects.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,8 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -71,8 +68,7 @@ class CartControllerTest {
 
     @Test
     void getUserCartItemsAndExpectOk() throws Exception {
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
         this.mockMvc.perform(get("/cart/list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
@@ -82,9 +78,8 @@ class CartControllerTest {
 
     @Test
     void addToCartAndExpectOk() throws Exception {
-            userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                    "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-            categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+            userRepo.save(ReturnValidObject.getValidUser());
+            categoryRepo.save(ReturnValidObject.getValidCategory());
             List<CategoryEntity> categories = categoryRepo.findAll();
             productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                     "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -103,9 +98,8 @@ class CartControllerTest {
     @Test
     void addToCartWithSameUserAndProductAndExpectOk() throws Exception {
         int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -128,7 +122,7 @@ class CartControllerTest {
 
     @Test
     void addToCartWithNoSuchUserAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -143,8 +137,7 @@ class CartControllerTest {
 
     @Test
     void addToCartWithNoSuchProductAndExpectFail() throws Exception {
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(1L,5)))
@@ -156,9 +149,8 @@ class CartControllerTest {
     @Test
     void removeFromCartAndExpectOk() throws Exception {
         int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -180,9 +172,8 @@ class CartControllerTest {
     @Test
     void removeFromCartItemWhichNotExistAndExpectFail() throws Exception {
         int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -204,9 +195,8 @@ class CartControllerTest {
     @Test
     void removeFromUserWhichNotExistCartItemAndExpectFail() throws Exception {
         int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -228,9 +218,8 @@ class CartControllerTest {
     @Test
     void updateItemQuantityAndExpectOk() throws Exception {
         int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
@@ -252,9 +241,8 @@ class CartControllerTest {
 
     @Test
     void updateCartItemQuantityWhichNotExistAndExpectFail() throws Exception {
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         List<CategoryEntity> categories = categoryRepo.findAll();
         productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
