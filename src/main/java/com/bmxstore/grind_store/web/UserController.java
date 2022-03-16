@@ -1,9 +1,9 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.ResponseApi.ResponseApi;
-import com.bmxstore.grind_store.Service.UserService;
-import com.bmxstore.grind_store.dto.User.UserRequest;
-import com.bmxstore.grind_store.dto.User.UserResponse;
+import com.bmxstore.grind_store.response_api.ResponseApi;
+import com.bmxstore.grind_store.service.UserService;
+import com.bmxstore.grind_store.dto.user.UserRequest;
+import com.bmxstore.grind_store.dto.user.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

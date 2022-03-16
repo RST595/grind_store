@@ -1,12 +1,12 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.ExHandler.ErrorMessage;
-import com.bmxstore.grind_store.ExHandler.ServiceError;
-import com.bmxstore.grind_store.db.Entity.CategoryEntity;
-import com.bmxstore.grind_store.db.Entity.ProductEntity;
-import com.bmxstore.grind_store.db.Repository.*;
-import com.bmxstore.grind_store.dto.Enums.Color;
-import com.bmxstore.grind_store.dto.Product.ProductRequest;
+import com.bmxstore.grind_store.ex_handler.ErrorMessage;
+import com.bmxstore.grind_store.ex_handler.ServiceError;
+import com.bmxstore.grind_store.db.entity.CategoryEntity;
+import com.bmxstore.grind_store.db.entity.ProductEntity;
+import com.bmxstore.grind_store.db.repository.*;
+import com.bmxstore.grind_store.dto.enums.Color;
+import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

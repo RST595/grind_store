@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.Service.CurrencyService;
+import com.bmxstore.grind_store.service.CurrencyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

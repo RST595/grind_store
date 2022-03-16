@@ -1,9 +1,9 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.ResponseApi.ResponseApi;
-import com.bmxstore.grind_store.Service.OrderService;
-import com.bmxstore.grind_store.dto.Enums.OrderStatus;
-import com.bmxstore.grind_store.dto.Order.PaymentRequest;
+import com.bmxstore.grind_store.response_api.ResponseApi;
+import com.bmxstore.grind_store.service.OrderService;
+import com.bmxstore.grind_store.dto.enums.OrderStatus;
+import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

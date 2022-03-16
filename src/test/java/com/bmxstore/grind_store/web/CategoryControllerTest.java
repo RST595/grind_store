@@ -1,23 +1,17 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.ExHandler.ErrorMessage;
-import com.bmxstore.grind_store.ExHandler.ServiceError;
-import com.bmxstore.grind_store.db.Entity.CategoryEntity;
-import com.bmxstore.grind_store.db.Repository.CategoryRepo;
-import com.bmxstore.grind_store.dto.Category.CategoryRequest;
-import com.bmxstore.grind_store.validObjects.ReturnValidObject;
+import com.bmxstore.grind_store.db.entity.CategoryEntity;
+import com.bmxstore.grind_store.db.repository.CategoryRepo;
+import com.bmxstore.grind_store.dto.category.CategoryRequest;
+import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 

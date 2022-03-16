@@ -1,18 +1,16 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.ExHandler.ApiError;
-import com.bmxstore.grind_store.ExHandler.ErrorMessage;
-import com.bmxstore.grind_store.ExHandler.ServiceError;
-import com.bmxstore.grind_store.db.Entity.CartEntity;
-import com.bmxstore.grind_store.db.Entity.ProductEntity;
-import com.bmxstore.grind_store.db.Entity.UserEntity;
-import com.bmxstore.grind_store.db.Repository.CartRepo;
-import com.bmxstore.grind_store.db.Repository.CategoryRepo;
-import com.bmxstore.grind_store.db.Repository.ProductRepo;
-import com.bmxstore.grind_store.db.Repository.UserRepo;
-import com.bmxstore.grind_store.dto.Cart.AddToCartRequest;
-import com.bmxstore.grind_store.dto.Cart.CartResponse;
-import com.bmxstore.grind_store.validObjects.ReturnValidObject;
+import com.bmxstore.grind_store.ex_handler.ErrorMessage;
+import com.bmxstore.grind_store.ex_handler.ServiceError;
+import com.bmxstore.grind_store.db.entity.CartEntity;
+import com.bmxstore.grind_store.db.entity.ProductEntity;
+import com.bmxstore.grind_store.db.entity.UserEntity;
+import com.bmxstore.grind_store.db.repository.CartRepo;
+import com.bmxstore.grind_store.db.repository.CategoryRepo;
+import com.bmxstore.grind_store.db.repository.ProductRepo;
+import com.bmxstore.grind_store.db.repository.UserRepo;
+import com.bmxstore.grind_store.dto.cart.AddToCartRequest;
+import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +23,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.*;
 

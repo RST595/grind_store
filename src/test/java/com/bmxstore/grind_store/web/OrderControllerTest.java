@@ -1,12 +1,12 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.db.Entity.*;
-import com.bmxstore.grind_store.db.Repository.*;
-import com.bmxstore.grind_store.dto.Enums.Color;
-import com.bmxstore.grind_store.dto.Enums.OrderStatus;
-import com.bmxstore.grind_store.dto.Enums.Role;
-import com.bmxstore.grind_store.dto.Enums.UserStatus;
-import com.bmxstore.grind_store.dto.Order.PaymentRequest;
+import com.bmxstore.grind_store.db.entity.*;
+import com.bmxstore.grind_store.db.repository.*;
+import com.bmxstore.grind_store.dto.enums.Color;
+import com.bmxstore.grind_store.dto.enums.OrderStatus;
+import com.bmxstore.grind_store.dto.enums.Role;
+import com.bmxstore.grind_store.dto.enums.UserStatus;
+import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

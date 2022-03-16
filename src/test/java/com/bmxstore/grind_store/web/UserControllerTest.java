@@ -1,11 +1,10 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.db.Entity.UserEntity;
-import com.bmxstore.grind_store.db.Repository.*;
-import com.bmxstore.grind_store.dto.Enums.Role;
-import com.bmxstore.grind_store.dto.Enums.UserStatus;
-import com.bmxstore.grind_store.dto.User.UserRequest;
-import com.bmxstore.grind_store.validObjects.ReturnValidObject;
+import com.bmxstore.grind_store.db.repository.*;
+import com.bmxstore.grind_store.dto.enums.Role;
+import com.bmxstore.grind_store.dto.enums.UserStatus;
+import com.bmxstore.grind_store.dto.user.UserRequest;
+import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
