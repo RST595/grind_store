@@ -54,6 +54,7 @@ public class UserService {
         return new ResponseEntity<>(new ResponseApi(true, "user added"), HttpStatus.CREATED);
     }
 
+    // TODO: 16.03.2022 also here and all places
     public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) {
         for (UserEntity user : userRepo.findAll()) {
             if(user.getId().equals(userId) && user.getStatus().equals(UserStatus.ACTIVE)) {

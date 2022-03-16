@@ -22,7 +22,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -179,11 +181,16 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        for(UserEntity user : userRepo.findAll()){
-            if(user.getEmail().equals("ivanov@mail.ru") && user.getStatus().equals(UserStatus.ACTIVE)){
-                throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("NOT_EMPTY"));
-            }
-        }
+
+        List<UserEntity> all = userRepo.findAll();
+        // TODO: 16.03.2022 use search like this in all places
+        assertFalse(all.stream().anyMatch(user ->
+                user.getEmail().equals("ivanov@mail.ru") && user.getStatus().equals(UserStatus.ACTIVE)));
+//        for(UserEntity user : all){
+//            if(user.getEmail().equals("ivanov@mail.ru") && user.getStatus().equals(UserStatus.ACTIVE)){
+//                throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("NOT_EMPTY"));
+//            }
+//        }
     }
 
     @Test

@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class CartControllerTest {
+    // FIXME: 16.03.2022 almoust all falls with .DataIntegrityViolationException
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,6 +63,7 @@ class CartControllerTest {
                     .param("userId", String.valueOf(1)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+        // TODO: 16.03.2022 add assert
     }
 
     @Test
@@ -72,6 +74,8 @@ class CartControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
+        // TODO: 16.03.2022 add assert
+
     }
 
     @Test
@@ -184,6 +188,7 @@ class CartControllerTest {
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+        // TODO: 16.03.2022 add search and equals assertion
         if(cartRepo.findAll().isEmpty()) {
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
         }

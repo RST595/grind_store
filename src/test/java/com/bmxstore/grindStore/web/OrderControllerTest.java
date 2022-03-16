@@ -82,6 +82,7 @@ class OrderControllerTest {
     @Test
     void tryCreateOrderWithNoSuchUserAndExpectFail() throws Exception {
         int qnt = 5;
+        // TODO: 16.03.2022 remove ivan copypaste
         userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
                 "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
         categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
@@ -97,6 +98,7 @@ class OrderControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+        // TODO: 16.03.2022 replace with junit assert methods here and in all like this
         assert (!cartRepo.findAll().isEmpty());
         assert (orderRepo.findAll().isEmpty());
     }

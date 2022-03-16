@@ -27,9 +27,10 @@ public class ProductService {
 
     @Autowired
     ObjectMapper objectMapper;
-
+    // TODO: 16.03.2022 use constructor and lombok instead
     @Autowired
     CategoryRepo categoryRepo;
+
 
     public Set<ProductResponse> getAllProducts() {
         Set<ProductResponse> allProducts = new HashSet<>();
@@ -64,6 +65,7 @@ public class ProductService {
         return new ResponseEntity<>(new ResponseApi(true, "product added"), HttpStatus.CREATED);
     }
 
+    // TODO: 16.03.2022 ask Andrei how to do it properly
     public ResponseEntity<ResponseApi> updateProduct(ProductRequest updatedProduct, Long productId) {
         for (ProductEntity product : productRepo.findAll()) {
             if (product.getId().equals(productId)) {
