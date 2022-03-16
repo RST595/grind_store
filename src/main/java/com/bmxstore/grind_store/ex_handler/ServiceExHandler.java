@@ -14,7 +14,7 @@ public class ServiceExHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {ServiceError.class})
     protected ResponseEntity<ApiError> handleException(
-            ServiceError serviceError, WebRequest request) {
+            ServiceError serviceError) {
         log.error(serviceError.getMessage(), serviceError);
         ApiError apiError = new ApiError(serviceError.getHttpStatus(), serviceError.getHttpError());
         return new ResponseEntity<>(apiError, apiError.getStatus());
@@ -22,7 +22,7 @@ public class ServiceExHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {Throwable.class})
     protected ResponseEntity<ApiError> handleGeneralException(
-            Throwable throwable, WebRequest request) {
+            Throwable throwable) {
         log.error(throwable.getMessage(), throwable);
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.SERVER_ERROR);
         return new ResponseEntity<>(apiError, apiError.getStatus());

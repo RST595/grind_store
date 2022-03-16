@@ -7,6 +7,7 @@ import com.bmxstore.grind_store.db.entity.ProductEntity;
 import com.bmxstore.grind_store.db.repository.*;
 import com.bmxstore.grind_store.dto.enums.Color;
 import com.bmxstore.grind_store.dto.product.ProductRequest;
+import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,40 +70,29 @@ class ProductControllerTest {
 
     @Test
     void addProductAndExpectOk() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem",
-                "To fix bar", "stem.jpg", new ArrayList<>()));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
                                 "PCODE123", "stem.jpg", 5000, 250,
                                 "To fix bar", Color.BLACK, "stem" ))))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        ProductEntity testEntity = new ProductEntity();
-        for(ProductEntity product : productRepo.findAll()){
-            if(product.getProductCode().equals("PCODE123")){
-                testEntity = product;
-
-            }
-        }
-        assert(testEntity.getProductCode().equals("PCODE123"));
+                .andExpect(status().isCreated());
+        assertTrue(productRepo.findAll().stream().anyMatch(product ->
+                product.getProductCode().equals("PCODE123")));
     }
 
     @Test
     void addProductWithSameCodeTwiceAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar",
-                "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        productRepo.save(ReturnValidObject.getValidProduct());
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss V2",
                                 "PCODE123", "stemNew.jpg", 6000, 312,
                                 "To fix bar", Color.BLACK, "stem" ))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -112,7 +104,7 @@ class ProductControllerTest {
                                 "PCODE123", "stem.jpg", 5000, 250,
                                 "To fix bar", Color.BLACK, "stem" ))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
@@ -124,40 +116,37 @@ class ProductControllerTest {
                                 "PCODE123", "stem.jpg", 5000, 250,
                                 "To fix bar", Color.BLACK, "stem" ))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
     void addProductWithEmptyCodeAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
                                 "", "stem.jpg", 5000, 250,
                                 "To fix bar", Color.BLACK, "stem" ))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
     void addProductWithCodeFromSpacesAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
                                 "  ", "stem.jpg", 5000, 250,
                                 "To fix bar", Color.BLACK, "stem" ))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
     void updateProductInfoAndExpectOk() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        productRepo.save(ReturnValidObject.getValidProduct());
         this.mockMvc.perform(post("/product/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
@@ -165,24 +154,16 @@ class ProductControllerTest {
                                 "     ", Color.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        ProductEntity testEntity = new ProductEntity();
-        for(ProductEntity product : productRepo.findAll()){
-            if(product.getProductCode().equals("UPDATED") && product.getDescription().equals("To fix bar")
-             && product.getName().equals("Odyssey Boss")){
-                testEntity = product;
-            }
-        }
-        assert(testEntity.getProductCode().equals("UPDATED"));
+                .andExpect(status().isOk());
+        assertTrue(productRepo.findAll().stream().anyMatch(product ->
+                product.getProductCode().equals("UPDATED") && product.getDescription().equals("To fix bar")
+                        && product.getName().equals("Odyssey Boss")));
     }
 
     @Test
     void updateProductWhichNotExist() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        productRepo.save(ReturnValidObject.getValidProduct());
         this.mockMvc.perform(post("/product/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
@@ -190,26 +171,20 @@ class ProductControllerTest {
                                 "To fix bar", Color.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void deleteProductAndExpectOk() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        productRepo.save(ReturnValidObject.getValidProduct());
         this.mockMvc.perform(delete("/product/delete/{productId}",
                 Long.toString(productRepo.findAll().get(0).getId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        for(ProductEntity product : productRepo.findAll()){
-            if(product.getProductCode().equals("PCODE123")){
-                throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("NOT_EMPTY"));
-            }
-        }
+                .andExpect(status().isOk());
+        assertFalse(productRepo.findAll().stream().anyMatch(product ->
+                product.getProductCode().equals("PCODE123")));
     }
 
     @Test
@@ -218,6 +193,6 @@ class ProductControllerTest {
                         "2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 }
