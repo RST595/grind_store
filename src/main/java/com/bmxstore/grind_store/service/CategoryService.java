@@ -11,8 +11,6 @@ import com.bmxstore.grind_store.dto.category.CategoryRequest;
 import com.bmxstore.grind_store.dto.category.CategoryResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -32,11 +30,8 @@ public class CategoryService {
 
     private final CategoryRepo categoryRepo;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    ProductRepo productRepo;
+    private final ObjectMapper objectMapper;
+    private final ProductRepo productRepo;
 
 //    @PostConstruct
 //    public void initDB() {

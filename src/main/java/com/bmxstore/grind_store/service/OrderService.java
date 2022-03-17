@@ -7,10 +7,8 @@ import com.bmxstore.grind_store.db.entity.*;
 import com.bmxstore.grind_store.db.repository.*;
 import com.bmxstore.grind_store.dto.enums.OrderStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +27,8 @@ public class OrderService {
     private final OrderRepo orderRepo;
     private final CurrencyService currencyService;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private CartRepo cartRepo;
+    private final UserRepo userRepo;
+    private final CartRepo cartRepo;
 
     @Value("${variables.currencyTo}")
     private String currencyTo;

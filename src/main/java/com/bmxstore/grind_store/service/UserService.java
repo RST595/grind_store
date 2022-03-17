@@ -11,7 +11,6 @@ import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,7 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepo userRepo;
-
-    @Autowired
-    ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public Set<UserResponse> getAllUsers() {
         Set<UserResponse> allUsers = new HashSet<>();

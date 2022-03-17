@@ -13,7 +13,6 @@ import com.bmxstore.grind_store.dto.cart.AddToCartRequest;
 import com.bmxstore.grind_store.dto.cart.CartResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,14 +27,9 @@ public class CartService {
 
     private final CartRepo cartRepo;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private ProductRepo productRepo;
+    private final ObjectMapper objectMapper;
+    private final UserRepo userRepo;
+    private final ProductRepo productRepo;
 
     public List<CartResponse> getUserCartItems(Long userId) {
         Optional<UserEntity> userById = userRepo.findById(userId);

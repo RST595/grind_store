@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
@@ -32,6 +33,6 @@ class CurrencyControllerTest {
     @Test
     void getValidCurrencyRate() throws Exception {
         Double rate = currencyService.getCurrencyRate(currencyTo);
-        assertFalse(rate == 0.0);
+        assertNotNull(rate);
     }
 }

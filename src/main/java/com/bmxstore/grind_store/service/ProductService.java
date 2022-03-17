@@ -11,7 +11,6 @@ import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.bmxstore.grind_store.dto.product.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,11 +24,11 @@ public class ProductService {
 
     private final ProductRepo productRepo;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+    private final CategoryRepo categoryRepo;
+    //FIXed
     // TODO: 16.03.2022 use constructor and lombok instead
-    @Autowired
-    CategoryRepo categoryRepo;
+
 
 
     public Set<ProductResponse> getAllProducts() {
@@ -81,9 +80,9 @@ public class ProductService {
                 if(!updatedProduct.getImageURL().replace(" ", "").isEmpty()) {
                     product.setImageURL(updatedProduct.getImageURL());
                 }
-//                if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty()){
-//                    product.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
-//                }
+                if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty()){
+                    product.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
+                }
                 if(updatedProduct.getPrice() != 0){
                     product.setPrice(updatedProduct.getPrice());
                 }

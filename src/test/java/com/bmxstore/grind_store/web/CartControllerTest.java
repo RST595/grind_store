@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class CartControllerTest {
-    //
+    //FIXed
     // FIXME: 16.03.2022 almost all falls with .DataIntegrityViolationException
 
     @Autowired
