@@ -21,6 +21,7 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // TODO: 17.03.2022 remove all redundant name arguments
     @JoinColumn(name = "status", nullable = false)
     private OrderStatus status;
 
