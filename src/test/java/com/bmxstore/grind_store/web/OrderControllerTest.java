@@ -62,7 +62,9 @@ class OrderControllerTest {
     @Test
     void createValidOrderAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -83,7 +85,9 @@ class OrderControllerTest {
         //FIXed
         // TODO: 16.03.2022 remove ivan copypaste
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -102,7 +106,9 @@ class OrderControllerTest {
     @Test
     void tryCreateOrderWithNoItemsUserAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -118,7 +124,9 @@ class OrderControllerTest {
     @Test
     void tryPayForOrderAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -143,7 +151,9 @@ class OrderControllerTest {
     @Test
     void tryPayForOrderWithExpireCardAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -168,7 +178,9 @@ class OrderControllerTest {
     @Test
     void tryPayForOrderWhichNotExistAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -193,7 +205,9 @@ class OrderControllerTest {
     @Test
     void tryChangeOrderStatusAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -217,7 +231,9 @@ class OrderControllerTest {
     @Test
     void tryChangeOrderStatusWhichNotExistAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -241,7 +257,9 @@ class OrderControllerTest {
     @Test
     void tryChangeOrderStatusWithWrongStatusAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);

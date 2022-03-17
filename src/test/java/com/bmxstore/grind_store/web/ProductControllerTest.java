@@ -71,7 +71,9 @@ class ProductControllerTest {
 
     @Test
     void addProductAndExpectOk() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
@@ -85,7 +87,9 @@ class ProductControllerTest {
 
     @Test
     void addProductWithSameCodeTwiceAndExpectFail() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity newProduct = ReturnValidObject.getValidProduct();
         newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(newProduct);
@@ -100,7 +104,9 @@ class ProductControllerTest {
 
     @Test
     void addProductWithEmptyNameAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("",
@@ -112,7 +118,9 @@ class ProductControllerTest {
 
     @Test
     void addProductWithNameFromSpacesAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("    ",
@@ -124,7 +132,9 @@ class ProductControllerTest {
 
     @Test
     void addProductWithEmptyCodeAndExpectFail() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
@@ -136,7 +146,9 @@ class ProductControllerTest {
 
     @Test
     void addProductWithCodeFromSpacesAndExpectFail() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
@@ -151,7 +163,9 @@ class ProductControllerTest {
         ProductEntity newProduct = ReturnValidObject.getValidProduct();
         CategoryEntity newCategory = ReturnValidObject.getValidCategory();
         newCategory.setProducts(Arrays.asList(newProduct));
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(newProduct);
         this.mockMvc.perform(post("/product/update/")
@@ -169,7 +183,9 @@ class ProductControllerTest {
 
     @Test
     void updateProductWhichNotExist() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity newProduct = ReturnValidObject.getValidProduct();
         newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(newProduct);
@@ -185,7 +201,9 @@ class ProductControllerTest {
 
     @Test
     void deleteProductAndExpectOk() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         ProductEntity newProduct = ReturnValidObject.getValidProduct();
         newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(newProduct);
