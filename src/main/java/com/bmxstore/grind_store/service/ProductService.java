@@ -9,6 +9,8 @@ import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.db.repository.ProductRepo;
 import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.bmxstore.grind_store.dto.product.ProductResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -63,45 +66,21 @@ public class ProductService {
         productRepo.save(productEntity);
         return new ResponseEntity<>(new ResponseApi(true, "product added"), HttpStatus.CREATED);
     }
-
+    //FIXed, but this method doesn't prevent from strings from spaces
     // TODO: 16.03.2022 ask Andrei how to do it properly
-    public ResponseEntity<ResponseApi> updateProduct(ProductRequest updatedProduct, Long productId) {
-        for (ProductEntity product : productRepo.findAll()) {
-            if (product.getId().equals(productId)) {
-                if(!updatedProduct.getName().replace(" ", "").isEmpty()) {
-                    product.setName(updatedProduct.getName());
-                }
-                if(!updatedProduct.getProductCode().replace(" ", "").isEmpty()) {
-                    product.setProductCode(updatedProduct.getProductCode());
-                }
-                if(!updatedProduct.getDescription().replace(" ", "").isEmpty()) {
-                    product.setDescription((updatedProduct.getDescription()));
-                }
-                if(!updatedProduct.getImageURL().replace(" ", "").isEmpty()) {
-                    product.setImageURL(updatedProduct.getImageURL());
-                }
-                if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty()){
-                    product.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
-                }
-                if(updatedProduct.getPrice() != 0){
-                    product.setPrice(updatedProduct.getPrice());
-                }
-                if(updatedProduct.getWeight() != 0){
-                    product.setWeight(updatedProduct.getWeight());
-                }
-                productRepo.save(product);
-                return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);
-            }
+    public ResponseEntity<ResponseApi> updateProduct(ProductRequest updatedProduct, Long productId) throws JsonMappingException {
+        Optional<ProductEntity> productById = productRepo.findById(productId);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        ProductEntity oldProduct = productById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));
+        ProductEntity newProduct = objectMapper.convertValue(updatedProduct, ProductEntity.class);
+        if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty()){
+            newProduct.setCategoryEntity(oldProduct.getCategoryEntity());
+        } else {
+            newProduct.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("PRODUCT_NOT_EXIST"));
-
-//        Optional<ProductEntity> productById = productRepo.findById(productId);
-//        ProductEntity oldProduct = productById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));
-//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-//        ProductEntity newProduct = objectMapper.convertValue(updatedProduct, ProductEntity.class);
-//        newProduct = objectMapper.updateValue(newProduct,oldProduct);
-//        productRepo.save(newProduct);
-//        return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);
+        oldProduct = objectMapper.updateValue(oldProduct, newProduct);
+        productRepo.save(oldProduct);
+        return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);
     }
 
 

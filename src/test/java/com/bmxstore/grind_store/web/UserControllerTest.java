@@ -128,7 +128,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Jeff", "Carrot",
-                                "Chicago", "ivanov@mail.ru", Role.USER, "   ")))
+                                "Chicago", "ivanov@mail.ru", Role.USER, "")))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());

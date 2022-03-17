@@ -21,7 +21,7 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "status", nullable = false)
+    @JoinColumn(nullable = false)
     private OrderStatus status;
 
     @Column(name = "created_date", nullable = false)

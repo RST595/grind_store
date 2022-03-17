@@ -5,10 +5,11 @@ import com.bmxstore.grind_store.ex_handler.ServiceError;
 import com.bmxstore.grind_store.response_api.ResponseApi;
 import com.bmxstore.grind_store.db.entity.UserEntity;
 import com.bmxstore.grind_store.db.repository.UserRepo;
-import com.bmxstore.grind_store.dto.enums.Role;
 import com.bmxstore.grind_store.dto.enums.UserStatus;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.dto.user.UserResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -51,33 +53,17 @@ public class UserService {
         return new ResponseEntity<>(new ResponseApi(true, "user added"), HttpStatus.CREATED);
     }
 
+    //FIXed
     // TODO: 16.03.2022 also here and all places
-    public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) {
-        for (UserEntity user : userRepo.findAll()) {
-            if(user.getId().equals(userId) && user.getStatus().equals(UserStatus.ACTIVE)) {
-                if(!updatedUser.getFirstName().replace(" ", "").isEmpty()) {
-                    user.setFirstName(updatedUser.getFirstName());
-                }
-                if(!updatedUser.getLastName().replace(" ", "").isEmpty()) {
-                    user.setLastName(updatedUser.getLastName());
-                }
-                if(!updatedUser.getAddress().replace(" ", "").isEmpty()) {
-                    user.setAddress(updatedUser.getAddress());
-                }
-                if(!updatedUser.getEmail().replace(" ", "").isEmpty()) {
-                    user.setEmail((updatedUser.getEmail()));
-                }
-                if(!updatedUser.getPassword().replace(" ", "").isEmpty()) {
-                    user.setPassword(updatedUser.getPassword());
-                }
-                if(updatedUser.getRole().equals(Role.USER) || updatedUser.getRole().equals(Role.ADMIN)){
-                    user.setRole(updatedUser.getRole());
-                }
-                userRepo.save(user);
-                return new ResponseEntity<>(new ResponseApi(true, "user updated"), HttpStatus.OK);
-            }
-        }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST"));
+    public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) throws JsonMappingException {
+        Optional<UserEntity> userById = userRepo.findById(userId);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
+        UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
+        newUser.setOrders(oldUser.getOrders());
+        oldUser = objectMapper.updateValue(oldUser, newUser);
+        userRepo.save(oldUser);
+        return new ResponseEntity<>(new ResponseApi(true, "user updated"), HttpStatus.OK);
     }
 
     public ResponseEntity<ResponseApi> deleteUser(Long userId) {
@@ -90,5 +76,4 @@ public class UserService {
         }
         throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("NOT_FOUND"));
     }
-
 }

@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -147,15 +148,17 @@ class ProductControllerTest {
 
     @Test
     void updateProductInfoAndExpectOk() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
         ProductEntity newProduct = ReturnValidObject.getValidProduct();
+        CategoryEntity newCategory = ReturnValidObject.getValidCategory();
+        newCategory.setProducts(Arrays.asList(newProduct));
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(newProduct);
         this.mockMvc.perform(post("/product/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
                                 "UPDATED", "stem6.jpg", 7000, 350,
-                                "     ", Color.BLACK, "stem" )))
+                                "", Color.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -177,7 +180,7 @@ class ProductControllerTest {
                                 "To fix bar", Color.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test

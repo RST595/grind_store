@@ -26,23 +26,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private static final String TYPICAL_ERROR_MESSAGE = "CATEGORY_NOT_EXIST";
+    private static final ErrorMessage TYPICAL_ERROR_MESSAGE = ErrorMessage.valueOf("CATEGORY_NOT_EXIST");
 
     private final CategoryRepo categoryRepo;
 
     private final ObjectMapper objectMapper;
     private final ProductRepo productRepo;
-
-//    @PostConstruct
-//    public void initDB() {
-//        List<CategoryEntity> category = IntStream.rangeClosed(5, 205)
-//                .mapToObj(i -> new CategoryEntity(i*1L, "title" + i,
-//                        "description" + i,
-//                        "picURL" + i,
-//                        new HashSet<>()))
-//                .collect(Collectors.toList());
-//        categoryRepo.saveAll(category);
-//    }
 
     public List<CategoryResponse> getAllCategories() {
         List<CategoryResponse> allCategories = new ArrayList<>();
@@ -61,7 +50,7 @@ public class CategoryService {
     public ResponseEntity<ResponseApi> addCategory(CategoryRequest newCategory) {
         CategoryEntity categoryEntity = objectMapper.convertValue(newCategory, CategoryEntity.class);
         if(categoryEntity.getTitle().replace(" ", "").isEmpty()){
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, TYPICAL_ERROR_MESSAGE);
         }
         for (CategoryEntity category : categoryRepo.findAll()) {
             if (category.getTitle().equals(newCategory.getTitle())) {
@@ -86,7 +75,7 @@ public class CategoryService {
                 return new ResponseEntity<>(new ResponseApi(true, "category updated"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf(TYPICAL_ERROR_MESSAGE));
+        throw new ServiceError(HttpStatus.NOT_FOUND, TYPICAL_ERROR_MESSAGE);
     }
 
 
@@ -102,7 +91,7 @@ public class CategoryService {
                 return new ResponseEntity<>(new ResponseApi(true, "category deleted"), HttpStatus.OK);
             }
         }
-        throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf(TYPICAL_ERROR_MESSAGE));
+        throw new ServiceError(HttpStatus.NOT_FOUND, TYPICAL_ERROR_MESSAGE);
     }
 }
 

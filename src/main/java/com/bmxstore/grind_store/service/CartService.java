@@ -65,8 +65,9 @@ public class CartService {
     }
 
     public ResponseEntity<ResponseApi> removeFromCart(Long cartId, Long userId) {
-        Optional<UserEntity> userById = userRepo.findById(userId);
-        userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND")));
+        if(userRepo.findById(userId).isEmpty()){
+            throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND"));
+        }
         Optional<CartEntity> cartItem = cartRepo.findById(cartId);
         CartEntity cartEntity = cartItem.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND")));
         if(!cartEntity.getUserEntity().getId().equals(userId)) {

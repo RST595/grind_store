@@ -26,21 +26,21 @@ public class UserEntity {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "address")
+    @Column
     private String address;
 
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column
     private UserStatus status;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @JsonIgnore

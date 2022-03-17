@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class GrindStoreApplication {
 
-
+	//FIXed
 	// TODO: 16.03.2022 fix all sonar issues include naming violations
 
 	public static void main(String[] args) {
