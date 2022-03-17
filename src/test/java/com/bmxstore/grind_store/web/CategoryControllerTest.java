@@ -53,8 +53,8 @@ class CategoryControllerTest {
                         .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        assertNotNull(categoryRepo.findByTitle("stem"));
-        assertEquals(categoryRepo.findByTitle("stem").getTitle(),"stem");
+        assertTrue(categoryRepo.findAll().stream().anyMatch(category ->
+                category.getTitle().equals("stem")));
     }
 
     @Test
@@ -93,8 +93,8 @@ class CategoryControllerTest {
                         .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "New description", "    "))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        assertNotNull(categoryRepo.findByDescription("New description"));
-        assertEquals(categoryRepo.findByDescription("New description").getDescription(),"New description");
+        assertTrue(categoryRepo.findAll().stream().anyMatch(category ->
+                category.getDescription().equals("New description")));
     }
 
     @Test
@@ -113,7 +113,8 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        assertNull(categoryRepo.findByTitle("stem"));
+        assertFalse(categoryRepo.findAll().stream().anyMatch(category ->
+                category.getTitle().equals("stem")));
     }
 
     @Test

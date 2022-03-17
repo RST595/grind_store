@@ -85,7 +85,9 @@ class ProductControllerTest {
     @Test
     void addProductWithSameCodeTwiceAndExpectFail() throws Exception {
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
+        ProductEntity newProduct = ReturnValidObject.getValidProduct();
+        newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(newProduct);
         this.mockMvc.perform(post("/product/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss V2",
@@ -146,7 +148,9 @@ class ProductControllerTest {
     @Test
     void updateProductInfoAndExpectOk() throws Exception {
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
+        ProductEntity newProduct = ReturnValidObject.getValidProduct();
+        newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(newProduct);
         this.mockMvc.perform(post("/product/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
@@ -163,7 +167,9 @@ class ProductControllerTest {
     @Test
     void updateProductWhichNotExist() throws Exception {
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
+        ProductEntity newProduct = ReturnValidObject.getValidProduct();
+        newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(newProduct);
         this.mockMvc.perform(post("/product/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
@@ -177,7 +183,9 @@ class ProductControllerTest {
     @Test
     void deleteProductAndExpectOk() throws Exception {
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
+        ProductEntity newProduct = ReturnValidObject.getValidProduct();
+        newProduct.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(newProduct);
         this.mockMvc.perform(delete("/product/delete/{productId}",
                 Long.toString(productRepo.findAll().get(0).getId()))
                         .contentType(MediaType.APPLICATION_JSON))

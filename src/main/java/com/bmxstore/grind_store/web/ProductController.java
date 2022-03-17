@@ -4,6 +4,7 @@ import com.bmxstore.grind_store.response_api.ResponseApi;
 import com.bmxstore.grind_store.service.ProductService;
 import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.bmxstore.grind_store.dto.product.ProductResponse;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class ProductController {
     @Operation(summary = "Update product info")
     @PostMapping("/update")
     public ResponseEntity<ResponseApi> updateCategory(@RequestBody ProductRequest updatedProduct,
-                                                      @RequestParam Long productId) {
+                                                      @RequestParam Long productId) throws JsonMappingException {
         return this.productService.updateProduct(updatedProduct, productId);
     }
 

@@ -25,7 +25,7 @@ public class ReturnValidObject {
     public static ProductEntity getValidProduct(){
         return  new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+                new CategoryEntity());
     }
 
     public static CartEntity getValidCart(){

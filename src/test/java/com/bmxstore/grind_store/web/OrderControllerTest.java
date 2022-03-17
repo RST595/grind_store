@@ -7,6 +7,7 @@ import com.bmxstore.grind_store.dto.enums.OrderStatus;
 import com.bmxstore.grind_store.dto.enums.Role;
 import com.bmxstore.grind_store.dto.enums.UserStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
+import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,81 +61,68 @@ class OrderControllerTest {
 
     @Test
     void createValidOrderAndExpectOk() throws Exception {
-        int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        assert (cartRepo.findAll().isEmpty());
-        assert (!orderRepo.findAll().isEmpty());
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertFalse(orderRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getUserEntity().getId().equals(userRepo.findAll().get(0).getId())));
     }
 
     @Test
     void tryCreateOrderWithNoSuchUserAndExpectFail() throws Exception {
-        int qnt = 5;
+        //FIXed
         // TODO: 16.03.2022 remove ivan copypaste
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+        //FIXed
         // TODO: 16.03.2022 replace with junit assert methods here and in all like this
-        assert (!cartRepo.findAll().isEmpty());
-        assert (orderRepo.findAll().isEmpty());
+        assertFalse(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().isEmpty());
     }
 
     @Test
     void tryCreateOrderWithNoItemsUserAndExpectFail() throws Exception {
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        assert (cartRepo.findAll().isEmpty());
-        assert (orderRepo.findAll().isEmpty());
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().isEmpty());
     }
 
     @Test
     void tryPayForOrderAndExpectOk() throws Exception {
-        int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
@@ -145,29 +135,19 @@ class OrderControllerTest {
                                 2025, 10, "999", "Ivanov"))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        assert (cartRepo.findAll().isEmpty());
-        OrderEntity newOrder = new OrderEntity();
-        for(OrderEntity order : orderRepo.findAll()){
-            if(order.getId().equals(orderRepo.findAll().get(0).getId())){
-                newOrder = order;
-            }
-        }
-        assert (newOrder.getStatus().equals(OrderStatus.PAID));
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.PAID)));
     }
 
     @Test
     void tryPayForOrderWithExpireCardAndExpectFail() throws Exception {
-        int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
@@ -180,29 +160,19 @@ class OrderControllerTest {
                                 2020, 10, "999", "Ivanov"))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        assert (cartRepo.findAll().isEmpty());
-        OrderEntity newOrder = new OrderEntity();
-        for(OrderEntity order : orderRepo.findAll()){
-            if(order.getId().equals(orderRepo.findAll().get(0).getId())){
-                newOrder = order;
-            }
-        }
-        assert (newOrder.getStatus().equals(OrderStatus.PAYMENT_FAILED));
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.PAYMENT_FAILED)));
     }
 
     @Test
     void tryPayForOrderWhichNotExistAndExpectFail() throws Exception {
-        int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
@@ -215,29 +185,19 @@ class OrderControllerTest {
                                 2020, 10, "999", "Ivanov"))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        assert (cartRepo.findAll().isEmpty());
-        OrderEntity newOrder = new OrderEntity();
-        for(OrderEntity order : orderRepo.findAll()){
-            if(order.getId().equals(orderRepo.findAll().get(0).getId())){
-                newOrder = order;
-            }
-        }
-        assert (newOrder.getStatus().equals(OrderStatus.NEW));
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
     }
 
     @Test
     void tryChangeOrderStatusAndExpectOk() throws Exception {
-        int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
@@ -249,29 +209,19 @@ class OrderControllerTest {
                         .param("status", String.valueOf(OrderStatus.SHIPPED)))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        assert (cartRepo.findAll().isEmpty());
-        OrderEntity newOrder = new OrderEntity();
-        for(OrderEntity order : orderRepo.findAll()){
-            if(order.getId().equals(orderRepo.findAll().get(0).getId())){
-                newOrder = order;
-            }
-        }
-        assert (newOrder.getStatus().equals(OrderStatus.SHIPPED));
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.SHIPPED)));
     }
 
     @Test
     void tryChangeOrderStatusWhichNotExistAndExpectFail() throws Exception {
-        int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
@@ -283,29 +233,19 @@ class OrderControllerTest {
                         .param("status", String.valueOf(OrderStatus.SHIPPED)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        assert (cartRepo.findAll().isEmpty());
-        OrderEntity newOrder = new OrderEntity();
-        for(OrderEntity order : orderRepo.findAll()){
-            if(order.getId().equals(orderRepo.findAll().get(0).getId())){
-                newOrder = order;
-            }
-        }
-        assert (newOrder.getStatus().equals(OrderStatus.NEW));
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
     }
 
     @Test
     void tryChangeOrderStatusWithWrongStatusAndExpectFail() throws Exception {
-        int qnt = 5;
-        userRepo.save(new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", Role.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
-        List<CategoryEntity> categories = categoryRepo.findAll();
-        productRepo.save(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
-                "stem.jpg", 5000.0, 250.0, "To fix bar", Color.BLACK,
-                categories.get(0)));
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), qnt, users.get(0)));
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/order/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
@@ -317,14 +257,9 @@ class OrderControllerTest {
                         .param("status", "SHIPPED2"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        assert (cartRepo.findAll().isEmpty());
-        OrderEntity newOrder = new OrderEntity();
-        for(OrderEntity order : orderRepo.findAll()){
-            if(order.getId().equals(orderRepo.findAll().get(0).getId())){
-                newOrder = order;
-            }
-        }
-        assert (newOrder.getStatus().equals(OrderStatus.NEW));
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
     }
 
 }

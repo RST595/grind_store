@@ -157,6 +157,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
+        //FIXed
         // TODO: 16.03.2022 use search like this in all places
         assertFalse(userRepo.findAll().stream().anyMatch(user ->
                 user.getEmail().equals("ivanov@mail.ru") && user.getStatus().equals(UserStatus.ACTIVE)));

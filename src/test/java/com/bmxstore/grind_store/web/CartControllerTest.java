@@ -34,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class CartControllerTest {
+    //
     // FIXME: 16.03.2022 almost all falls with .DataIntegrityViolationException
 
     @Autowired
@@ -68,6 +69,7 @@ class CartControllerTest {
                     .param("userId", String.valueOf(1)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+        //FIXed
         // TODO: 16.03.2022 add assert
         MvcResult mvcResult = perform.andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -84,49 +86,53 @@ class CartControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
+        //FIXed in previous method. Not sure it's good method.
         // TODO: 16.03.2022 add assert
 
     }
 
     @Test
     void addToCartAndExpectOk() throws Exception {
-            userRepo.save(ReturnValidObject.getValidUser());
-            categoryRepo.save(ReturnValidObject.getValidCategory());
-            productRepo.save(ReturnValidObject.getValidProduct());
+        userRepo.save(ReturnValidObject.getValidUser());
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),5)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        if(cartRepo.findAll().isEmpty()) {
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
-        }
+        assertFalse(cartRepo.findAll().isEmpty());
+        assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
+                cart.getProductEntity().getId().equals(productRepo.findAll().get(0).getId())));
     }
 
     @Test
     void addToCartWithSameUserAndProductAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
-        cartRepo.save(ReturnValidObject.getValidCart());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),ReturnValidObject.quantity)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        for(CartEntity cartItems : cartRepo.findAll()){
-            if(cartItems.getQuantity() != ReturnValidObject.quantity * 2) {
-                throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
-            }
-        }
+        assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
+                cart.getQuantity() == ReturnValidObject.quantity * 2));
     }
 
     @Test
     void addToCartWithNoSuchUserAndExpectFail() throws Exception {
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
         this.mockMvc.perform(post("/cart/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),5)))
@@ -150,59 +156,55 @@ class CartControllerTest {
     void removeFromCartAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
-
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(delete("/cart/remove")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        if(!cartRepo.findAll().isEmpty()) {
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
-        }
+        assertTrue(cartRepo.findAll().isEmpty());
     }
 
     @Test
     void removeFromCartItemWhichNotExistAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
-
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(delete("/cart/remove")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
                         .param("cartId", String.valueOf(2)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        if(cartRepo.findAll().isEmpty()) {
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND"));
-        }
+        assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
+                cart.getQuantity() == ReturnValidObject.quantity));
+        assertFalse(cartRepo.findAll().isEmpty());
     }
 
     @Test
     void removeFromUserWhichNotExistCartItemAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
-
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(delete("/cart/remove")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(3))
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        // TODO: 16.03.2022 add search and equals assertion
         assertFalse(cartRepo.findAll().isEmpty());
+        assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
+                cart.getQuantity() == ReturnValidObject.quantity));
     }
 
     @Test
@@ -210,10 +212,10 @@ class CartControllerTest {
         int newQuantity = 5;
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
-        List<ProductEntity> products = productRepo.findAll();
-        List<UserEntity> users = userRepo.findAll();
-        cartRepo.save(new CartEntity(products.get(0), ReturnValidObject.quantity, users.get(0)));
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
         this.mockMvc.perform(put("/cart/update/{quantity}", newQuantity)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
@@ -230,7 +232,9 @@ class CartControllerTest {
     void updateCartItemQuantityWhichNotExistAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
-        productRepo.save(ReturnValidObject.getValidProduct());
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
         this.mockMvc.perform(put("/cart/update/{quantity}", 5)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("cartId", String.valueOf(2)))

@@ -81,6 +81,9 @@ public class ProductService {
                 if(!updatedProduct.getImageURL().replace(" ", "").isEmpty()) {
                     product.setImageURL(updatedProduct.getImageURL());
                 }
+//                if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty()){
+//                    product.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
+//                }
                 if(updatedProduct.getPrice() != 0){
                     product.setPrice(updatedProduct.getPrice());
                 }
@@ -92,6 +95,14 @@ public class ProductService {
             }
         }
         throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("PRODUCT_NOT_EXIST"));
+
+//        Optional<ProductEntity> productById = productRepo.findById(productId);
+//        ProductEntity oldProduct = productById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));
+//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+//        ProductEntity newProduct = objectMapper.convertValue(updatedProduct, ProductEntity.class);
+//        newProduct = objectMapper.updateValue(newProduct,oldProduct);
+//        productRepo.save(newProduct);
+//        return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);
     }
 
 
