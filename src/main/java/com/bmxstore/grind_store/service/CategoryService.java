@@ -49,7 +49,7 @@ public class CategoryService {
 
     public ResponseEntity<ResponseApi> addCategory(CategoryRequest newCategory) {
         CategoryEntity categoryEntity = objectMapper.convertValue(newCategory, CategoryEntity.class);
-        if(categoryEntity.getTitle().replace(" ", "").isEmpty()){
+        if(categoryEntity.getTitle() == null || categoryEntity.getTitle().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, TYPICAL_ERROR_MESSAGE);
         }
         for (CategoryEntity category : categoryRepo.findAll()) {

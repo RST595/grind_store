@@ -45,7 +45,8 @@ public class ProductService {
     }
 
     public ResponseEntity<ResponseApi> addProduct(ProductRequest newProduct) {
-        if(newProduct.getName().replace(" ", "").isEmpty() ||
+        if(newProduct.getName() == null || newProduct.getProductCode() == null
+                || newProduct.getName().replace(" ", "").isEmpty() ||
                 newProduct.getProductCode().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST"));
         }
