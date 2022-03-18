@@ -58,8 +58,6 @@ class CartControllerTest {
     @BeforeEach
     void cleanRepo(){
         cartRepo.deleteAll();
-        productRepo.deleteAll();
-        userRepo.deleteAll();
     }
 
     @Test
