@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public ResponseEntity<ResponseApi> addUser(UserRequest newUser) {
-        configurationService.JsonConf();
+        configurationService.jsonConf();
         if(newUser.getEmail().replace(" ", "").isEmpty() ||
                 newUser.getPassword().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_NOT_EXIST"));
@@ -62,7 +62,7 @@ public class UserService {
     // TODO: 16.03.2022 also here and all places
     public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) throws JsonMappingException {
         Optional<UserEntity> userById = userRepo.findById(userId);
-        configurationService.JsonConf();
+        configurationService.jsonConf();
         UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
         UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
         newUser.setOrders(oldUser.getOrders());

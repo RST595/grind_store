@@ -11,7 +11,7 @@ public class ConfigurationService {
     @Autowired
     ObjectMapper objectMapper;
 
-    public void JsonConf(){
+    public void jsonConf(){
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     }
 

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class SpringConfiguration {
 
     @Bean
-    public ConfigurationService JsonConfig(){
+    public ConfigurationService jsonConfig(){
         return new ConfigurationService();
     }
 }
