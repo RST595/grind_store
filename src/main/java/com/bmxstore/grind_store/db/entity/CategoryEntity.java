@@ -39,4 +39,11 @@ public class CategoryEntity {
                 "picUrl=" + picUrl +  '}';
     }
 
+    public CategoryEntity(Long id, String title, String description, String picUrl){
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.picUrl = picUrl;
+    }
+
 }

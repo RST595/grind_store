@@ -4,7 +4,6 @@ import com.bmxstore.grind_store.db.entity.CategoryEntity;
 import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.dto.category.CategoryRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -125,5 +129,61 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void getCategoriesWithValidPaginationAndExpectOk() throws Exception {
+        List<CategoryEntity> category = IntStream.rangeClosed(1, 200)
+                .mapToObj(i -> new CategoryEntity(i*1L, "title" + i,
+                        "description" + i,
+                        "picURL" + i))
+                .collect(Collectors.toList());
+        categoryRepo.saveAll(category);
+        ResultActions perform = this.mockMvc.perform(get("/category/sort/{field}", "id")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .param("pageNumber", "5")
+                .param("pageSize", "10"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        MvcResult mvcResult = perform.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String content = response.getContentAsString();
+        assertTrue(content.contains("title51"));
+    }
+
+    @Test
+    void getCategoriesWithUnValidSortingAndExpectFail() throws Exception {
+        List<CategoryEntity> category = IntStream.rangeClosed(1, 200)
+                .mapToObj(i -> new CategoryEntity(i*1L, "title" + i,
+                        "description" + i,
+                        "picURL" + i))
+                .collect(Collectors.toList());
+        categoryRepo.saveAll(category);
+        ResultActions perform = this.mockMvc.perform(get("/category/sort/{field}", "i2d")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("pageNumber", "5")
+                        .param("pageSize", "10"))
+                .andDo(print())
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void getCategoriesWithUnValidPaginationAndExpectFail() throws Exception {
+        List<CategoryEntity> category = IntStream.rangeClosed(1, 200)
+                .mapToObj(i -> new CategoryEntity(i*1L, "title" + i,
+                        "description" + i,
+                        "picURL" + i))
+                .collect(Collectors.toList());
+        categoryRepo.saveAll(category);
+        ResultActions perform = this.mockMvc.perform(get("/category/sort/{field}", "id")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("pageNumber", "25")
+                        .param("pageSize", "10"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        MvcResult mvcResult = perform.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String content = response.getContentAsString();
+        assertTrue(content.contains("\"numberOfElements\":0"));
     }
 }
