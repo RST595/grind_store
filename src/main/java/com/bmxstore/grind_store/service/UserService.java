@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class UserService {
     private final UserRepo userRepo;
     private final ObjectMapper objectMapper;
 
+    @Autowired
+    private ConfigurationService configurationService;
+
     public Set<UserResponse> getAllUsers() {
         Set<UserResponse> allUsers = new HashSet<>();
         for (UserEntity user : userRepo.findAll()) {
@@ -38,6 +42,7 @@ public class UserService {
     }
 
     public ResponseEntity<ResponseApi> addUser(UserRequest newUser) {
+        configurationService.JsonConf();
         if(newUser.getEmail().replace(" ", "").isEmpty() ||
                 newUser.getPassword().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_NOT_EXIST"));
@@ -57,7 +62,7 @@ public class UserService {
     // TODO: 16.03.2022 also here and all places
     public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) throws JsonMappingException {
         Optional<UserEntity> userById = userRepo.findById(userId);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        configurationService.JsonConf();
         UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
         UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
         newUser.setOrders(oldUser.getOrders());

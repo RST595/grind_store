@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class ProductService {
 
     private final ObjectMapper objectMapper;
     private final CategoryRepo categoryRepo;
+
     //FIXed
     // TODO: 16.03.2022 use constructor and lombok instead
 
@@ -71,7 +73,6 @@ public class ProductService {
     // TODO: 16.03.2022 ask Andrei how to do it properly
     public ResponseEntity<ResponseApi> updateProduct(ProductRequest updatedProduct, Long productId) throws JsonMappingException {
         Optional<ProductEntity> productById = productRepo.findById(productId);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         ProductEntity oldProduct = productById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));
         ProductEntity newProduct = objectMapper.convertValue(updatedProduct, ProductEntity.class);
         if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty()){
