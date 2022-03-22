@@ -58,6 +58,7 @@ class CartControllerTest {
     @BeforeEach
     void cleanRepo(){
         cartRepo.deleteAll();
+
     }
 
     @Test
@@ -72,8 +73,7 @@ class CartControllerTest {
         MvcResult mvcResult = perform.andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         String content = response.getContentAsString();
-        assertTrue(content.contains("NOT_FOUND"));
-
+        assertTrue(content.contains(ErrorMessage.NOT_FOUND.name()));
     }
 
     @Test

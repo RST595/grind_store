@@ -9,6 +9,7 @@ import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.db.repository.ProductRepo;
 import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.bmxstore.grind_store.dto.product.ProductResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -78,6 +79,7 @@ public class ProductService {
         } else {
             newProduct.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
         }
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         oldProduct = objectMapper.updateValue(oldProduct, newProduct);
         productRepo.save(oldProduct);
         return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);

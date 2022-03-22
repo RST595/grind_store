@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +31,11 @@ public class UserService {
 
     @Autowired
     private ConfigurationService configurationService;
+
+//    @PostConstruct
+//    private void init(){
+//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+//    }
 
     public Set<UserResponse> getAllUsers() {
         Set<UserResponse> allUsers = new HashSet<>();
