@@ -84,7 +84,6 @@ public class ProductService {
         } else {
             newProduct.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
         }
-        //objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         oldProduct = objectMapper.updateValue(oldProduct, newProduct);
         productRepo.save(oldProduct);
         return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);

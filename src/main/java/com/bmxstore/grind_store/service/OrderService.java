@@ -1,7 +1,6 @@
 package com.bmxstore.grind_store.service;
 
 import com.bmxstore.grind_store.dto.order.OrderResponse;
-import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
 import com.bmxstore.grind_store.response_api.ResponseApi;

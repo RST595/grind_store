@@ -1,6 +1,5 @@
 package com.bmxstore.grind_store.dto.order;
 
-import com.bmxstore.grind_store.dto.enums.Color;
 import com.bmxstore.grind_store.dto.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
