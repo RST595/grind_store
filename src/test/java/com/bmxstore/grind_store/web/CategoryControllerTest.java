@@ -5,6 +5,8 @@ import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.dto.category.CategoryRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.checkerframework.checker.units.qual.h;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ class CategoryControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @BeforeEach
+    @AfterEach
     void clearRepo() {
         categoryRepo.deleteAll();
     }

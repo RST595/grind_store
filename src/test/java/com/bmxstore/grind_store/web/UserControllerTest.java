@@ -6,6 +6,7 @@ import com.bmxstore.grind_store.dto.enums.UserStatus;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ class UserControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @BeforeEach
+    @AfterEach
     void cleanRepo() {
         orderRepo.deleteAll();
         cartRepo.deleteAll();

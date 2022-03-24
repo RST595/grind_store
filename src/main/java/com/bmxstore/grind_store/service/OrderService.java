@@ -1,5 +1,7 @@
 package com.bmxstore.grind_store.service;
 
+import com.bmxstore.grind_store.dto.order.OrderResponse;
+import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
 import com.bmxstore.grind_store.response_api.ResponseApi;
@@ -7,6 +9,7 @@ import com.bmxstore.grind_store.db.entity.*;
 import com.bmxstore.grind_store.db.repository.*;
 import com.bmxstore.grind_store.dto.enums.OrderStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +29,7 @@ public class OrderService {
 
     private final OrderRepo orderRepo;
     private final CurrencyService currencyService;
+    private final ObjectMapper objectMapper;
 
     private final UserRepo userRepo;
     private final CartRepo cartRepo;
@@ -93,5 +97,17 @@ public class OrderService {
         order.setStatus(status);
         orderRepo.save(order);
         return new ResponseEntity<>(new ResponseApi(true, "Order " + status), HttpStatus.OK);
+    }
+
+    public List<OrderResponse> getListOfUserOrders(Long userId){
+        List<OrderResponse> listOfOrdersResponse = new ArrayList<>();
+        Optional<UserEntity> userById = userRepo.findById(userId);
+        UserEntity user = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
+        List<OrderEntity> listOfOrdersEntity = user.getOrders();
+        for(OrderEntity order : listOfOrdersEntity){
+            OrderResponse orderResponse = objectMapper.convertValue(order, OrderResponse.class);
+            listOfOrdersResponse.add(orderResponse);
+        }
+        return listOfOrdersResponse;
     }
 }

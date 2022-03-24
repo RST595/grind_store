@@ -1,5 +1,7 @@
 package com.bmxstore.grind_store.web;
 
+import com.bmxstore.grind_store.dto.category.CategoryResponse;
+import com.bmxstore.grind_store.dto.order.OrderResponse;
 import com.bmxstore.grind_store.response_api.ResponseApi;
 import com.bmxstore.grind_store.service.OrderService;
 import com.bmxstore.grind_store.dto.enums.OrderStatus;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Tag(name = "Orders", description = "Create new order, make payment for order, change status of orders.")
 @RequestMapping("/order")
@@ -17,6 +21,12 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Operation(summary = "Show all user orders")
+    @GetMapping("/list")
+    public List<OrderResponse> getAllListOfUserOrders(@RequestParam Long userId) {
+        return this.orderService.getListOfUserOrders(userId);
+    }
 
     @Operation(summary = "Create new order")
     @PostMapping("/create")

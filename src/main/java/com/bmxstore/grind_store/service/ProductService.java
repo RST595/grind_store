@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -33,7 +34,11 @@ public class ProductService {
     //FIXed
     // TODO: 16.03.2022 use constructor and lombok instead
 
-
+    @PostConstruct
+    private void init(){
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
 
     public Set<ProductResponse> getAllProducts() {
         Set<ProductResponse> allProducts = new HashSet<>();
@@ -79,7 +84,7 @@ public class ProductService {
         } else {
             newProduct.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
         }
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        //objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         oldProduct = objectMapper.updateValue(oldProduct, newProduct);
         productRepo.save(oldProduct);
         return new ResponseEntity<>(new ResponseApi(true, "product updated"), HttpStatus.OK);

@@ -29,13 +29,11 @@ public class UserService {
     private final UserRepo userRepo;
     private final ObjectMapper objectMapper;
 
-    @Autowired
-    private ConfigurationService configurationService;
-
-//    @PostConstruct
-//    private void init(){
-//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-//    }
+    @PostConstruct
+    private void init(){
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
 
     public Set<UserResponse> getAllUsers() {
         Set<UserResponse> allUsers = new HashSet<>();
@@ -48,7 +46,6 @@ public class UserService {
     }
 
     public ResponseEntity<ResponseApi> addUser(UserRequest newUser) {
-        configurationService.jsonConf();
         if(newUser.getEmail().replace(" ", "").isEmpty() ||
                 newUser.getPassword().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_NOT_EXIST"));
@@ -68,10 +65,10 @@ public class UserService {
     // TODO: 16.03.2022 also here and all places
     public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) throws JsonMappingException {
         Optional<UserEntity> userById = userRepo.findById(userId);
-        configurationService.jsonConf();
         UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
         UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
         newUser.setOrders(oldUser.getOrders());
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         oldUser = objectMapper.updateValue(oldUser, newUser);
         userRepo.save(oldUser);
         return new ResponseEntity<>(new ResponseApi(true, "user updated"), HttpStatus.OK);

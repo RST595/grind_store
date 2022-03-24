@@ -9,6 +9,7 @@ import com.bmxstore.grind_store.dto.enums.UserStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ class OrderControllerTest {
     @Autowired
     ProductRepo productRepo;
 
-    @BeforeEach
+    @AfterEach
     void cleanRepo() {
         orderRepo.deleteAll();
         cartRepo.deleteAll();
@@ -278,6 +279,53 @@ class OrderControllerTest {
         assertTrue(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().stream().anyMatch(order ->
                 order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
+    }
+
+    @Test
+    void getListOfUserOrdersWithValidUserAndExpectOk() throws Exception {
+        userRepo.save(ReturnValidObject.getValidUser());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
+        this.mockMvc.perform(post("/order/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().isCreated());
+        this.mockMvc.perform(get("/order/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().isOk());
+//        assertTrue(cartRepo.findAll().isEmpty());
+//        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+//                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
+    }
+
+    @Test
+    void getListOfUserOrdersWithUnValidUserAndExpectFail() throws Exception {
+        userRepo.save(ReturnValidObject.getValidUser());
+        if (categoryRepo.findAll().isEmpty()) {
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
+        ProductEntity product = ReturnValidObject.getValidProduct();
+        product.setCategoryEntity(categoryRepo.findAll().get(0));
+        productRepo.save(product);
+        cartRepo.save(new CartEntity(productRepo.findAll().get(0), ReturnValidObject.quantity, userRepo.findAll().get(0)));
+        this.mockMvc.perform(post("/order/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
+                .andDo(print())
+                .andExpect(status().isCreated());
+        this.mockMvc.perform(get("/order/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
 }
