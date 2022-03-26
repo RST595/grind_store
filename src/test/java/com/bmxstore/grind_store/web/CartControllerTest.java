@@ -59,7 +59,8 @@ class CartControllerTest {
     @AfterEach
     void cleanRepo(){
         cartRepo.deleteAll();
-
+        productRepo.deleteAll();
+        categoryRepo.deleteAll();
     }
 
     @Test
@@ -90,10 +91,11 @@ class CartControllerTest {
 
     }
 
-    @Test
+    @Test //2
     void addToCartAndExpectOk() throws Exception {
-        userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
+        userRepo.save(ReturnValidObject.getValidUser());
+
         ProductEntity product = ReturnValidObject.getValidProduct();
         product.setCategoryEntity(categoryRepo.findAll().get(0));
         productRepo.save(product);
@@ -126,7 +128,7 @@ class CartControllerTest {
                 cart.getQuantity() == ReturnValidObject.quantity * 2));
     }
 
-    @Test
+    @Test //2
     void addToCartWithNoSuchUserAndExpectFail() throws Exception {
         categoryRepo.save(ReturnValidObject.getValidCategory());
         ProductEntity product = ReturnValidObject.getValidProduct();
@@ -140,7 +142,7 @@ class CartControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test
+    @Test //2
     void addToCartWithNoSuchProductAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         this.mockMvc.perform(post("/cart/add")
@@ -151,7 +153,7 @@ class CartControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test
+    @Test //2
     void removeFromCartAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
@@ -168,7 +170,7 @@ class CartControllerTest {
         assertTrue(cartRepo.findAll().isEmpty());
     }
 
-    @Test
+    @Test //2
     void removeFromCartItemWhichNotExistAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
@@ -187,7 +189,7 @@ class CartControllerTest {
         assertFalse(cartRepo.findAll().isEmpty());
     }
 
-    @Test
+    @Test //2
     void removeFromUserWhichNotExistCartItemAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
@@ -206,7 +208,7 @@ class CartControllerTest {
                 cart.getQuantity() == ReturnValidObject.quantity));
     }
 
-    @Test
+    @Test //2
     void updateItemQuantityAndExpectOk() throws Exception {
         int newQuantity = 5;
         userRepo.save(ReturnValidObject.getValidUser());
@@ -227,7 +229,7 @@ class CartControllerTest {
         assertEquals(cart.getQuantity(), newQuantity);
     }
 
-    @Test
+    @Test //2
     void updateCartItemQuantityWhichNotExistAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());

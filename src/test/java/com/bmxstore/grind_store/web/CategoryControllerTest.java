@@ -116,7 +116,9 @@ class CategoryControllerTest {
 
     @Test
     void deleteCategoryAndExpectOk() throws Exception {
-        categoryRepo.save(ReturnValidObject.getValidCategory());
+        if(categoryRepo.findAll().isEmpty()){
+            categoryRepo.save(ReturnValidObject.getValidCategory());
+        }
         this.mockMvc.perform(delete("/category/delete/{title}", "stem")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
