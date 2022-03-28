@@ -15,9 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CurrencyControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
     ObjectMapper objectMapper;
 
     @Autowired
