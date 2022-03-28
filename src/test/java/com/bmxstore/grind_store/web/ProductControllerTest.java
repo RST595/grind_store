@@ -173,7 +173,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
                                 "UPDATED", "stem6.jpg", 7000, 350,
-                                "", Color.BLACK, "stem" )))
+                                null, Color.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().isOk());
