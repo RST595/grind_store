@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.web;
+package com.bmxstore.grind_store.api;
 
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;

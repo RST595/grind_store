@@ -5,7 +5,7 @@ import com.bmxstore.grind_store.db.entity.product.ProductEntity;
 import com.bmxstore.grind_store.db.entity.user.UserEntity;
 import com.bmxstore.grind_store.db.entity.product.ProductColor;
 import com.bmxstore.grind_store.db.entity.user.UserRole;
-import com.bmxstore.grind_store.db.entity.user.UserStatus;
+
 import java.util.ArrayList;
 
 
@@ -14,8 +14,8 @@ public class ReturnValidObject {
     public static final int quantity = 5;
 
     public static UserEntity getValidUser(){
-        return new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", UserRole.USER, UserStatus.ACTIVE, "12345", new ArrayList<>());
+        return new UserEntity("Ivan", "Ivanov", "Saint Petersburg",
+                "ivanov@mail.ru", UserRole.USER, "12345");
     }
 
     public static CategoryEntity getValidCategory(){
@@ -33,8 +33,8 @@ public class ReturnValidObject {
                 "stem.jpg", 5000.0, 250.0, "To fix bar", ProductColor.BLACK,
                 new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>())),
                 ReturnValidObject.quantity,
-                new UserEntity(1L, "Ivan", "Ivanov", "Saint Petersburg",
-                        "ivanov@mail.ru", UserRole.USER, UserStatus.ACTIVE, "12345", new ArrayList<>()));
+                new UserEntity("Ivan", "Ivanov", "Saint Petersburg",
+                        "ivanov@mail.ru", UserRole.USER, "12345"));
     }
 
 }

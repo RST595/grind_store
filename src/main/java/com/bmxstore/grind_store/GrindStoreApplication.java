@@ -12,8 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootConfiguration
 public class GrindStoreApplication {
 
-	//FIXed
-	// TODO: 16.03.2022 fix all sonar issues include naming violations
 	public static void main(String[] args) {
 		SpringApplication.run(GrindStoreApplication.class, args);
 	}

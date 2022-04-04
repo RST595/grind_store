@@ -1,8 +1,7 @@
-package com.bmxstore.grind_store.web;
+package com.bmxstore.grind_store.api;
 
 import com.bmxstore.grind_store.db.repository.*;
 import com.bmxstore.grind_store.db.entity.user.UserRole;
-import com.bmxstore.grind_store.db.entity.user.UserStatus;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -157,16 +156,9 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
-        //FIXed
-        // TODO: 16.03.2022 use search like this in all places
+
         assertFalse(userRepo.findAll().stream().anyMatch(user ->
-                user.getEmail().equals("ivanov@mail.ru") && user.getStatus().equals(UserStatus.ACTIVE)));
-        //List<UserEntity> all = userRepo.findAll();
-//        for(UserEntity user : all){
-//            if(user.getEmail().equals("ivanov@mail.ru") && user.getStatus().equals(UserStatus.ACTIVE)){
-//                throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("NOT_EMPTY"));
-//            }
-//        }
+                user.getEmail().equals("ivanov@mail.ru") && user.isEnabled()));
     }
 
     @Test

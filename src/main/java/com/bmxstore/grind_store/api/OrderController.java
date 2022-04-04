@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.web;
+package com.bmxstore.grind_store.api;
 
 import com.bmxstore.grind_store.dto.order.OrderResponse;
 import com.bmxstore.grind_store.response_api.ResponseApi;

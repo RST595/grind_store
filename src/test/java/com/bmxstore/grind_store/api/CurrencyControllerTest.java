@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.web;
+package com.bmxstore.grind_store.api;
 
 import com.bmxstore.grind_store.service.CurrencyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest

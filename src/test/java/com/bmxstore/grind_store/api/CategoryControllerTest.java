@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.web;
+package com.bmxstore.grind_store.api;
 
 import com.bmxstore.grind_store.db.entity.CategoryEntity;
 import com.bmxstore.grind_store.db.repository.CategoryRepo;
