@@ -7,7 +7,6 @@ import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
 import com.bmxstore.grind_store.response_api.ResponseApi;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +26,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
+    private static final String USER_NOT_FOUND_MSG = "user with email %s not found";
 
     private final UserRepo userRepo;
     private final ObjectMapper objectMapper;
@@ -38,12 +36,6 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(
                                     String.format(USER_NOT_FOUND_MSG, email)));
-    }
-
-    @PostConstruct
-    private void init(){
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     public Set<UserResponse> getAllUsers() {
@@ -78,7 +70,6 @@ public class UserService implements UserDetailsService {
         UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
         UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
         newUser.setOrders(oldUser.getOrders());
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         oldUser = objectMapper.updateValue(oldUser, newUser);
         userRepo.save(oldUser);
         return new ResponseEntity<>(new ResponseApi(true, "user updated"), HttpStatus.OK);

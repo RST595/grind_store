@@ -1,6 +1,7 @@
 package com.bmxstore.grind_store.service;
 
 import com.bmxstore.grind_store.db.entity.order.OrderEntity;
+import com.bmxstore.grind_store.db.entity.order.OrderItemEntity;
 import com.bmxstore.grind_store.db.entity.user.UserEntity;
 import com.bmxstore.grind_store.dto.order.OrderResponse;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;

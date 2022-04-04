@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.db.repository;
 
-import com.bmxstore.grind_store.db.entity.OrderItemEntity;
+import com.bmxstore.grind_store.db.entity.order.OrderItemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

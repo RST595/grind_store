@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.db.entity;
+package com.bmxstore.grind_store.db.entity.order;
 
 import com.bmxstore.grind_store.db.entity.order.OrderEntity;
 import com.bmxstore.grind_store.db.entity.product.ProductEntity;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor

@@ -9,7 +9,6 @@ import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.db.repository.ProductRepo;
 import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.bmxstore.grind_store.dto.product.ProductResponse;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -30,15 +28,6 @@ public class ProductService {
 
     private final ObjectMapper objectMapper;
     private final CategoryRepo categoryRepo;
-
-    //FIXed
-    // TODO: 16.03.2022 use constructor and lombok instead
-
-    @PostConstruct
-    private void init(){
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    }
 
     public Set<ProductResponse> getAllProducts() {
         Set<ProductResponse> allProducts = new HashSet<>();
@@ -73,8 +62,7 @@ public class ProductService {
         productRepo.save(productEntity);
         return new ResponseEntity<>(new ResponseApi(true, "product added"), HttpStatus.CREATED);
     }
-    //FIXed, but this method doesn't prevent from strings from spaces
-    // TODO: 16.03.2022 ask Andrei how to do it properly
+
     public ResponseEntity<ResponseApi> updateProduct(ProductRequest updatedProduct, Long productId) throws JsonMappingException {
         Optional<ProductEntity> productById = productRepo.findById(productId);
         ProductEntity oldProduct = productById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));

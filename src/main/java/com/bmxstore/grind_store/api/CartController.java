@@ -17,11 +17,8 @@ import java.util.List;
 @RequestMapping("/cart")
 public class CartController {
 
-
-
     @Autowired
     private CartService cartService;
-
 
     @Operation(summary = "Show all items in user cart")
     @GetMapping("/list")
