@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.dto.product;
 
-import com.bmxstore.grind_store.dto.enums.Color;
+import com.bmxstore.grind_store.db.entity.product.ProductColor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +16,6 @@ public class ProductRequest {
     private double price;
     private double weight;
     private String description;
-    private Color color;
+    private ProductColor productColor;
     private String categoryTitle;
 }

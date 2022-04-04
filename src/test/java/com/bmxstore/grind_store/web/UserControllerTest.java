@@ -1,8 +1,8 @@
 package com.bmxstore.grind_store.web;
 
 import com.bmxstore.grind_store.db.repository.*;
-import com.bmxstore.grind_store.dto.enums.Role;
-import com.bmxstore.grind_store.dto.enums.UserStatus;
+import com.bmxstore.grind_store.db.entity.user.UserRole;
+import com.bmxstore.grind_store.db.entity.user.UserStatus;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,7 +63,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Ivan", "Ivanov",
-                                "Saint Petersburg", "ivanov@mail.ru", Role.USER, "12345"))))
+                                "Saint Petersburg", "ivanov@mail.ru", UserRole.USER, "12345"))))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
         assertTrue(userRepo.findAll().stream().anyMatch(user ->
@@ -76,7 +76,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
-                                "Moscow", "ivanov@mail.ru", Role.USER, "54321"))))
+                                "Moscow", "ivanov@mail.ru", UserRole.USER, "54321"))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -86,7 +86,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
-                                "Moscow", "", Role.USER, "54321"))))
+                                "Moscow", "", UserRole.USER, "54321"))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -96,7 +96,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
-                                "Moscow", "   ", Role.USER, "54321"))))
+                                "Moscow", "   ", UserRole.USER, "54321"))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -106,7 +106,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
-                                "Moscow", "shin@gmail.com", Role.USER, ""))))
+                                "Moscow", "shin@gmail.com", UserRole.USER, ""))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -116,7 +116,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
-                                "Moscow", "shin@gmail.com", Role.USER, "   "))))
+                                "Moscow", "shin@gmail.com", UserRole.USER, "   "))))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
     }
@@ -128,7 +128,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Jeff", "Carrot",
-                                "Chicago", "ivanov@mail.ru", Role.USER, "")))
+                                "Chicago", "ivanov@mail.ru", UserRole.USER, "")))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
@@ -143,7 +143,7 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Jeff", "Carrot",
-                                "Chicago", "ivanov@mail.ru", Role.USER, "   ")))
+                                "Chicago", "ivanov@mail.ru", UserRole.USER, "   ")))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());

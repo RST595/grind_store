@@ -1,6 +1,6 @@
-package com.bmxstore.grind_store.db.entity;
+package com.bmxstore.grind_store.db.entity.product;
 
-import com.bmxstore.grind_store.dto.enums.Color;
+import com.bmxstore.grind_store.db.entity.CategoryEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +29,7 @@ public class ProductEntity {
     private double price;
     private double weight;
     private String description;
-    private Color color;
+    private ProductColor productColor;
 
 
     @JsonIgnore

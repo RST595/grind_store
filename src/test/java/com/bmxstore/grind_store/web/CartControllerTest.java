@@ -3,7 +3,7 @@ package com.bmxstore.grind_store.web;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
 import com.bmxstore.grind_store.db.entity.CartEntity;
-import com.bmxstore.grind_store.db.entity.ProductEntity;
+import com.bmxstore.grind_store.db.entity.product.ProductEntity;
 import com.bmxstore.grind_store.db.repository.CartRepo;
 import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.db.repository.ProductRepo;

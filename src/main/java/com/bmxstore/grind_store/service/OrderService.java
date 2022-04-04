@@ -1,12 +1,14 @@
 package com.bmxstore.grind_store.service;
 
+import com.bmxstore.grind_store.db.entity.order.OrderEntity;
+import com.bmxstore.grind_store.db.entity.user.UserEntity;
 import com.bmxstore.grind_store.dto.order.OrderResponse;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
 import com.bmxstore.grind_store.response_api.ResponseApi;
 import com.bmxstore.grind_store.db.entity.*;
 import com.bmxstore.grind_store.db.repository.*;
-import com.bmxstore.grind_store.dto.enums.OrderStatus;
+import com.bmxstore.grind_store.db.entity.order.OrderStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

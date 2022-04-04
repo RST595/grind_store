@@ -1,26 +1,26 @@
-#spring:
-#  jpa:
-#    database: postgresql
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
-#
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://localhost:5432/parts-store
+spring:
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/parts_store
 #    username: postgres
 #    password: postgres
 
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-  datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
+#spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.H2Dialect
+#  datasource:
+#    driverClassName: org.h2.Driver
+#    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
 
 variables:
   currencyFrom: RUB

@@ -3,7 +3,7 @@ package com.bmxstore.grind_store.web;
 import com.bmxstore.grind_store.dto.order.OrderResponse;
 import com.bmxstore.grind_store.response_api.ResponseApi;
 import com.bmxstore.grind_store.service.OrderService;
-import com.bmxstore.grind_store.dto.enums.OrderStatus;
+import com.bmxstore.grind_store.db.entity.order.OrderStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

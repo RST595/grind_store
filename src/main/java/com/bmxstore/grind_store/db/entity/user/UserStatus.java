@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.dto.enums;
+package com.bmxstore.grind_store.db.entity.user;
 
 public enum UserStatus {
     ACTIVE,

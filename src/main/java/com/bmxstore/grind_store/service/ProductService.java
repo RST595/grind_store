@@ -4,7 +4,7 @@ import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
 import com.bmxstore.grind_store.response_api.ResponseApi;
 import com.bmxstore.grind_store.db.entity.CategoryEntity;
-import com.bmxstore.grind_store.db.entity.ProductEntity;
+import com.bmxstore.grind_store.db.entity.product.ProductEntity;
 import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.db.repository.ProductRepo;
 import com.bmxstore.grind_store.dto.product.ProductRequest;

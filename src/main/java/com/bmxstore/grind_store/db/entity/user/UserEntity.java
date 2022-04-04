@@ -1,7 +1,6 @@
-package com.bmxstore.grind_store.db.entity;
+package com.bmxstore.grind_store.db.entity.user;
 
-import com.bmxstore.grind_store.dto.enums.Role;
-import com.bmxstore.grind_store.dto.enums.UserStatus;
+import com.bmxstore.grind_store.db.entity.order.OrderEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +33,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private Role role;
+    private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
     @Column

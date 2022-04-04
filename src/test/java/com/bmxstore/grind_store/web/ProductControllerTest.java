@@ -1,9 +1,9 @@
 package com.bmxstore.grind_store.web;
 
 import com.bmxstore.grind_store.db.entity.CategoryEntity;
-import com.bmxstore.grind_store.db.entity.ProductEntity;
+import com.bmxstore.grind_store.db.entity.product.ProductEntity;
 import com.bmxstore.grind_store.db.repository.*;
-import com.bmxstore.grind_store.dto.enums.Color;
+import com.bmxstore.grind_store.db.entity.product.ProductColor;
 import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,7 +73,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Elementary V3",
                                 "PCODE123", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
+                                "To fix bar", ProductColor.BLACK, "stem" ))))
                 .andDo(print())
                 .andExpect(status().isCreated());
         assertTrue(productRepo.findAll().stream().anyMatch(product ->
@@ -92,7 +92,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss V2",
                                 "PCODE123", "stemNew.jpg", 6000, 312,
-                                "To fix bar", Color.BLACK, "stem" ))))
+                                "To fix bar", ProductColor.BLACK, "stem" ))))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -106,7 +106,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("",
                                 "PCODE123", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
+                                "To fix bar", ProductColor.BLACK, "stem" ))))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable());
     }
@@ -120,7 +120,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("    ",
                                 "PCODE123", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
+                                "To fix bar", ProductColor.BLACK, "stem" ))))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable());
     }
@@ -134,7 +134,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
                                 "", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
+                                "To fix bar", ProductColor.BLACK, "stem" ))))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable());
     }
@@ -148,7 +148,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Broc",
                                 "  ", "stem.jpg", 5000, 250,
-                                "To fix bar", Color.BLACK, "stem" ))))
+                                "To fix bar", ProductColor.BLACK, "stem" ))))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable());
     }
@@ -167,7 +167,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
                                 "UPDATED", "stem6.jpg", 7000, 350,
-                                null, Color.BLACK, "stem" )))
+                                null, ProductColor.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -188,7 +188,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductRequest("Odyssey Boss",
                                 "UPDATED", "stem6.jpg", 7000, 350,
-                                "To fix bar", Color.BLACK, "stem" )))
+                                "To fix bar", ProductColor.BLACK, "stem" )))
                         .param("productId", String.valueOf(productRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable());
