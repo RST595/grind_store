@@ -36,11 +36,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login").permitAll()
                     //place to redirect after successful authentication
                     .defaultSuccessUrl("/panel", true)
+                    .passwordParameter("password") //specify name of parameter for html
+                    .usernameParameter("username") //specify name of parameter for html
                 .and() // extend remember me options to 21 day
                     .rememberMe()
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
                     .key("SecretKeyToGrindStore2022")
-                    .rememberMeParameter("remember-me")
+                    .rememberMeParameter("remember-me") //specify name of parameter for html
                 .and() //logout and clear JSESSIONID and remember-me cookies
                     .logout()
                     .logoutUrl("/logout")
