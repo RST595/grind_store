@@ -14,6 +14,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.bmxstore.grind_store.db.entity.user.UserRole.ADMIN;
+import static com.bmxstore.grind_store.db.entity.user.UserRole.USER;
+
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
@@ -27,10 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/gg/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                    .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
+                    .antMatchers("/panel").hasAnyAuthority(ADMIN.name())
+                    .antMatchers("/order").hasAnyAuthority(USER.name())
+                    .anyRequest()
+                    .authenticated()
                 .and() //custom login page
                     .formLogin()
                     .loginPage("/login").permitAll()
