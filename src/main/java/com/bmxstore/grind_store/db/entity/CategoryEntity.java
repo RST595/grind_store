@@ -24,7 +24,6 @@ public class CategoryEntity {
     @Column(nullable = false, unique = true)
     private String title;
 
-    private String description;
     private String picUrl;
 
     @OneToMany(mappedBy = "categoryEntity",
@@ -40,10 +39,8 @@ public class CategoryEntity {
                 "picUrl=" + picUrl +  '}';
     }
 
-    public CategoryEntity(Long id, String title, String description, String picUrl){
-        this.id = id;
+    public CategoryEntity(String title, String picUrl){
         this.title = title;
-        this.description = description;
         this.picUrl = picUrl;
     }
 

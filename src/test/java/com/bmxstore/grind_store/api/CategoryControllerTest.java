@@ -58,39 +58,42 @@ class CategoryControllerTest {
     void addCategoryAndExpectOk() throws Exception {
         this.mockMvc.perform(post("/category/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "stem.jpg"))))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         assertTrue(categoryRepo.findAll().stream().anyMatch(category ->
                 category.getTitle().equals("stem")));
     }
 
     @Test
     void addSameCategoryTwiceAndExpectFail() throws Exception {
-        categoryRepo.save(new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>()));
+        categoryRepo.save(new CategoryEntity("stem", "stem.jpg"));
         this.mockMvc.perform(post("/category/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "To fix bar", "stem.jpg"))))
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "stem.jpg"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isConflict());
+        assertEquals(categoryRepo.findAll().size(),1);
     }
 
     @Test
     void addCategoryWithEmptyTitleAndExpectFail() throws Exception {
         this.mockMvc.perform(post("/category/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("", "To fix bar", "stem.jpg"))))
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("", "stem.jpg"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
+        assertTrue(categoryRepo.findAll().isEmpty());
     }
 
     @Test
     void addCategoryWithTitleFromSpacesAndExpectFail() throws Exception {
         this.mockMvc.perform(post("/category/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("    ", "To fix bar", "stem.jpg"))))
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("    ", "stem.jpg"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
+        assertTrue(categoryRepo.findAll().isEmpty());
     }
 
     @Test
@@ -98,20 +101,23 @@ class CategoryControllerTest {
         categoryRepo.save(ReturnValidObject.getValidCategory());
         this.mockMvc.perform(post("/category/update/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "New description", "    "))))
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "NewPic"))))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isOk());
         assertTrue(categoryRepo.findAll().stream().anyMatch(category ->
-                category.getDescription().equals("New description")));
+                category.getPicUrl().equals("NewPic")));
     }
 
     @Test
     void updateCategoryWhichNotExist() throws Exception {
+        categoryRepo.save(ReturnValidObject.getValidCategory());
         this.mockMvc.perform(post("/category/update/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem2", "To fix bar", "stem.jpg"))))
+                        .content(objectMapper.writeValueAsString(new CategoryRequest("stem2", "NewPic"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
+        assertTrue(categoryRepo.findAll().stream().anyMatch(category ->
+                category.getPicUrl().equals("stem.jpg")));
     }
 
     @Test
@@ -122,24 +128,28 @@ class CategoryControllerTest {
         this.mockMvc.perform(delete("/category/delete/{title}", "stem")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isOk());
+        assertTrue(categoryRepo.findAll().isEmpty());
         assertFalse(categoryRepo.findAll().stream().anyMatch(category ->
                 category.getTitle().equals("stem")));
     }
 
     @Test
     void deleteCategoryWhichNotExist() throws Exception {
-        this.mockMvc.perform(delete("/category/delete/{title}", "stem")
+        categoryRepo.save(ReturnValidObject.getValidCategory());
+        this.mockMvc.perform(delete("/category/delete/{title}", "stem2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
+        assertFalse(categoryRepo.findAll().isEmpty());
+        assertTrue(categoryRepo.findAll().stream().anyMatch(category ->
+                category.getTitle().equals("stem")));
     }
 
     @Test
     void getCategoriesWithValidPaginationAndExpectOk() throws Exception {
         List<CategoryEntity> category = IntStream.rangeClosed(1, 200)
-                .mapToObj(i -> new CategoryEntity(i*1L, "title" + i,
-                        "description" + i,
+                .mapToObj(i -> new CategoryEntity("title" + i,
                         "picURL" + i))
                 .collect(Collectors.toList());
         categoryRepo.saveAll(category);
@@ -158,8 +168,7 @@ class CategoryControllerTest {
     @Test
     void getCategoriesWithUnValidSortingAndExpectFail() throws Exception {
         List<CategoryEntity> category = IntStream.rangeClosed(1, 200)
-                .mapToObj(i -> new CategoryEntity(i*1L, "title" + i,
-                        "description" + i,
+                .mapToObj(i -> new CategoryEntity("title" + i,
                         "picURL" + i))
                 .collect(Collectors.toList());
         categoryRepo.saveAll(category);
@@ -174,8 +183,7 @@ class CategoryControllerTest {
     @Test
     void getCategoriesWithUnValidPaginationAndExpectFail() throws Exception {
         List<CategoryEntity> category = IntStream.rangeClosed(1, 200)
-                .mapToObj(i -> new CategoryEntity(i*1L, "title" + i,
-                        "description" + i,
+                .mapToObj(i -> new CategoryEntity("title" + i,
                         "picURL" + i))
                 .collect(Collectors.toList());
         categoryRepo.saveAll(category);

@@ -8,6 +8,8 @@ import com.bmxstore.grind_store.db.entity.user.UserRole;
 
 import java.util.ArrayList;
 
+import static com.bmxstore.grind_store.db.entity.user.UserRole.USER;
+
 
 public class ReturnValidObject {
 
@@ -15,11 +17,11 @@ public class ReturnValidObject {
 
     public static UserEntity getValidUser(){
         return new UserEntity("Ivan", "Ivanov", "Saint Petersburg",
-                "ivanov@mail.ru", UserRole.USER, "12345");
+                "ivanov@mail.ru", USER, "12345");
     }
 
     public static CategoryEntity getValidCategory(){
-        return new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>());
+        return new CategoryEntity("stem", "stem.jpg");
     }
 
     public static ProductEntity getValidProduct(){
@@ -31,10 +33,10 @@ public class ReturnValidObject {
     public static CartEntity getValidCart(){
         return new CartEntity(new ProductEntity(1L, "Odyssey Elementary V3", "PCODE123",
                 "stem.jpg", 5000.0, 250.0, "To fix bar", ProductColor.BLACK,
-                new CategoryEntity(1L, "stem", "To fix bar", "stem.jpg", new ArrayList<>())),
+                new CategoryEntity("stem", "stem.jpg")),
                 ReturnValidObject.quantity,
                 new UserEntity("Ivan", "Ivanov", "Saint Petersburg",
-                        "ivanov@mail.ru", UserRole.USER, "12345"));
+                        "ivanov@mail.ru", USER, "12345"));
     }
 
 }

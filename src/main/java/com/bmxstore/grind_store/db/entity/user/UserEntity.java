@@ -18,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+//for entity must: @Entity, no-arg constructor, primary key, class not final
+//@Transient for field to remove it from table
 @Table(name = "store_user")
 public class UserEntity implements UserDetails {
 
