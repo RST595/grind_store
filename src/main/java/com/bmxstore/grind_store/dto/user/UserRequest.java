@@ -15,4 +15,5 @@ public class UserRequest {
     private String email;
     private UserRole userRole;
     private String password;
+    private String confirmPassword;
 }
