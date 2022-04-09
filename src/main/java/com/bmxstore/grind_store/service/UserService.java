@@ -1,6 +1,7 @@
 package com.bmxstore.grind_store.service;
 
 import com.bmxstore.grind_store.db.entity.user.UserEntity;
+import com.bmxstore.grind_store.db.entity.user.UserRole;
 import com.bmxstore.grind_store.db.repository.UserRepo;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.dto.user.UserResponse;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.bmxstore.grind_store.db.entity.user.UserRole.USER;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +52,8 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<ResponseApi> addUser(UserRequest newUser) {
+
+        //TODO: add request check in separate class
         if(newUser.getEmail().replace(" ", "").isEmpty() ||
                 newUser.getPassword().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_NOT_EXIST"));
@@ -61,6 +66,7 @@ public class UserService implements UserDetailsService {
         }
         String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encodePassword);
+        userEntity.setUserRole(USER);
         userRepo.save(userEntity);
         return new ResponseEntity<>(new ResponseApi(true, "user added"), HttpStatus.CREATED);
     }

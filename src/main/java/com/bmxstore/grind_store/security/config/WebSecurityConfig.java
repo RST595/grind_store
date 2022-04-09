@@ -31,10 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/panel").hasAnyAuthority(ADMIN.name(), USER.name())
-                    .antMatchers("/order/**").hasAuthority(ADMIN.name())
-                    .antMatchers().permitAll()
-                    .antMatchers("/", "index", "/css/*", "/js/*", "/swagger-ui/**",
-                            "/registration").permitAll()
+                    .antMatchers("/order/**", "/swagger-ui/**").hasAuthority(ADMIN.name())
+                    .antMatchers("/", "index", "/registration").permitAll()
                     .anyRequest()
                     .authenticated()
                 .and() //custom login page

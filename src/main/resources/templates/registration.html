@@ -10,16 +10,46 @@
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
     <style>
-        body {
-            background-color: #1f1f1f;
-            color: #25bd0b;
+        body, html {
+            height: 100%;
+            margin: 0;
         }
+        body {
+            /* The image used */
+            background-image: url("https://www.odysseybmx.com/dailyword/archivesV2/2020/02/odyssey-wallpaper-february-2020-at-ease.jpg");
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            /*Color of text*/
+            color: #2c2c2c;
+        }
+
+        /*body {*/
+        /*    background-color: #1f1f1f;*/
+        /*    color: #25bd0b;*/
+        /*}*/
+        /*input:invalid:required {*/
+        /*    background-image: linear-gradient(to right, #8f6b6b, #20a220);*/
+        /*    background: #ffffff;*/
+        /*}*/
+        /*input:invalid {*/
+        /*    border: 3px solid #ffe900;*/
+        /*}*/
+        /*input:valid {*/
+        /*    border: 2px solid #7a7777;*/
+        /*}*/
     </style>
 </head>
 <body>
 <p class="container">
     <form class="form-signin" method="post" action="/registration">
-        <h2 class="form-signin-heading" style="text-align: center">register at grind_store</h2>
+        <h2 class="form-signin-heading" style="text-align: center">registration</h2>
         <p>
             <label for="firstName" class="sr-only">First Name</label>
             <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name" required=""
@@ -33,11 +63,12 @@
         <p>
             <label for="address" class="sr-only">Address</label>
             <input type="text" id="address" name="address" class="form-control" placeholder="Address" required=""
-               autofocus="">
+                   minlength="5" autofocus="">
+
         </p>
          <p>
             <label for="email" class="sr-only">email</label>
-            <input type="text" id="email" name="email" class="form-control" placeholder="E-mail" required=""
+            <input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required=""
                autofocus="">
          </p>
         <p>
@@ -50,7 +81,8 @@
             <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
                placeholder="Confirm Password" required="">
         </p>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">register</button>
+        <button class="btn btn-lg btn-info btn-block" type="submit">register</button>
+
     </form>
 </div>
 </body>
