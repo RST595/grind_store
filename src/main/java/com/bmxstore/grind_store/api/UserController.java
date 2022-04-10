@@ -1,7 +1,7 @@
 package com.bmxstore.grind_store.api;
 
 import com.bmxstore.grind_store.response_api.ResponseApi;
-import com.bmxstore.grind_store.service.UserService;
+import com.bmxstore.grind_store.service.user.UserService;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.fasterxml.jackson.databind.JsonMappingException;

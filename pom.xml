@@ -30,7 +30,12 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.5</version> <!--http://:8080/swagger-ui/index.html-->
+			<version>1.6.6</version> <!--http://:8080/swagger-ui/index.html-->
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-security</artifactId>
+			<version>1.6.6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>

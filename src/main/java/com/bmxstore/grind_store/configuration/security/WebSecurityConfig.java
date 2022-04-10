@@ -1,6 +1,6 @@
-package com.bmxstore.grind_store.security.config;
+package com.bmxstore.grind_store.configuration.security;
 
-import com.bmxstore.grind_store.service.UserService;
+import com.bmxstore.grind_store.service.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

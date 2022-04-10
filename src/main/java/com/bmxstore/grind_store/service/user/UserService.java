@@ -1,8 +1,9 @@
-package com.bmxstore.grind_store.service;
+package com.bmxstore.grind_store.service.user;
 
 import com.bmxstore.grind_store.db.entity.user.UserEntity;
 import com.bmxstore.grind_store.db.entity.user.UserRole;
 import com.bmxstore.grind_store.db.repository.UserRepo;
+import com.bmxstore.grind_store.dto.user.AdminRequest;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.bmxstore.grind_store.db.entity.user.UserRole.ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +65,26 @@ public class UserService implements UserDetailsService {
                 throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED_EMAIL"));
             }
         }
+        String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
+        userEntity.setPassword(encodePassword);
+        userRepo.save(userEntity);
+        return new ResponseEntity<>(new ResponseApi(true, "user added"), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<ResponseApi> addAdmin(AdminRequest newAdmin) {
+
+        if(newAdmin.getEmail().replace(" ", "").isEmpty() ||
+                newAdmin.getPassword().replace(" ", "").isEmpty()){
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_NOT_EXIST"));
+        }
+        UserEntity userEntity = objectMapper.convertValue(newAdmin, UserEntity.class);
+        for (UserEntity user : userRepo.findAll()) {
+            if (user.getEmail().equals(newAdmin.getEmail()) && user.isEnabled()) {
+                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED_EMAIL"));
+            }
+        }
+        userEntity.setUserRole(ADMIN);
+        userEntity.setAddress("INTERNAL");
         String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encodePassword);
         userRepo.save(userEntity);

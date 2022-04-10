@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.security;
+package com.bmxstore.grind_store.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -3,9 +3,10 @@ package com.bmxstore.grind_store.web;
 import com.bmxstore.grind_store.db.entity.CategoryEntity;
 import com.bmxstore.grind_store.db.repository.CategoryRepo;
 import com.bmxstore.grind_store.dto.category.WebCategoriesDto;
-import com.bmxstore.grind_store.dto.user.UserRequest;
-import com.bmxstore.grind_store.service.UserService;
+import com.bmxstore.grind_store.dto.user.AdminRequest;
+import com.bmxstore.grind_store.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bmxstore.grind_store.db.entity.user.UserRole.ADMIN;
-
 @Controller
 @RequestMapping("/")
 public class AdminRegistrationController {
+
+    @Value("${variables.keyWord}")
+    private String keyWord;
 
     @Autowired
     private UserService userService;
@@ -28,19 +30,17 @@ public class AdminRegistrationController {
 
     @GetMapping(value = "/registration")
     public String registration(Model model) {
-        model.addAttribute("RegistrationForm", new UserRequest());
+        model.addAttribute("RegistrationForm", new AdminRequest());
 
         return "registration";
     }
 
     @PostMapping(value = "/registration")
-    public String registration(@ModelAttribute("RegistrationForm") UserRequest user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
+    public String registration(@ModelAttribute("RegistrationForm") AdminRequest admin, BindingResult result, Model model) {
+        if (result.hasErrors() || !admin.getKeyWord().equals(keyWord)) {
             return "registration_error";
         }
-        user.setUserRole(ADMIN);
-        user.setAddress("INTERNAL");
-        userService.addUser(user);
+        userService.addAdmin(admin);
         return "redirect:/login";
     }
 
