@@ -32,7 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/panel").hasAnyAuthority(ADMIN.name(), USER.name())
                     .antMatchers("/order/**", "/swagger-ui/**").hasAuthority(ADMIN.name())
-                    .antMatchers("/", "index", "/registration").permitAll()
+                    .antMatchers("/", "index", "/registration", "/allCategories",
+                            "/edit", "/save").permitAll()
                     .anyRequest()
                     .authenticated()
                 .and() //custom login page

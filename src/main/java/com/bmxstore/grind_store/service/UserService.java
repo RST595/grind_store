@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.bmxstore.grind_store.db.entity.user.UserRole.USER;
-
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -66,7 +64,6 @@ public class UserService implements UserDetailsService {
         }
         String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encodePassword);
-        userEntity.setUserRole(USER);
         userRepo.save(userEntity);
         return new ResponseEntity<>(new ResponseApi(true, "user added"), HttpStatus.CREATED);
     }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>edit categories</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
+  <style>
+    body {
+      background-image: linear-gradient(to right, #e974a1, #f5f515);
+      color: #2c2c2c;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: center;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 style="text-align: center">edit categories</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <form action="#" class="form-horizontal"
+            th:action="@{/save}"
+            th:object="${form}"
+            method="post">
+        <fieldset>
+          <table style="width:50%; margin-left:55%;" >
+            <thead>
+            <tr>
+              <th style="width:0"></th>
+              <th style="width:50%">title</th>
+              <th style="width:50%">picture URL</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category, itemStat : ${form.categories}">
+              <td><input hidden th:name="|categories[${itemStat.index}].id|" th:value="${category.getId()}"/></td>
+              <td><input th:placeholder="Title + ' ' + ${itemStat.count}" th:name="|categories[${itemStat.index}].title|"
+                         th:value="${category.getTitle()}"
+                         required/></td>
+              <td><input th:placeholder="Picture + ' ' + ${itemStat.count}" th:name="|categories[${itemStat.index}].picUrl|"
+                         th:value="${category.getPicUrl()}" required/></td>
+            </tr>
+            </tbody>
+          </table>
+          <span style="width:50%; margin-left:70%;">
+            <input type="submit" id="submitButton" class="btn btn-success" th:value="Save">
+            <input type="reset" id="resetButton" class="btn btn-danger" th:value="Reset"/>
+            <a class="btn btn-info" href="#" th:href="@{/allCategories}"> Back to All Categories </a>
+          </span>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
