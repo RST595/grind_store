@@ -2,6 +2,11 @@ package com.bmxstore.grind_store;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
@@ -15,6 +20,8 @@ import javax.annotation.PostConstruct;
 @EnableFeignClients
 @EnableScheduling
 @SpringBootConfiguration
+@OpenAPIDefinition(info = @Info(title = "Grind_Store API", version = "1.0", description = "online shop"))
+@SecurityScheme(name = "swagger", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class GrindStoreApplication {
 
 	@Autowired
