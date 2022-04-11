@@ -20,8 +20,6 @@ import javax.annotation.PostConstruct;
 @EnableFeignClients
 @EnableScheduling
 @SpringBootConfiguration
-@OpenAPIDefinition(info = @Info(title = "Grind_Store API", version = "1.0", description = "online shop"))
-@SecurityScheme(name = "swagger", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class GrindStoreApplication {
 
 	@Autowired

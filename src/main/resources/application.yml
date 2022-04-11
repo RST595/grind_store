@@ -9,6 +9,10 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/parts_store
 
+springdoc:
+  api-docs:
+    path: /docs/v3/api-docs
+
 variables:
   currencyFrom: RUB
   currencyTo: USD
