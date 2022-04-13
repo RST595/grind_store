@@ -73,7 +73,7 @@ class CategoryControllerTest {
                         .content(objectMapper.writeValueAsString(new CategoryRequest("stem", "stem.jpg"))))
                 .andDo(print())
                 .andExpect(status().isConflict());
-        assertEquals(categoryRepo.findAll().size(),1);
+        assertEquals(1, categoryRepo.findAll().size());
     }
 
     @Test

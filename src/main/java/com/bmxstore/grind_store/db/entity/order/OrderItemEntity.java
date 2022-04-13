@@ -1,6 +1,5 @@
 package com.bmxstore.grind_store.db.entity.order;
 
-import com.bmxstore.grind_store.db.entity.order.OrderEntity;
 import com.bmxstore.grind_store.db.entity.product.ProductEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Data
 @NoArgsConstructor

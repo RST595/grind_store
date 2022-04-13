@@ -30,7 +30,7 @@ public class CategoryController {
     @Operation(summary = "Show all available categories with sorting")
     @GetMapping("/sort/{field}")
     public Page<CategoryResponse> getCategoriesWithPaginationAndSort(
-            @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
             @PathVariable String field) {
         return categoryService.findCategoriesWithPaginationAndSorting(pageNumber, pageSize, field);

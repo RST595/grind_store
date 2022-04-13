@@ -1,5 +1,7 @@
 package com.bmxstore.grind_store.api;
 
+import com.bmxstore.grind_store.dto.user.UserPage;
+import com.bmxstore.grind_store.dto.user.UserSearchCriteria;
 import com.bmxstore.grind_store.response_api.ResponseApi;
 import com.bmxstore.grind_store.service.user.UserService;
 import com.bmxstore.grind_store.dto.user.UserRequest;
@@ -9,6 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,22 @@ public class UserController {
     @GetMapping("/list")
     public Set<UserResponse> getAllUsers() {
         return this.userService.getAllUsers();
+    }
+
+    @Operation(summary = "Show all registered users with filer and sorting")
+    @GetMapping("/search")
+    public Page<UserResponse> getUsersPageFilter(
+            @RequestParam (value = "page number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam (value = "page size", required = false, defaultValue = "10") int pageSize,
+            @RequestParam (value = "Sort direction", required = false) Direction sortDirection,
+            @RequestParam (value = "sort by", required = false, defaultValue = "lastName") String sortBy,
+            @RequestParam (value = "Firs name", required = false) String firstName,
+            @RequestParam (value = "Last name", required = false) String lastName,
+            @RequestParam (value = "e-mail", required = false) String email,
+            @RequestParam (value = "Address", required = false) String address) {
+        UserPage userPage = new UserPage(pageNumber, pageSize, sortDirection, sortBy);
+        UserSearchCriteria userSearchCriteria = new UserSearchCriteria(firstName, lastName, email, address);
+        return userService.getUserWithSortingANdFiltering(userPage, userSearchCriteria);
     }
 
     @Operation(summary = "Sign up new user")
