@@ -16,7 +16,8 @@
         }
         body {
             /* The image used */
-            background-image: url("https://www.odysseybmx.com/dailyword/archivesV2/2020/02/odyssey-wallpaper-february-2020-at-ease.jpg");
+            background-image: linear-gradient(to right, #e974a1, #f5f515);
+            color: #2c2c2c;
 
             /* Full height */
             height: 100%;
@@ -33,7 +34,7 @@
 </head>
 <body>
 <p class="container">
-    <form class="form-signin" method="post" action="/registration">
+    <form class="form-signin" method="post" action="/admin/registration">
         <h2 class="form-signin-heading" style="text-align: center">registration</h2>
         <p>
             <label for="firstName" class="sr-only">First Name</label>
@@ -66,7 +67,9 @@
                placeholder="Confirm Password" minlength="5" required="">
         </p>
         <button class="btn btn-lg btn-info btn-block" type="submit">register</button>
-
+    </form>
+    <form class="form-signin" method="get" action="/login">
+        <button class="btn btn-lg btn-info btn-block" type="submit">back to login</button>
     </form>
 </div>
 </body>

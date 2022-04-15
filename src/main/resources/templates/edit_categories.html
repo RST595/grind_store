@@ -33,11 +33,11 @@
   <div class="row">
     <div class="col-md-6">
       <form action="#" class="form-horizontal"
-            th:action="@{/save}"
+            th:action="@{/categories/save}"
             th:object="${form}"
             method="post">
         <fieldset>
-          <legend>Categories</legend>
+          <legend></legend>
           <table aria-describedby="categories" style="width:50%; margin-left:55%;" >
             <thead>
             <tr>
@@ -60,7 +60,7 @@
           <span style="width:50%; margin-left:70%;">
             <input type="submit" id="submitButton" class="btn btn-success" th:value="Save">
             <input type="reset" id="resetButton" class="btn btn-danger" th:value="Reset"/>
-            <a class="btn btn-info" href="#" th:href="@{/allCategories}"> Back to All Categories </a>
+            <a class="btn btn-info" href="#" th:href="@{/categories/all}"> back to all categories </a>
           </span>
         </fieldset>
       </form>

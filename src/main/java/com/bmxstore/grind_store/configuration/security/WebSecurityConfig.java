@@ -30,17 +30,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/panel").hasAnyAuthority(ADMIN.name(), USER.name())
-                    .antMatchers("/order/**", "/user/**", "/swagger-ui/**").hasAuthority(ADMIN.name())
-                    .antMatchers("/", "index", "/registration", "/allCategories",
-                            "/edit", "/save").permitAll()
+                    .antMatchers("/categories/all").hasAnyAuthority(ADMIN.name(), USER.name())
+                    .antMatchers("/", "index", "/admin/registration").permitAll()
+                    .antMatchers("/**").hasAuthority(ADMIN.name())
                     .anyRequest()
                     .authenticated()
                 .and() //custom login page
                     .formLogin()
                     .loginPage("/login").permitAll()
                     //place to redirect after successful authentication
-                    .defaultSuccessUrl("/panel", true)
+                    .defaultSuccessUrl("/admin/panel", true)
                     .passwordParameter("password") //specify name of parameter for html
                     .usernameParameter("username") //specify name of parameter for html
                 .and() // extend remember me options to 21 day
