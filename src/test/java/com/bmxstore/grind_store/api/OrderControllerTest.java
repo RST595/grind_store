@@ -1,9 +1,9 @@
 package com.bmxstore.grind_store.api;
 
-import com.bmxstore.grind_store.db.entity.*;
-import com.bmxstore.grind_store.db.entity.product.ProductEntity;
-import com.bmxstore.grind_store.db.repository.*;
-import com.bmxstore.grind_store.db.entity.order.OrderStatus;
+import com.bmxstore.grind_store.database.entity.*;
+import com.bmxstore.grind_store.database.entity.product.ProductEntity;
+import com.bmxstore.grind_store.database.repository.*;
+import com.bmxstore.grind_store.database.entity.order.OrderStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;

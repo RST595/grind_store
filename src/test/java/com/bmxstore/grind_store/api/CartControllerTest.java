@@ -2,12 +2,12 @@ package com.bmxstore.grind_store.api;
 
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
-import com.bmxstore.grind_store.db.entity.CartEntity;
-import com.bmxstore.grind_store.db.entity.product.ProductEntity;
-import com.bmxstore.grind_store.db.repository.CartRepo;
-import com.bmxstore.grind_store.db.repository.CategoryRepo;
-import com.bmxstore.grind_store.db.repository.ProductRepo;
-import com.bmxstore.grind_store.db.repository.UserRepo;
+import com.bmxstore.grind_store.database.entity.CartEntity;
+import com.bmxstore.grind_store.database.entity.product.ProductEntity;
+import com.bmxstore.grind_store.database.repository.CartRepo;
+import com.bmxstore.grind_store.database.repository.CategoryRepo;
+import com.bmxstore.grind_store.database.repository.ProductRepo;
+import com.bmxstore.grind_store.database.repository.UserRepo;
 import com.bmxstore.grind_store.dto.cart.AddToCartRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;

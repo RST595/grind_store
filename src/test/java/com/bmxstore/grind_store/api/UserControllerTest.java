@@ -1,7 +1,7 @@
 package com.bmxstore.grind_store.api;
 
-import com.bmxstore.grind_store.db.repository.*;
-import com.bmxstore.grind_store.db.entity.user.UserRole;
+import com.bmxstore.grind_store.database.repository.*;
+import com.bmxstore.grind_store.database.entity.user.UserRole;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

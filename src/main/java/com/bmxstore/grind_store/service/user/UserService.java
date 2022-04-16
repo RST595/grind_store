@@ -1,8 +1,8 @@
 package com.bmxstore.grind_store.service.user;
 
-import com.bmxstore.grind_store.db.entity.user.UserEntity;
-import com.bmxstore.grind_store.db.repository.UserCriteriaRepo;
-import com.bmxstore.grind_store.db.repository.UserRepo;
+import com.bmxstore.grind_store.database.entity.user.UserEntity;
+import com.bmxstore.grind_store.database.repository.UserCriteriaRepo;
+import com.bmxstore.grind_store.database.repository.UserRepo;
 import com.bmxstore.grind_store.dto.user.*;
 import com.bmxstore.grind_store.ex_handler.ErrorMessage;
 import com.bmxstore.grind_store.ex_handler.ServiceError;
@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.bmxstore.grind_store.db.entity.user.UserRole.ADMIN;
+import static com.bmxstore.grind_store.database.entity.user.UserRole.ADMIN;
 
 @Service
 @RequiredArgsConstructor

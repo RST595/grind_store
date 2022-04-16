@@ -1,8 +1,8 @@
 package com.bmxstore.grind_store.configuration;
 
-import com.bmxstore.grind_store.db.entity.user.UserEntity;
-import com.bmxstore.grind_store.db.entity.user.UserRole;
-import com.bmxstore.grind_store.db.repository.UserRepo;
+import com.bmxstore.grind_store.database.entity.user.UserEntity;
+import com.bmxstore.grind_store.database.entity.user.UserRole;
+import com.bmxstore.grind_store.database.repository.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

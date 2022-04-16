@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.dto.category;
 
-import com.bmxstore.grind_store.db.entity.CategoryEntity;
+import com.bmxstore.grind_store.database.entity.CategoryEntity;
 
 import java.util.List;
 

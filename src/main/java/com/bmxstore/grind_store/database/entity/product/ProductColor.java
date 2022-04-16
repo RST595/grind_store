@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.db.entity.product;
+package com.bmxstore.grind_store.database.entity.product;
 
 public enum ProductColor {
     BLACK, WHITE, YELLOW, GREEN, RED, BLUE, CYAN, VIOLET,

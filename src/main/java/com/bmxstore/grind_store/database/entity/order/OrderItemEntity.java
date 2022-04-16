@@ -1,6 +1,6 @@
-package com.bmxstore.grind_store.db.entity.order;
+package com.bmxstore.grind_store.database.entity.order;
 
-import com.bmxstore.grind_store.db.entity.product.ProductEntity;
+import com.bmxstore.grind_store.database.entity.product.ProductEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;

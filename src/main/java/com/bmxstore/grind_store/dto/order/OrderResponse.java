@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.dto.order;
 
-import com.bmxstore.grind_store.db.entity.order.OrderStatus;
+import com.bmxstore.grind_store.database.entity.order.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

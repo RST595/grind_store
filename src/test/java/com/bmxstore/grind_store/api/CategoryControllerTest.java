@@ -1,7 +1,7 @@
 package com.bmxstore.grind_store.api;
 
-import com.bmxstore.grind_store.db.entity.CategoryEntity;
-import com.bmxstore.grind_store.db.repository.CategoryRepo;
+import com.bmxstore.grind_store.database.entity.CategoryEntity;
+import com.bmxstore.grind_store.database.repository.CategoryRepo;
 import com.bmxstore.grind_store.dto.category.CategoryRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

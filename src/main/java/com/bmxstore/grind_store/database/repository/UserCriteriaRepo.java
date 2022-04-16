@@ -1,7 +1,7 @@
-package com.bmxstore.grind_store.db.repository;
+package com.bmxstore.grind_store.database.repository;
 
 
-import com.bmxstore.grind_store.db.entity.user.UserEntity;
+import com.bmxstore.grind_store.database.entity.user.UserEntity;
 import com.bmxstore.grind_store.dto.user.UserPage;
 import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.bmxstore.grind_store.dto.user.UserSearchCriteria;

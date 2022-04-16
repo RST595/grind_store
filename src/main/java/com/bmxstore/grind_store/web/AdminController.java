@@ -1,10 +1,9 @@
 package com.bmxstore.grind_store.web;
 
-import com.bmxstore.grind_store.db.entity.CategoryEntity;
-import com.bmxstore.grind_store.db.repository.CategoryRepo;
+import com.bmxstore.grind_store.database.entity.CategoryEntity;
+import com.bmxstore.grind_store.database.repository.CategoryRepo;
 import com.bmxstore.grind_store.dto.category.CategoryRequest;
 import com.bmxstore.grind_store.dto.category.WebCategoriesDto;
-import com.bmxstore.grind_store.dto.user.AdminRequest;
 import com.bmxstore.grind_store.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
