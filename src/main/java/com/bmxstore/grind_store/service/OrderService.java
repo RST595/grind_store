@@ -1,15 +1,15 @@
 package com.bmxstore.grind_store.service;
 
-import com.bmxstore.grind_store.database.entity.order.OrderEntity;
-import com.bmxstore.grind_store.database.entity.order.OrderItemEntity;
-import com.bmxstore.grind_store.database.entity.user.UserEntity;
+import com.bmxstore.grind_store.data.entity.order.OrderEntity;
+import com.bmxstore.grind_store.data.entity.order.OrderItemEntity;
+import com.bmxstore.grind_store.data.entity.user.UserEntity;
 import com.bmxstore.grind_store.dto.order.OrderResponse;
-import com.bmxstore.grind_store.ex_handler.ErrorMessage;
-import com.bmxstore.grind_store.ex_handler.ServiceError;
-import com.bmxstore.grind_store.response_api.ResponseApi;
-import com.bmxstore.grind_store.database.entity.*;
-import com.bmxstore.grind_store.database.repository.*;
-import com.bmxstore.grind_store.database.entity.order.OrderStatus;
+import com.bmxstore.grind_store.exception_handler.ErrorMessage;
+import com.bmxstore.grind_store.exception_handler.ServiceError;
+import com.bmxstore.grind_store.dto.ServerResponseDTO;
+import com.bmxstore.grind_store.data.entity.*;
+import com.bmxstore.grind_store.data.repository.*;
+import com.bmxstore.grind_store.data.entity.order.OrderStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class OrderService {
     private String currencyTo;
 
     @SneakyThrows
-    public ResponseEntity<ResponseApi> createOrder(Long userId) {
+    public ResponseEntity<ServerResponseDTO> createOrder(Long userId) {
         Double rate = currencyService.getCurrencyRate(currencyTo);
         Optional<UserEntity> user = userRepo.findById(userId);
         UserEntity userEntity = user.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND")));
@@ -69,36 +69,36 @@ public class OrderService {
         order.setTotalPrice(totalOrderPrice);
         order.setOrderItems(userOrderItems);
         orderRepo.save(order);
-        return new ResponseEntity<>(new ResponseApi(true, "Order Created"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "Order Created"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseApi> payForOrder(Long orderId, PaymentRequest card) {
+    public ResponseEntity<ServerResponseDTO> payForOrder(Long orderId, PaymentRequest card) {
         LocalDate now = LocalDate.now();
         LocalDate cardExp = LocalDate.of(card.getExpYear(), card.getExpMonth(), 1);
         Optional<OrderEntity> orderById = orderRepo.findById(orderId);
         OrderEntity order = orderById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("ORDER_NOT_FOUND")));
         if(!order.getStatus().equals(OrderStatus.NEW) && !order.getStatus().equals(OrderStatus.PAYMENT_FAILED)) {
-            return new ResponseEntity<>(new ResponseApi(false, "Order payed/canceled"), HttpStatus.OK);
+            return new ResponseEntity<>(new ServerResponseDTO(false, "Order payed/canceled"), HttpStatus.OK);
         }
         if(card.getCardId() != null && ChronoUnit.YEARS.between(now, cardExp) >= 0 &&
                 ChronoUnit.MONTHS.between(now, cardExp) >= 0){
             order.setStatus(OrderStatus.PAID);
             orderRepo.save(order);
-            return new ResponseEntity<>(new ResponseApi(true, "Order has been paid"), HttpStatus.OK);
+            return new ResponseEntity<>(new ServerResponseDTO(true, "Order has been paid"), HttpStatus.OK);
         } else {
             order.setStatus(OrderStatus.PAYMENT_FAILED);
             orderRepo.save(order);
-            return new ResponseEntity<>(new ResponseApi(false, "Payment fail"), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(new ServerResponseDTO(false, "Payment fail"), HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
 
-    public ResponseEntity<ResponseApi> changeOrderStatus(OrderStatus status, Long orderId) {
+    public ResponseEntity<ServerResponseDTO> changeOrderStatus(OrderStatus status, Long orderId) {
         Optional<OrderEntity> orderById = orderRepo.findById(orderId);
         OrderEntity order = orderById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("ORDER_NOT_FOUND")));
         order.setStatus(status);
         orderRepo.save(order);
-        return new ResponseEntity<>(new ResponseApi(true, "Order " + status), HttpStatus.OK);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "Order " + status), HttpStatus.OK);
     }
 
     public List<OrderResponse> getListOfUserOrders(Long userId){

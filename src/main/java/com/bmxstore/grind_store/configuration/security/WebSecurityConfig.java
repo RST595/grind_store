@@ -14,8 +14,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.bmxstore.grind_store.database.entity.user.UserRole.ADMIN;
-import static com.bmxstore.grind_store.database.entity.user.UserRole.USER;
+import static com.bmxstore.grind_store.data.entity.user.UserRole.ADMIN;
+import static com.bmxstore.grind_store.data.entity.user.UserRole.USER;
 
 @Configuration
 @AllArgsConstructor

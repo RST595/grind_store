@@ -1,12 +1,12 @@
 package com.bmxstore.grind_store.service.user;
 
-import com.bmxstore.grind_store.database.entity.user.UserEntity;
-import com.bmxstore.grind_store.database.repository.UserCriteriaRepo;
-import com.bmxstore.grind_store.database.repository.UserRepo;
+import com.bmxstore.grind_store.data.entity.user.UserEntity;
+import com.bmxstore.grind_store.data.repository.UserCriteriaRepo;
+import com.bmxstore.grind_store.data.repository.UserRepo;
 import com.bmxstore.grind_store.dto.user.*;
-import com.bmxstore.grind_store.ex_handler.ErrorMessage;
-import com.bmxstore.grind_store.ex_handler.ServiceError;
-import com.bmxstore.grind_store.response_api.ResponseApi;
+import com.bmxstore.grind_store.exception_handler.ErrorMessage;
+import com.bmxstore.grind_store.exception_handler.ServiceError;
+import com.bmxstore.grind_store.dto.ServerResponseDTO;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.bmxstore.grind_store.database.entity.user.UserRole.ADMIN;
+import static com.bmxstore.grind_store.data.entity.user.UserRole.ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +58,7 @@ public class UserService implements UserDetailsService {
         return clientCriteriaRepo.findAllWithFilters(userPage, userSearchCriteria);
     }
 
-    public ResponseEntity<ResponseApi> addUser(UserRequest newUser) {
+    public ResponseEntity<ServerResponseDTO> addUser(UserRequest newUser) {
 
         //TODO: add request check in separate class
         if(newUser.getEmail().replace(" ", "").isEmpty() ||
@@ -74,10 +74,10 @@ public class UserService implements UserDetailsService {
         String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encodePassword);
         userRepo.save(userEntity);
-        return new ResponseEntity<>(new ResponseApi(true, "user added"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseApi> addAdmin(AdminRequest newAdmin) {
+    public ResponseEntity<ServerResponseDTO> addAdmin(AdminRequest newAdmin) {
 
         if(newAdmin.getEmail().replace(" ", "").isEmpty() ||
                 newAdmin.getPassword().replace(" ", "").isEmpty()){
@@ -94,25 +94,25 @@ public class UserService implements UserDetailsService {
         String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encodePassword);
         userRepo.save(userEntity);
-        return new ResponseEntity<>(new ResponseApi(true, "user added"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseApi> updateUser(UserRequest updatedUser, Long userId) throws JsonMappingException {
+    public ResponseEntity<ServerResponseDTO> updateUser(UserRequest updatedUser, Long userId) throws JsonMappingException {
         Optional<UserEntity> userById = userRepo.findById(userId);
         UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, USER_NOT_EXIST_MSG));
         UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
         newUser.setOrders(oldUser.getOrders());
         oldUser = objectMapper.updateValue(oldUser, newUser);
         userRepo.save(oldUser);
-        return new ResponseEntity<>(new ResponseApi(true, "user updated"), HttpStatus.OK);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "user updated"), HttpStatus.OK);
     }
 
-    public ResponseEntity<ResponseApi> deleteUser(Long userId) {
+    public ResponseEntity<ServerResponseDTO> deleteUser(Long userId) {
         for(UserEntity user : userRepo.findAll()){
             if(user.getId().equals(userId)){
                 user.setEnabled(false);
                 userRepo.save(user);
-                return new ResponseEntity<>(new ResponseApi(true, "User was deleted"), HttpStatus.OK);
+                return new ResponseEntity<>(new ServerResponseDTO(true, "User was deleted"), HttpStatus.OK);
             }
         }
         throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("NOT_FOUND"));

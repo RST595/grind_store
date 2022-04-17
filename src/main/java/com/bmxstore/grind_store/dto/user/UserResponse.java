@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.dto.user;
 
-import com.bmxstore.grind_store.database.entity.order.OrderEntity;
+import com.bmxstore.grind_store.data.entity.order.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

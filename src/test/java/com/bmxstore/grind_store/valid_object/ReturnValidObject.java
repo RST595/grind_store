@@ -1,11 +1,11 @@
 package com.bmxstore.grind_store.valid_object;
-import com.bmxstore.grind_store.database.entity.CartEntity;
-import com.bmxstore.grind_store.database.entity.CategoryEntity;
-import com.bmxstore.grind_store.database.entity.product.ProductEntity;
-import com.bmxstore.grind_store.database.entity.user.UserEntity;
-import com.bmxstore.grind_store.database.entity.product.ProductColor;
+import com.bmxstore.grind_store.data.entity.CartEntity;
+import com.bmxstore.grind_store.data.entity.CategoryEntity;
+import com.bmxstore.grind_store.data.entity.product.ProductEntity;
+import com.bmxstore.grind_store.data.entity.user.UserEntity;
+import com.bmxstore.grind_store.data.entity.product.ProductColor;
 
-import static com.bmxstore.grind_store.database.entity.user.UserRole.USER;
+import static com.bmxstore.grind_store.data.entity.user.UserRole.USER;
 
 
 public class ReturnValidObject {
