@@ -40,8 +40,7 @@ public class SignInUpController {
         if (result.hasErrors() || !admin.getKeyWord().equals(keyWord)) {
             return "registration_error";
         }
-        userService.addAdmin(admin);
-        return "redirect:/login";
+        return userService.addAdmin(admin);
     }
 
 }

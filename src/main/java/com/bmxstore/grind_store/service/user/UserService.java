@@ -12,6 +12,7 @@ import com.bmxstore.grind_store.service.user.user_filtering.UserSearchCriteria;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,9 @@ import static com.bmxstore.grind_store.data.entity.user.UserRole.ADMIN;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
+    @Value("${variables.keyWord}")
+    private String keyWord;
+
     private static final String USER_NOT_FOUND_MSG = "user with email %s not found";
     private static final ErrorMessage USER_NOT_EXIST_MSG = ErrorMessage.valueOf("USER_NOT_EXIST");
 
@@ -38,6 +42,7 @@ public class UserService implements UserDetailsService {
     private final ObjectMapper objectMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserCriteriaRepo clientCriteriaRepo;
+    private final UserValidation userValidation;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -61,42 +66,31 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<ServerResponseDTO> addUser(UserRequest newUser) {
-
-        //TODO: add request check in separate class
-        if(newUser.getEmail().replace(" ", "").isEmpty() ||
-                newUser.getPassword().replace(" ", "").isEmpty()){
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, USER_NOT_EXIST_MSG);
+        if(userValidation.validateUserRequest(newUser)){
+            UserEntity userEntity = objectMapper.convertValue(newUser, UserEntity.class);
+            String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
+            userEntity.setPassword(encodePassword);
+            userRepo.save(userEntity);
+            return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
         }
-        UserEntity userEntity = objectMapper.convertValue(newUser, UserEntity.class);
-        for (UserEntity user : userRepo.findAll()) {
-            if (user.getEmail().equals(newUser.getEmail()) && user.isEnabled()) {
-                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED_EMAIL"));
-            }
-        }
-        String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
-        userEntity.setPassword(encodePassword);
-        userRepo.save(userEntity);
-        return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
+        throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, USER_NOT_EXIST_MSG);
     }
 
-    public ResponseEntity<ServerResponseDTO> addAdmin(AdminRequest newAdmin) {
-
-        if(newAdmin.getEmail().replace(" ", "").isEmpty() ||
-                newAdmin.getPassword().replace(" ", "").isEmpty()){
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, USER_NOT_EXIST_MSG);
+    public String addAdmin(AdminRequest admin) {
+        if(!admin.getKeyWord().equals(keyWord)){
+            return "registration_error";
         }
-        UserEntity userEntity = objectMapper.convertValue(newAdmin, UserEntity.class);
-        for (UserEntity user : userRepo.findAll()) {
-            if (user.getEmail().equals(newAdmin.getEmail()) && user.isEnabled()) {
-                throw new ServiceError(HttpStatus.CONFLICT, ErrorMessage.valueOf("DUPLICATED_EMAIL"));
-            }
+        UserRequest adminRequest = objectMapper.convertValue(admin, UserRequest.class);
+        adminRequest.setAddress("INTERNAL");
+        adminRequest.setUserRole(ADMIN);
+        if(userValidation.validateUserRequest(adminRequest)){
+            UserEntity userEntity = objectMapper.convertValue(adminRequest, UserEntity.class);
+            String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
+            userEntity.setPassword(encodePassword);
+            userRepo.save(userEntity);
+            return "redirect:/login";
         }
-        userEntity.setUserRole(ADMIN);
-        userEntity.setAddress("INTERNAL");
-        String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
-        userEntity.setPassword(encodePassword);
-        userRepo.save(userEntity);
-        return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
+        return "registration_error";
     }
 
     public ResponseEntity<ServerResponseDTO> updateUser(UserRequest updatedUser, Long userId) {
