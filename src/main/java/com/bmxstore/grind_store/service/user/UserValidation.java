@@ -5,8 +5,8 @@ import com.bmxstore.grind_store.data.repository.UserRepo;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.exception_handler.ErrorMessage;
 import com.bmxstore.grind_store.exception_handler.ServiceError;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +15,13 @@ import org.springframework.stereotype.Service;
 public class UserValidation {
 
     private final UserRepo userRepo;
-    private final ObjectMapper objectMapper;
-    private static final ErrorMessage USER_NOT_EXIST_MSG = ErrorMessage.valueOf("USER_NOT_EXIST");
 
-    //TODO: add request check in separate class
     boolean validateUserRequest(UserRequest newUser){
-        if(newUser.getEmail().replace(" ", "").isEmpty() ||
-                newUser.getPassword().replace(" ", "").isEmpty()){
-            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, USER_NOT_EXIST_MSG);
+        if(!EmailValidator.getInstance().isValid(newUser.getEmail())) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("WRONG_EMAIL"));
+        }
+        if(!newUser.getPassword().equals(newUser.getConfirmPassword())){
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_PASSWORD_FAIL"));
         }
         for (UserEntity user : userRepo.findAll()) {
             if (user.getEmail().equals(newUser.getEmail()) && user.isEnabled()) {

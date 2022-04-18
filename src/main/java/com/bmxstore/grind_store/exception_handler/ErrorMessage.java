@@ -17,6 +17,8 @@ public enum ErrorMessage {
     SERVER_ERROR("Server error"),
     DUPLICATED("Already exits"),
     DUPLICATED_EMAIL("e-mail already exists"),
+    USER_PASSWORD_FAIL("Passwords not the same"),
+    WRONG_EMAIL("e-mail is not valid"),
     RATES_WASNT_FOUNDED("Fail to get currency rates");
 
     private final String message;
