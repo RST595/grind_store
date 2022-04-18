@@ -48,7 +48,7 @@ public class UserController {
         return userService.getUserWithSortingANdFiltering(userPage, userSearchCriteria);
     }
 
-    @Operation(summary = "Sign up new user")
+    @Operation(summary = "Sign up new user (available roles: ADMIN, USER)")
     @PostMapping("/add")
     public ResponseEntity<ServerResponseDTO> addUser(@RequestBody UserRequest newUser) {
         return this.userService.addUser(newUser);

@@ -26,7 +26,8 @@ public class ProductController {
         return this.productService.getAllProducts();
     }
 
-    @Operation(summary = "Add new product to base")
+    @Operation(summary = "Add new product to base " +
+            "(available colors: BLACK, WHITE, YELLOW, GREEN, RED, BLUE, BROWN, GREY)")
     @PostMapping("/add")
     public ResponseEntity<ServerResponseDTO> addProduct(@RequestBody ProductRequest newProduct) {
         return this.productService.addProduct(newProduct);
