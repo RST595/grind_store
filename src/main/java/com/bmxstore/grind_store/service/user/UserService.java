@@ -1,12 +1,14 @@
 package com.bmxstore.grind_store.service.user;
 
 import com.bmxstore.grind_store.data.entity.user.UserEntity;
-import com.bmxstore.grind_store.data.repository.UserCriteriaRepo;
+import com.bmxstore.grind_store.service.user.user_filtering.UserCriteriaRepo;
 import com.bmxstore.grind_store.data.repository.UserRepo;
 import com.bmxstore.grind_store.dto.user.*;
 import com.bmxstore.grind_store.exception_handler.ErrorMessage;
 import com.bmxstore.grind_store.exception_handler.ServiceError;
 import com.bmxstore.grind_store.dto.ServerResponseDTO;
+import com.bmxstore.grind_store.service.user.user_filtering.UserPage;
+import com.bmxstore.grind_store.service.user.user_filtering.UserSearchCriteria;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Page<UserResponse> getUserWithSortingANdFiltering(UserPage userPage,
-                                                          UserSearchCriteria userSearchCriteria) {
+                                                             UserSearchCriteria userSearchCriteria) {
         return clientCriteriaRepo.findAllWithFilters(userPage, userSearchCriteria);
     }
 
@@ -97,12 +99,16 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ServerResponseDTO> updateUser(UserRequest updatedUser, Long userId) throws JsonMappingException {
+    public ResponseEntity<ServerResponseDTO> updateUser(UserRequest updatedUser, Long userId) {
         Optional<UserEntity> userById = userRepo.findById(userId);
         UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, USER_NOT_EXIST_MSG));
         UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
         newUser.setOrders(oldUser.getOrders());
-        oldUser = objectMapper.updateValue(oldUser, newUser);
+        try {
+            oldUser = objectMapper.updateValue(oldUser, newUser);
+        }catch (JsonMappingException e){
+            throw new ServiceError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.valueOf("SERVER_ERROR"));
+        }
         userRepo.save(oldUser);
         return new ResponseEntity<>(new ServerResponseDTO(true, "user updated"), HttpStatus.OK);
     }

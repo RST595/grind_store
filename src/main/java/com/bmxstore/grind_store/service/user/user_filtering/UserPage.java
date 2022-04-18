@@ -1,4 +1,4 @@
-package com.bmxstore.grind_store.dto.user;
+package com.bmxstore.grind_store.service.user.user_filtering;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

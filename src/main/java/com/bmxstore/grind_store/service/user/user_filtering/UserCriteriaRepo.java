@@ -1,10 +1,10 @@
-package com.bmxstore.grind_store.data.repository;
+package com.bmxstore.grind_store.service.user.user_filtering;
 
 
 import com.bmxstore.grind_store.data.entity.user.UserEntity;
-import com.bmxstore.grind_store.dto.user.UserPage;
+import com.bmxstore.grind_store.service.user.user_filtering.UserPage;
 import com.bmxstore.grind_store.dto.user.UserResponse;
-import com.bmxstore.grind_store.dto.user.UserSearchCriteria;
+import com.bmxstore.grind_store.service.user.user_filtering.UserSearchCriteria;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;

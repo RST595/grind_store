@@ -45,4 +45,15 @@ public class ProductEntity {
                 "productCode=" + productCode +
                 "imageURL=" + imageURL + '}';
     }
+
+    public ProductEntity(String name, String productCode, String imageURL, double price,
+                         double weight, String description, ProductColor productColor) {
+        this.name = name;
+        this.productCode = productCode;
+        this.imageURL = imageURL;
+        this.price = price;
+        this.weight = weight;
+        this.description = description;
+        this.productColor = productColor;
+    }
 }

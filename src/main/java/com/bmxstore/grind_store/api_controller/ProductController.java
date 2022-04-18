@@ -36,7 +36,7 @@ public class ProductController {
     @Operation(summary = "Update product info")
     @PostMapping("/update")
     public ResponseEntity<ServerResponseDTO> updateCategory(@RequestBody ProductRequest updatedProduct,
-                                                            @RequestParam Long productId) throws JsonMappingException {
+                                                            @RequestParam Long productId) {
         return this.productService.updateProduct(updatedProduct, productId);
     }
 

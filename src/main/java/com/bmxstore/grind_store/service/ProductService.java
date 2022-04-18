@@ -63,7 +63,7 @@ public class ProductService {
         return new ResponseEntity<>(new ServerResponseDTO(true, "product added"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ServerResponseDTO> updateProduct(ProductRequest updatedProduct, Long productId) throws JsonMappingException {
+    public ResponseEntity<ServerResponseDTO> updateProduct(ProductRequest updatedProduct, Long productId) {
         Optional<ProductEntity> productById = productRepo.findById(productId);
         ProductEntity oldProduct = productById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));
         ProductEntity newProduct = objectMapper.convertValue(updatedProduct, ProductEntity.class);
@@ -72,7 +72,11 @@ public class ProductService {
         } else {
             newProduct.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
         }
-        oldProduct = objectMapper.updateValue(oldProduct, newProduct);
+        try {
+            oldProduct = objectMapper.updateValue(oldProduct, newProduct);
+        }catch (JsonMappingException e){
+            throw new ServiceError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.valueOf("SERVER_ERROR"));
+        }
         productRepo.save(oldProduct);
         return new ResponseEntity<>(new ServerResponseDTO(true, "product updated"), HttpStatus.OK);
     }
