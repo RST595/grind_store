@@ -46,6 +46,7 @@ class CategoryControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "username", authorities = {"USER"})
     void getAllCategories() throws Exception {
         this.mockMvc.perform(get("/category/list")
                     .contentType(MediaType.APPLICATION_JSON))

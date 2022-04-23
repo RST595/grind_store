@@ -1,5 +1,6 @@
 package com.bmxstore.grind_store.api_controller;
 
+import com.bmxstore.grind_store.data.entity.user.UserEntity;
 import com.bmxstore.grind_store.data.repository.*;
 import com.bmxstore.grind_store.data.entity.user.UserRole;
 import com.bmxstore.grind_store.dto.user.AdminRequest;
@@ -11,18 +12,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -84,13 +89,32 @@ class UserControllerTest {
                 .param("email", "nn@gg.com")
                 .param("password", "string")
                 .param("confirmPassword", "string");
-
         this.mockMvc
                 .perform(request)
                 .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login"));
         assertTrue(userRepo.findAll().stream().anyMatch(user ->
                 user.getEmail().equals("nn@gg.com")));
+    }
+
+    @Test
+    void addInvalidAdminAndExpectFail() throws Exception {
+        File login = new ClassPathResource("templates/registration_error.html").getFile();
+        String html = new String(Files.readAllBytes(login.toPath()));
+        RequestBuilder request = post("/admin/registration")
+                .param("firstName", "nn")
+                .param("lastName", "gg")
+                .param("keyWord", "GRIND1234")
+                .param("email", "nn@gg.com")
+                .param("password", "string")
+                .param("confirmPassword", "string");
+        this.mockMvc
+                .perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().string(html))
+                .andDo(print());
+        assertTrue(userRepo.findAll().isEmpty());
     }
 
     @Test
@@ -151,10 +175,11 @@ class UserControllerTest {
         this.mockMvc.perform(post("/user/update/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest("Jeff", "Carrot",
-                                "Chicago", "ivanov@mail.ru", UserRole.USER, "", "")))
+                                "Chicago", "ivanov@mail.ru", UserRole.USER, null, null)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
+        List<UserEntity> users = userRepo.findAll();
         assertTrue(userRepo.findAll().stream().anyMatch(user ->
                 user.getEmail().equals("ivanov@mail.ru") && user.getPassword().equals("12345")
                         && user.getLastName().equals("Carrot")));

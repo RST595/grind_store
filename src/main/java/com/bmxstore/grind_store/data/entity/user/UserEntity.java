@@ -2,6 +2,7 @@ package com.bmxstore.grind_store.data.entity.user;
 
 import com.bmxstore.grind_store.data.entity.order.OrderEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -58,6 +59,8 @@ public class UserEntity implements UserDetails {
         this.password = password;
     }
 
+    @JsonDeserialize(using = CustomAuthorityDeserializer.class) // need because objectMapper.updateValue(T, T)
+    // fails with GrantedAuthority mapping
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
