@@ -20,7 +20,8 @@ public class UserValidation {
         if(!EmailValidator.getInstance().isValid(newUser.getEmail())) {
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("WRONG_EMAIL"));
         }
-        if(!newUser.getPassword().equals(newUser.getConfirmPassword())){
+        if(!newUser.getPassword().equals(newUser.getConfirmPassword()) ||
+                newUser.getPassword().replace(" ", "").isEmpty()){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_PASSWORD_FAIL"));
         }
         for (UserEntity user : userRepo.findAll()) {

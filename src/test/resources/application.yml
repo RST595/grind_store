@@ -13,3 +13,4 @@ spring:
 variables:
   currencyFrom: RUB
   currencyTo: USD
+  keyWord: GRIND

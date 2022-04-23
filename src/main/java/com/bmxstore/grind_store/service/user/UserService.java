@@ -101,6 +101,7 @@ public class UserService implements UserDetailsService {
         try {
             oldUser = objectMapper.updateValue(oldUser, newUser);
         }catch (JsonMappingException e){
+            System.out.println(e);
             throw new ServiceError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.valueOf("SERVER_ERROR"));
         }
         userRepo.save(oldUser);
