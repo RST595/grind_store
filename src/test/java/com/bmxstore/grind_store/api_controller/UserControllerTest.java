@@ -2,6 +2,7 @@ package com.bmxstore.grind_store.api_controller;
 
 import com.bmxstore.grind_store.data.repository.*;
 import com.bmxstore.grind_store.data.entity.user.UserRole;
+import com.bmxstore.grind_store.dto.user.AdminRequest;
 import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,11 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -69,6 +73,24 @@ class UserControllerTest {
                 .andExpect(status().is2xxSuccessful());
         assertTrue(userRepo.findAll().stream().anyMatch(user ->
                 user.getEmail().equals("ivanov@mail.ru")));
+    }
+
+    @Test
+    void addNewAdminAndExpectOk() throws Exception {
+        RequestBuilder request = post("/admin/registration")
+                .param("firstName", "nn")
+                .param("lastName", "gg")
+                .param("keyWord", "GRIND")
+                .param("email", "nn@gg.com")
+                .param("password", "string")
+                .param("confirmPassword", "string");
+
+        this.mockMvc
+                .perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(redirectedUrl("/login"));
+        assertTrue(userRepo.findAll().stream().anyMatch(user ->
+                user.getEmail().equals("nn@gg.com")));
     }
 
     @Test
