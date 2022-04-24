@@ -70,7 +70,7 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         assertTrue(cartRepo.findAll().isEmpty());
         assertFalse(orderRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().stream().anyMatch(order ->
@@ -93,7 +93,7 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
         //FIXed
         // TODO: 16.03.2022 replace with junit assert methods here and in all like this
         assertFalse(cartRepo.findAll().isEmpty());
@@ -113,7 +113,7 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
         assertTrue(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().isEmpty());
     }
@@ -139,7 +139,7 @@ class OrderControllerTest {
                         .content(objectMapper.writeValueAsString(new PaymentRequest("4400550065433211",
                                 2025, 10, "999", "Ivanov"))))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isOk());
         assertTrue(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().stream().anyMatch(order ->
                 order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.PAID)));
@@ -159,14 +159,14 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         this.mockMvc.perform(post("/order/payment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("orderId", String.valueOf(orderRepo.findAll().get(0).getId()))
                         .content(objectMapper.writeValueAsString(new PaymentRequest("4400550065433211",
                                 2020, 10, "999", "Ivanov"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
         assertTrue(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().stream().anyMatch(order ->
                 order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.PAYMENT_FAILED)));
@@ -186,14 +186,14 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         this.mockMvc.perform(post("/order/payment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("orderId", String.valueOf(orderRepo.findAll().get(0).getId() + 1))
                         .content(objectMapper.writeValueAsString(new PaymentRequest("4400550065433211",
                                 2020, 10, "999", "Ivanov"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
         assertTrue(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().stream().anyMatch(order ->
                 order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
@@ -213,7 +213,7 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         this.mockMvc.perform(post("/order/changeStatus")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("orderId", String.valueOf(orderRepo.findAll().get(0).getId()))
@@ -239,13 +239,13 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         this.mockMvc.perform(post("/order/changeStatus")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("orderId", String.valueOf(orderRepo.findAll().get(0).getId() + 1))
                         .param("status", String.valueOf(OrderStatus.SHIPPED)))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
         assertTrue(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().stream().anyMatch(order ->
                 order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
@@ -265,13 +265,13 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         this.mockMvc.perform(post("/order/changeStatus")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("orderId", String.valueOf(orderRepo.findAll().get(0).getId()))
                         .param("status", "SHIPPED2"))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
         assertTrue(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().stream().anyMatch(order ->
                 order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
@@ -297,9 +297,9 @@ class OrderControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().isOk());
-//        assertTrue(cartRepo.findAll().isEmpty());
-//        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
-//                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
+        assertTrue(cartRepo.findAll().isEmpty());
+        assertTrue(orderRepo.findAll().stream().anyMatch(order ->
+                order.getId().equals(orderRepo.findAll().get(0).getId()) && order.getStatus().equals(OrderStatus.NEW)));
     }
 
     @Test

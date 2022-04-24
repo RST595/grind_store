@@ -68,8 +68,6 @@ class CartControllerTest {
                     .param("userId", String.valueOf(1)))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
-        //FIXed
-        // TODO: 16.03.2022 add assert
         MvcResult mvcResult = perform.andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         String content = response.getContentAsString();
@@ -83,10 +81,7 @@ class CartControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
-        //FIXed in previous method. Not sure it's good method.
-        // TODO: 16.03.2022 add assert
-
+                .andExpect(status().isOk());
     }
 
     @Test //2
@@ -102,7 +97,7 @@ class CartControllerTest {
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),5)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         assertFalse(cartRepo.findAll().isEmpty());
         assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
                 cart.getProductEntity().getId().equals(productRepo.findAll().get(0).getId())));
@@ -121,7 +116,7 @@ class CartControllerTest {
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(productRepo.findAll().get(0).getId(),ReturnValidObject.quantity)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
                 cart.getQuantity() == ReturnValidObject.quantity * 2));
     }
@@ -140,7 +135,7 @@ class CartControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test //2
+    @Test
     void addToCartWithNoSuchProductAndExpectFail() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         this.mockMvc.perform(post("/cart/add")
@@ -148,10 +143,10 @@ class CartControllerTest {
                         .content(objectMapper.writeValueAsString(new AddToCartRequest(1L,5)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
-    @Test //2
+    @Test
     void removeFromCartAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         categoryRepo.save(ReturnValidObject.getValidCategory());
@@ -164,7 +159,7 @@ class CartControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         assertTrue(cartRepo.findAll().isEmpty());
     }
 
@@ -181,7 +176,7 @@ class CartControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId()))
                         .param("cartId", String.valueOf(2)))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
         assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
                 cart.getQuantity() == ReturnValidObject.quantity));
         assertFalse(cartRepo.findAll().isEmpty());
@@ -200,13 +195,13 @@ class CartControllerTest {
                         .param("userId", String.valueOf(3))
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
         assertFalse(cartRepo.findAll().isEmpty());
         assertTrue(cartRepo.findAll().stream().anyMatch(cart ->
                 cart.getQuantity() == ReturnValidObject.quantity));
     }
 
-    @Test //2
+    @Test
     void updateItemQuantityAndExpectOk() throws Exception {
         int newQuantity = 5;
         userRepo.save(ReturnValidObject.getValidUser());
@@ -219,7 +214,7 @@ class CartControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("cartId", String.valueOf(cartRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         Optional<CartEntity> cartById = cartRepo.findById(cartRepo.findAll().get(0).getId());
         CartEntity cart = cartById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE,
                 ErrorMessage.valueOf("CART_ITEM_NOT_FOUND")));
@@ -238,6 +233,6 @@ class CartControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("cartId", String.valueOf(2)))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 }

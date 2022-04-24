@@ -14,14 +14,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,6 +58,9 @@ class UserControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @AfterEach
     void cleanRepo() {
         orderRepo.deleteAll();
@@ -75,7 +84,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(new UserRequest("Ivan", "Ivanov",
                                 "Saint Petersburg", "ivanov@mail.ru", UserRole.USER, "12345", "12345"))))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isCreated());
         assertTrue(userRepo.findAll().stream().anyMatch(user ->
                 user.getEmail().equals("ivanov@mail.ru")));
     }
@@ -125,7 +134,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
                                 "Moscow", "ivanov@mail.ru", UserRole.USER, "54321", "54321"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -135,7 +144,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
                                 "Moscow", "", UserRole.USER, "54321", "54321"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
@@ -145,7 +154,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
                                 "Moscow", "   ", UserRole.USER, "54321", "54321"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
@@ -155,7 +164,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
                                 "Moscow", "shin@gmail.com", UserRole.USER, "", ""))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
     }
 
     @Test
@@ -165,7 +174,72 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(new UserRequest("Sergey", "Shin",
                                 "Moscow", "shin@gmail.com", UserRole.USER, "   ", "   "))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotAcceptable());
+    }
+
+    @Test
+    void searchUserWithValidRequestAndExpectOk() throws Exception {
+        userRepo.saveAll(IntStream.rangeClosed(1, 100)
+                .mapToObj(i -> new UserEntity("Firstname" + i, "Lastname" + i, "Address" + i,
+                        "email" + i, UserRole.USER, bCryptPasswordEncoder.encode("string" + i)))
+                .collect(Collectors.toList()));
+        ResultActions perform = this.mockMvc.perform(get("/user/search")
+                        .param("page number", "0")
+                        .param("page size", "10")
+                        .param("Sort direction", "ASC")
+                        .param("sort by", "email")
+                        .param("Firs name", "")
+                        .param("Last name", "")
+                        .param("e-mail", "email10")
+                        .param("Address", ""))
+                .andDo(print())
+                .andExpect(status().isOk());
+        MvcResult mvcResult = perform.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String content = response.getContentAsString();
+        assertTrue(content.contains("email10"));
+    }
+
+    @Test
+    void searchNotExistingUserWithValidRequestAndExpectNotFound() throws Exception {
+        userRepo.saveAll(IntStream.rangeClosed(1, 50)
+                .mapToObj(i -> new UserEntity("Firstname" + i, "Lastname" + i, "Address" + i,
+                        "email" + i, UserRole.USER, bCryptPasswordEncoder.encode("string" + i)))
+                .collect(Collectors.toList()));
+        ResultActions perform = this.mockMvc.perform(get("/user/search")
+                        .param("page number", "0")
+                        .param("page size", "10")
+                        .param("Sort direction", "ASC")
+                        .param("sort by", "email")
+                        .param("Firs name", "")
+                        .param("Last name", "")
+                        .param("e-mail", "email60")
+                        .param("Address", ""))
+                .andDo(print())
+                .andExpect(status().isOk());
+        MvcResult mvcResult = perform.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String content = response.getContentAsString();
+        assertFalse(content.contains("email60"));
+    }
+
+    @Test
+    void searchUserWithInValidRequestAndExpectFail() throws Exception {
+        userRepo.saveAll(IntStream.rangeClosed(1, 100)
+                .mapToObj(i -> new UserEntity("Firstname" + i, "Lastname" + i, "Address" + i,
+                        "email" + i, UserRole.USER, bCryptPasswordEncoder.encode("string" + i)))
+                .collect(Collectors.toList()));
+        ResultActions perform = this.mockMvc.perform(get("/user/search")
+                        .param("page number", "0")
+                        .param("page size", "10")
+                        .param("Sort direction", "ASC213")
+                        .param("sort by", "email")
+                        .param("Firs name", "")
+                        .param("Last name", "")
+                        .param("e-mail", "email10")
+                        .param("Address", ""))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
 
@@ -178,7 +252,7 @@ class UserControllerTest {
                                 "Chicago", "ivanov@mail.ru", UserRole.USER, null, null)))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isOk());
         List<UserEntity> users = userRepo.findAll();
         assertTrue(userRepo.findAll().stream().anyMatch(user ->
                 user.getEmail().equals("ivanov@mail.ru") && user.getPassword().equals("12345")
@@ -194,28 +268,28 @@ class UserControllerTest {
                                 "Chicago", "ivanov@mail.ru", UserRole.USER, "   ", "   ")))
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void deleteProductAndExpectOk() throws Exception {
+    void deleteUserAndExpectOk() throws Exception {
         userRepo.save(ReturnValidObject.getValidUser());
         this.mockMvc.perform(delete("/user/delete/{userId}",
                 Long.toString(userRepo.findAll().get(0).getId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isOk());
 
         assertFalse(userRepo.findAll().stream().anyMatch(user ->
                 user.getEmail().equals("ivanov@mail.ru") && user.isEnabled()));
     }
 
     @Test
-    void deleteProductWhichNotExist() throws Exception {
+    void deleteUserWhichNotExist() throws Exception {
         this.mockMvc.perform(delete("/user/delete/{userId}",
                         "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 }
