@@ -89,42 +89,7 @@ class UserControllerTest {
                 user.getEmail().equals("ivanov@mail.ru")));
     }
 
-    @Test
-    void addNewAdminAndExpectOk() throws Exception {
-        RequestBuilder request = post("/admin/registration")
-                .param("firstName", "nn")
-                .param("lastName", "gg")
-                .param("keyWord", "GRIND")
-                .param("email", "nn@gg.com")
-                .param("password", "string")
-                .param("confirmPassword", "string");
-        this.mockMvc
-                .perform(request)
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
-        assertTrue(userRepo.findAll().stream().anyMatch(user ->
-                user.getEmail().equals("nn@gg.com")));
-    }
 
-    @Test
-    void addInvalidAdminAndExpectFail() throws Exception {
-        File login = new ClassPathResource("templates/registration_error.html").getFile();
-        String html = new String(Files.readAllBytes(login.toPath()));
-        RequestBuilder request = post("/admin/registration")
-                .param("firstName", "nn")
-                .param("lastName", "gg")
-                .param("keyWord", "GRIND1234")
-                .param("email", "nn@gg.com")
-                .param("password", "string")
-                .param("confirmPassword", "string");
-        this.mockMvc
-                .perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().string(html))
-                .andDo(print());
-        assertTrue(userRepo.findAll().isEmpty());
-    }
 
     @Test
     void addUserWithSameEmailTwiceAndExpectFail() throws Exception {
