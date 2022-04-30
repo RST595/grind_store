@@ -8,7 +8,6 @@ import com.bmxstore.grind_store.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ import java.util.List;
 @RequestMapping("/")
 public class AdminController {
 
+    public static final String REDIRECT_TO_ALL_CATEGORISE = "redirect:/categories/all";
 
 
     @Autowired
@@ -27,7 +27,7 @@ public class AdminController {
     private CategoryService categoryService;
 
     @GetMapping("admin/panel")
-    public String getCourses() {
+    public String getAdminPanel() {
         return "admin_panel";
     }
 
@@ -50,25 +50,36 @@ public class AdminController {
     }
 
     @PostMapping(value = "/categories/save")
-    public String saveBooks(@ModelAttribute WebCategoriesDto form, Model model) {
+    public String saveCategoryChange(@ModelAttribute WebCategoriesDto form, Model model) {
         categoryRepo.saveAll(form.getCategories());
 
         model.addAttribute("categories", categoryRepo.findAll());
 
-        return "redirect:/categories/all";
+        return REDIRECT_TO_ALL_CATEGORISE;
     }
 
     @GetMapping(value = "/categories/add")
-    public String registration(Model model) {
+    public String addNewCategory(Model model) {
         model.addAttribute("CategoryForm", new CategoryRequest());
 
         return "add_category";
     }
 
     @PostMapping(value = "/categories/add")
-    public String registration(@ModelAttribute("CategoryForm") CategoryRequest category, BindingResult result, Model model) {
+    public String addNewCategory(@ModelAttribute("CategoryForm") CategoryRequest category) {
         categoryService.addCategory(category);
-        return "redirect:/categories/all";
+        return REDIRECT_TO_ALL_CATEGORISE;
+    }
+
+    @GetMapping(value = "/categories/delete")
+    public String deleteCategory() {
+        return "delete_category";
+    }
+
+    @PostMapping(value = "/categories/delete")
+    public String deleteCategory(@ModelAttribute("title") String title) {
+        categoryService.deleteCategory(title);
+        return REDIRECT_TO_ALL_CATEGORISE;
     }
 }
 

@@ -25,7 +25,7 @@ public class InitData {
     private final CategoryRepo categoryRepo;
     private final ProductRepo productRepo;
 
-    //@Bean
+//    @Bean
     public void initDB(){
         userRepo.saveAll(IntStream.rangeClosed(1, 50)
                 .mapToObj(i -> new UserEntity("Firstname" + i, "Lastname" + i, "Address" + i,

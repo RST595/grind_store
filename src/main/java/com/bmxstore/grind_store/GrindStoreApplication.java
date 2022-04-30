@@ -25,7 +25,7 @@ public class GrindStoreApplication {
 	}
 
 	@PostConstruct
-	private void init(){
+	private void iniObjectMapper(){
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 	}
 }
