@@ -26,7 +26,10 @@ public class ProductEntity {
     private String productCode;
 
     private String imageURL;
+
+    @Column(name = "price_usd")
     private double price;
+
     private double weight;
     private String description;
     private ProductColor productColor;

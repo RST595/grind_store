@@ -59,6 +59,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "username", authorities = {"USER"})
     void getAllProducts() throws Exception {
         this.mockMvc.perform(get("/product/list")
                     .contentType(MediaType.APPLICATION_JSON))

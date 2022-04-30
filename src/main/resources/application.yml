@@ -12,10 +12,6 @@ spring:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
 
-springdoc:
-  api-docs:
-    path: /docs/v3/api-docs
-
 variables:
   currencyFrom: RUB
   currencyTo: USD

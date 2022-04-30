@@ -6,6 +6,7 @@ import com.bmxstore.grind_store.service.OrderService;
 import com.bmxstore.grind_store.data.entity.order.OrderStatus;
 import com.bmxstore.grind_store.dto.order.PaymentRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Orders", description = "Create new order, make payment for order, change status of orders.")
+@SecurityRequirement(name = "swagger")
 @RequestMapping("/order")
 public class OrderController {
 

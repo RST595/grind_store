@@ -5,6 +5,7 @@ import com.bmxstore.grind_store.service.ProductService;
 import com.bmxstore.grind_store.dto.product.ProductRequest;
 import com.bmxstore.grind_store.dto.product.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 @RestController
 @Tag(name = "Products", description = "Show, add, update or delete products.")
+@SecurityRequirement(name = "swagger")
 @RequestMapping("/product")
 public class ProductController {
 

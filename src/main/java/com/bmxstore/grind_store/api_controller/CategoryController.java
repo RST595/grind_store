@@ -5,6 +5,7 @@ import com.bmxstore.grind_store.service.CategoryService;
 import com.bmxstore.grind_store.dto.category.CategoryRequest;
 import com.bmxstore.grind_store.dto.category.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Categories", description = "Add category for items, update or delete.")
+@SecurityRequirement(name = "swagger")
 @RequestMapping("/category")
 public class CategoryController {
 

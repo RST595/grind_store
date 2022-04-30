@@ -56,7 +56,7 @@ public class OrderService {
                 OrderItemEntity orderItem = new OrderItemEntity();
                 orderItem.setProductEntity(cart.getProductEntity());
                 orderItem.setQuantity(cart.getQuantity());
-                orderItem.setPrice(cart.getProductEntity().getPrice() * cart.getQuantity() / rate);
+                orderItem.setPrice(cart.getProductEntity().getPrice() * cart.getQuantity() * rate);
                 orderItem.setOrderEntity(order);
                 userOrderItems.add(orderItem);
                 totalOrderPrice += orderItem.getPrice();
