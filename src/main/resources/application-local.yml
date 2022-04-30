@@ -1,3 +1,6 @@
+server:
+  port : 9191
+
 spring:
   jpa:
     properties:
@@ -13,9 +16,6 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/parts
-
-server:
-  port : 9191
 
 #springdoc:
 #  api-docs:
