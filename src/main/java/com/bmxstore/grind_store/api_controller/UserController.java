@@ -19,7 +19,7 @@ import java.util.Set;
 
 @RestController
 @Tag(name = "Users", description = "Show, add, update or delete user.")
-@SecurityRequirement(name = "swagger")
+//@SecurityRequirement(name = "swagger")
 @RequestMapping("/user")
 public class UserController {
 

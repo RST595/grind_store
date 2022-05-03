@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Shopping Cart", description = "Add item to cart, update, delete.")
-@SecurityRequirement(name = "swagger")
 @RequestMapping("/cart")
 public class CartController {
 

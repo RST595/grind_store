@@ -66,14 +66,14 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<ServerResponseDTO> addUser(UserRequest newUser) {
-        if(userValidation.validateUserRequest(newUser)){
-            UserEntity userEntity = objectMapper.convertValue(newUser, UserEntity.class);
-            String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
-            userEntity.setPassword(encodePassword);
-            userRepo.save(userEntity);
-            return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
+        if(!userValidation.validateUserRequest(newUser)) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, USER_NOT_EXIST_MSG);
         }
-        throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, USER_NOT_EXIST_MSG);
+        UserEntity userEntity = objectMapper.convertValue(newUser, UserEntity.class);
+        String encodePassword = bCryptPasswordEncoder.encode(userEntity.getPassword());
+        userEntity.setPassword(encodePassword);
+        userRepo.save(userEntity);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "user added"), HttpStatus.CREATED);
     }
 
     public String addAdmin(AdminRequest admin) {
@@ -94,6 +94,9 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<ServerResponseDTO> updateUser(UserRequest updatedUser, Long userId) {
+        if(!userValidation.validateUpdateUserRequest(updatedUser)) {
+            throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, USER_NOT_EXIST_MSG);
+        }
         Optional<UserEntity> userById = userRepo.findById(userId);
         UserEntity oldUser = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, USER_NOT_EXIST_MSG));
         UserEntity newUser = objectMapper.convertValue(updatedUser, UserEntity.class);
@@ -103,6 +106,8 @@ public class UserService implements UserDetailsService {
         }catch (JsonMappingException e){
             throw new ServiceError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.valueOf("SERVER_ERROR"));
         }
+        String encodePassword = bCryptPasswordEncoder.encode(oldUser.getPassword());
+        oldUser.setPassword(encodePassword);
         userRepo.save(oldUser);
         return new ResponseEntity<>(new ServerResponseDTO(true, "user updated"), HttpStatus.OK);
     }

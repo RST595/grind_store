@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Categories", description = "Add category for items, update or delete.")
-@SecurityRequirement(name = "swagger")
 @RequestMapping("/category")
 public class CategoryController {
 

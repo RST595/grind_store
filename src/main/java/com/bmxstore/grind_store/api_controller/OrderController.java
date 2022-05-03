@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Orders", description = "Create new order, make payment for order, change status of orders.")
-@SecurityRequirement(name = "swagger")
 @RequestMapping("/order")
 public class OrderController {
 

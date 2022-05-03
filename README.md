@@ -13,8 +13,10 @@ and main with inMemory db (to provide application work on any machine).
 - Add basic authentication to the project.
 - Covered project with Unit tests, coverage more than 80%.
 - Connected outside client with @FeignClient annotation, to get currency rates.
+- Add pagination and sorting off result for categories of goods.
+- Add pagination, sorting and filtering to list of all users.
 - Add exception handler to ensure stable operation of the application.
-- Deployed application at aws instance with docker: link.
+- Deployed application at aws instance with docker: **link**.
 
 ## Available functions
 Bellow I described all available functions of application.
@@ -30,7 +32,7 @@ To register new admin you should provide:
 - valid email: 
   - yy@xx.f, where yy - not less than 1 character or digit;
   - xx, ff - not less than 2 character;
-- Password and confirm password should be equals and not less than 5 symbols
+- Password and confirm password should be equals and not less than 5 symbols.
 
 ### Admin panel
 - All categories - display all added t db categories.
@@ -43,92 +45,47 @@ If title wasn't founded will display json with error message.
 - Swagger-ui - to test other features: add and edit user, products, put products into basket, 
 create orders etc.
 
+### Swagger-UI
+#### User
+- Add - you could add new user with unique email. User role should be USER or ADMIN, password and confirm
+password should be equals.
+- Update - use user id from "/user/list" to update specific user.
+Field role should be "USER", or "ADMIN". For other fields, place null if you don't want to update them.
+Password and confirm password should be equals. Email should be valid:
+   - yy@xx.f, where yy, xx - not less than 1 character or digit;
+   - ff - not less than 2 character;
+- List - show all users from db.
+- Delete - change variable "enabled" for user with provided id from true to false.
+- Search - list of user with pagination, sorting and filtering.
 
-if you want to update product, you should leave category field with "" if you don't want to change it.
-Also, other fields which you don't want to update you should fill with null
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+#### Order
+- Create - place all positions from cart of provided user id into order and calculate total sum in rubles 
+(currency of products in usd). User cart will be cleared.
+- Payment - change order status from NEW or PAYMENT_FAILED to PAID (other statuses not allowed).
+Shod provide not null cardId, expiration date in future (from next month onwards), correct order id.
+- List - show all store orders.
+- Change status - change status of order by id.
 
-User update for role you should use "USER", or "ADMIN"
-For other fields, place null if you don't want to update them
-## Add your files
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+#### Cart
+- Add - create new cart item by user id, product id, and quantity.
+- List - show all cart items (product x quantity) of provided user.
+- Update - change quantity of cart item (card id available from "/cart/list").
+- Remove - delete cart item from user.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/itmo-124-12-diplomas/maksim_rostislavskiy.git
-git branch -M main
-git push -uf origin main
-```
+#### Categories
+- Add - need to provide unique title, not empty string and not null.
+- Update - change URL to category picture. Finds category by title.
+- List - show all categories.
+- Sort - show categories with pagination and sorting by specified field (picUrl or title).
+- Delete - delete category by title. For succeed category should be empty (without products).
 
-## Integrate with your tools
+#### Products
+- Add - need to provide unique productCode, not empty string and not null.
+- Update - update product info by product id. If you don't want to change category,
+you should leave category field with "", or type not existing category.If you don't want to update other fields
+you should fill them with null.
+- List - show all products.
+- Delete - delete product by id.
 
-- [ ] [Set up project integrations](https://gitlab.com/itmo-124-12-diplomas/maksim_rostislavskiy/-/settings/integrations)
 
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.

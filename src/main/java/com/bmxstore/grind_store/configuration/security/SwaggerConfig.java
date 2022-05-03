@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@SecurityScheme(name = "swagger", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+//@SecurityScheme(name = "swagger", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class SwaggerConfig {
 
     @Bean

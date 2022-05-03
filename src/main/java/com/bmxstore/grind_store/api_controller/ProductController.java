@@ -15,7 +15,6 @@ import java.util.Set;
 
 @RestController
 @Tag(name = "Products", description = "Show, add, update or delete products.")
-@SecurityRequirement(name = "swagger")
 @RequestMapping("/product")
 public class ProductController {
 
