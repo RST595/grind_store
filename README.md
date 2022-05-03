@@ -1,13 +1,28 @@
-# Maksim_Rostislavskiy
-
-e commerce application for bicycle store
+# Maksim_Rostislavskiy pet project: GrindStore
 
 ## Getting started
+This id pet project for BMX store e-commerce application.
+At this project I was focusing on backend part, that's why UI presented only for admin registration and 
+editing of category of goods.
+Key achievements:
+- Learn to work with Spring framework and IntelliJ IDEA.
+- Connect project with PostgreSQL database.
+- Used maven to build the project.
+- Add basic authentication to the project.
+- Covered project with Unit tests, coverage more than 80%.
+- Connected outside client with @FeignClient annotation, to get currency rates.
+- Add exception handler to ensure stable operation of the applicationю
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Available functions
+Bellow I described which data application expects in swagger-ui, and 
 
+
+if you want to update product, you should leave category field with "" if you don't want to change it.
+Also, other fields which you don't want to update you should fill with null
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
+User update for role you should use "USER", or "ADMIN"
+For other fields, place null if you don't want to update them
 ## Add your files
 
 - [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
