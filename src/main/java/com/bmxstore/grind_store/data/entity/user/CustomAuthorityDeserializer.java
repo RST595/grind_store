@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 // need because objectMapper.updateValue(T, T) fails with GrantedAuthority mapping
-public class CustomAuthorityDeserializer extends JsonDeserializer {
+public class CustomAuthorityDeserializer extends JsonDeserializer<Object> {
 
     @Override
     public Object deserialize(JsonParser jp, DeserializationContext context) throws IOException {

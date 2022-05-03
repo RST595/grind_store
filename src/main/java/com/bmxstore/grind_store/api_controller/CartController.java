@@ -1,11 +1,10 @@
 package com.bmxstore.grind_store.api_controller;
 
 import com.bmxstore.grind_store.dto.ServerResponseDTO;
-import com.bmxstore.grind_store.service.CartService;
 import com.bmxstore.grind_store.dto.cart.AddToCartRequest;
 import com.bmxstore.grind_store.dto.cart.CartResponse;
+import com.bmxstore.grind_store.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

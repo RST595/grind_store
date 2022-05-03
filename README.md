@@ -20,6 +20,8 @@ and main with inMemory db (to provide application work on any machine).
 
 ## Available functions
 Bellow I described all available functions of application.
+To fill project with some data, you could uncomment line 32 in
+src/main/java/com/bmxstore/grind_store/configuration/InitData.java and restart the application.
 
 ### Admin registration
 At main page you have 2 options: sign in for testing and leave (link to google).

@@ -44,7 +44,7 @@ public class UserEntity implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "userEntity",
             fetch = FetchType.LAZY)
-    private List<OrderEntity> orders;
+    private transient List<OrderEntity> orders;
 
     private Boolean locked = false;
     private Boolean enabled = true;

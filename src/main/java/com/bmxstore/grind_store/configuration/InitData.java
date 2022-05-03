@@ -11,7 +11,6 @@ import com.bmxstore.grind_store.data.repository.CategoryRepo;
 import com.bmxstore.grind_store.data.repository.ProductRepo;
 import com.bmxstore.grind_store.data.repository.UserRepo;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

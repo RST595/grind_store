@@ -34,13 +34,17 @@ public class UserValidation {
 
     boolean validateUpdateUserRequest(UserRequest updatedUser){
 
+        boolean isPasswordNull = false;
+
         if(updatedUser.getEmail() != null && !EmailValidator.getInstance().isValid(updatedUser.getEmail())) {
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("WRONG_EMAIL"));
         }
-        if(updatedUser.getPassword() == null && updatedUser.getConfirmPassword() == null)return true;
-        if((updatedUser.getConfirmPassword() == null && updatedUser.getPassword() != null)
+        if(updatedUser.getPassword() == null && updatedUser.getConfirmPassword() == null) {
+            isPasswordNull = true;
+        }
+        if(!isPasswordNull && ((updatedUser.getConfirmPassword() == null && updatedUser.getPassword() != null)
         || (updatedUser.getConfirmPassword() != null && updatedUser.getPassword() == null)
-        || !updatedUser.getPassword().equals(updatedUser.getConfirmPassword())){
+        || !updatedUser.getPassword().equals(updatedUser.getConfirmPassword()))){
             throw new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("USER_PASSWORD_FAIL"));
         }
         return true;

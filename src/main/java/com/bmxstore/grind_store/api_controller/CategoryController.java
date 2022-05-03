@@ -1,11 +1,10 @@
 package com.bmxstore.grind_store.api_controller;
 
 import com.bmxstore.grind_store.dto.ServerResponseDTO;
-import com.bmxstore.grind_store.service.CategoryService;
 import com.bmxstore.grind_store.dto.category.CategoryRequest;
 import com.bmxstore.grind_store.dto.category.CategoryResponse;
+import com.bmxstore.grind_store.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
