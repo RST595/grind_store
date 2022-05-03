@@ -2,19 +2,46 @@
 
 ## Getting started
 This id pet project for BMX store e-commerce application.
-At this project I was focusing on backend part, that's why UI presented only for admin registration and 
+At this project I was focusing on backend part, that's why UI was added only for admin registration and 
 editing of category of goods.
 Key achievements:
 - Learn to work with Spring framework and IntelliJ IDEA.
 - Connect project with PostgreSQL database.
+- Add separate configuration file: local with Postgres db, 
+and main with inMemory db (to provide application work on any machine).
 - Used maven to build the project.
 - Add basic authentication to the project.
 - Covered project with Unit tests, coverage more than 80%.
 - Connected outside client with @FeignClient annotation, to get currency rates.
-- Add exception handler to ensure stable operation of the applicationю
+- Add exception handler to ensure stable operation of the application.
+- Deployed application at aws instance with docker: link.
 
 ## Available functions
-Bellow I described which data application expects in swagger-ui, and 
+Bellow I described all available functions of application.
+
+### Admin registration
+At main page you have 2 options: sign in for testing and leave (link to google).
+At sign in page, you could sign in to the application, and will be redirected to admin/panel page.
+Or you could sign up new account, and you will be redirected back to login page.
+To register new admin you should provide:
+- some first and last name (not less than 1 character or digit).
+- key word should be GRIND (that's how I'm protecting service from adding new admins from outside).
+  This word could be changed at application.yml file.
+- valid email: 
+  - yy@xx.f, where yy - not less than 1 character or digit;
+  - xx, ff - not less than 2 character;
+- Password and confirm password should be equals and not less than 5 symbols
+
+### Admin panel
+- All categories - display all added t db categories.
+- Edit categories - display editable table from category titles and links to picture.
+  Could save changes by save button, or return to original condition by reset button.
+- Add new category - category title should be unique. Will be redirected to all categories.
+ If title was duplicated will display json with error message.
+- Delete category - category title should present in db. Will be redirected to all categories.
+If title wasn't founded will display json with error message.
+- Swagger-ui - to test other features: add and edit user, products, put products into basket, 
+create orders etc.
 
 
 if you want to update product, you should leave category field with "" if you don't want to change it.
