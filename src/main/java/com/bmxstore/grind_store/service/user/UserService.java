@@ -106,8 +106,8 @@ public class UserService implements UserDetailsService {
         }catch (JsonMappingException e){
             throw new ServiceError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.valueOf("SERVER_ERROR"));
         }
-        String encodePassword = bCryptPasswordEncoder.encode(oldUser.getPassword());
-        oldUser.setPassword(encodePassword);
+        String encodedPassword = bCryptPasswordEncoder.encode(oldUser.getPassword());
+        oldUser.setPassword(encodedPassword);
         userRepo.save(oldUser);
         return new ResponseEntity<>(new ServerResponseDTO(true, "user updated"), HttpStatus.OK);
     }

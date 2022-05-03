@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-//@Tag(name = "Login", description = "Login to application")
 @RequestMapping("/")
 public class SignInUpController {
 

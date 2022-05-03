@@ -105,8 +105,7 @@ public class OrderService {
         List<OrderResponse> listOfOrdersResponse = new ArrayList<>();
         Optional<UserEntity> userById = userRepo.findById(userId);
         UserEntity user = userById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_NOT_EXIST")));
-        List<OrderEntity> listOfOrdersEntity = user.getOrders();
-        for(OrderEntity order : listOfOrdersEntity){
+        for(OrderEntity order : orderRepo.findByUserEntityId(user.getId())){
             OrderResponse orderResponse = objectMapper.convertValue(order, OrderResponse.class);
             listOfOrdersResponse.add(orderResponse);
         }

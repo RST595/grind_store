@@ -317,6 +317,7 @@ class OrderControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().isCreated());
+        userRepo.findAll();
         this.mockMvc.perform(get("/order/list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))

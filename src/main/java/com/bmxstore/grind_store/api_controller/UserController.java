@@ -18,7 +18,7 @@ import java.util.Set;
 
 @RestController
 @Tag(name = "Users", description = "Show, add, update or delete user.")
-//@SecurityRequirement(name = "swagger")
+//use this annotation to secure method or controller in swagger - @SecurityRequirement(name = "swagger")
 @RequestMapping("/user")
 public class UserController {
 

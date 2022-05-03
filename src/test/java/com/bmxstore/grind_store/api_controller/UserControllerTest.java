@@ -218,9 +218,8 @@ class UserControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId())))
                 .andDo(print())
                 .andExpect(status().isOk());
-        List<UserEntity> users = userRepo.findAll();
         assertTrue(userRepo.findAll().stream().anyMatch(user ->
-                user.getEmail().equals("ivanov@mail.ru") && user.getPassword().equals("12345")
+                user.getEmail().equals("ivanov@mail.ru") && bCryptPasswordEncoder.matches("12345", user.getPassword())
                         && user.getLastName().equals("Carrot")));
     }
 
