@@ -1,7 +1,6 @@
 package com.bmxstore.grind_store.api_controller;
 
 import com.bmxstore.grind_store.data.entity.user.UserEntity;
-import com.bmxstore.grind_store.data.entity.user.UserRole;
 import com.bmxstore.grind_store.data.repository.UserRepo;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import org.junit.jupiter.api.AfterEach;
@@ -11,15 +10,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.Files;
 
-import static com.bmxstore.grind_store.data.entity.user.UserRole.ADMIN;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -34,6 +32,7 @@ class SignInUpControllerTest {
 
     @Autowired
     private UserRepo userRepo;
+
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -81,6 +80,39 @@ class SignInUpControllerTest {
     }
 
     @Test
+    void addAdminWithWrongEmailAndExpectFail() throws Exception {
+        RequestBuilder request = post("/admin/registration")
+                .param("firstName", "nn")
+                .param("lastName", "gg")
+                .param("keyWord", "GRIND")
+                .param("email", "nn@gg")
+                .param("password", "string")
+                .param("confirmPassword", "string");
+        this.mockMvc
+                .perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotAcceptable());
+        assertTrue(userRepo.findAll().isEmpty());
+    }
+
+    @Test
+    void addAdminWithPasswordWhichNotMatchAndExpectFail() throws Exception {
+        RequestBuilder request = post("/admin/registration")
+                .param("firstName", "nn")
+                .param("lastName", "gg")
+                .param("keyWord", "GRIND")
+                .param("email", "nn@gg.com")
+                .param("password", "string")
+                .param("confirmPassword", "string2");
+        this.mockMvc
+                .perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotAcceptable());
+        assertTrue(userRepo.findAll().isEmpty());
+    }
+
+    @Test
+    @Transactional
     void loginWithValidUserAndExpectOk() throws Exception {
         UserEntity newUser = ReturnValidObject.getValidUser();
         String newUserPassword = newUser.getPassword();
@@ -94,5 +126,39 @@ class SignInUpControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/panel"));
+    }
+
+    @Test
+    @Transactional
+    void loginWithNotValidUserAndExpectFail() throws Exception {
+        UserEntity newUser = ReturnValidObject.getValidUser();
+        String newUserPassword = newUser.getPassword();
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        userRepo.save(newUser);
+        RequestBuilder request = post("/login")
+                .param("username", "test@mail.ru")
+                .param("password", newUserPassword);
+        this.mockMvc
+                .perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    @Transactional
+    void loginWithNotValidUserPasswordAndExpectFail() throws Exception {
+        UserEntity newUser = ReturnValidObject.getValidUser();
+        String newUserPassword = newUser.getPassword();
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        userRepo.save(newUser);
+        RequestBuilder request = post("/login")
+                .param("username", newUser.getEmail())
+                .param("password", "testFailPas");
+        this.mockMvc
+                .perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"));
     }
 }
