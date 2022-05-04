@@ -79,8 +79,6 @@ class OrderControllerTest {
 
     @Test
     void tryCreateOrderWithNoSuchUserAndExpectFail() throws Exception {
-        //FIXed
-        // TODO: 16.03.2022 remove ivan copypaste
         userRepo.save(ReturnValidObject.getValidUser());
         if(categoryRepo.findAll().isEmpty()){
             categoryRepo.save(ReturnValidObject.getValidCategory());
@@ -94,8 +92,6 @@ class OrderControllerTest {
                         .param("userId", String.valueOf(userRepo.findAll().get(0).getId() + 1)))
                 .andDo(print())
                 .andExpect(status().isNotFound());
-        //FIXed
-        // TODO: 16.03.2022 replace with junit assert methods here and in all like this
         assertFalse(cartRepo.findAll().isEmpty());
         assertTrue(orderRepo.findAll().isEmpty());
     }
