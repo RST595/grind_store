@@ -4,6 +4,7 @@ import com.bmxstore.grind_store.data.entity.user.UserEntity;
 import com.bmxstore.grind_store.data.repository.UserRepo;
 import com.bmxstore.grind_store.valid_object.ReturnValidObject;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.nio.file.Files;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -37,7 +39,7 @@ class SignInUpControllerTest {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @AfterEach
+    @BeforeEach
     void cleanRepo() {
         userRepo.deleteAll();
     }
@@ -66,7 +68,7 @@ class SignInUpControllerTest {
         String html = new String(Files.readAllBytes(login.toPath()));
         RequestBuilder request = post("/admin/registration")
                 .param("firstName", "nn")
-                .param("lastName", "gg")
+                .param("lastName", "gg70")
                 .param("keyWord", "GRIND1234")
                 .param("email", "nn@gg.com")
                 .param("password", "string")
@@ -76,7 +78,8 @@ class SignInUpControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(html))
                 .andDo(print());
-        assertTrue(userRepo.findAll().isEmpty());
+        assertFalse(userRepo.findAll().stream().anyMatch(user ->
+                user.getLastName().equals("gg70")));
     }
 
     @Test

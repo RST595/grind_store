@@ -3,6 +3,7 @@ package com.bmxstore.grind_store.api_controller;
 import com.bmxstore.grind_store.data.entity.CategoryEntity;
 import com.bmxstore.grind_store.data.repository.CategoryRepo;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.nio.file.Files;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,7 +36,7 @@ class AdminControllerTest {
     @Autowired
     private CategoryRepo categoryRepo;
 
-    @AfterEach
+    @BeforeEach
     void cleanRepo() {
         categoryRepo.deleteAll();
     }
@@ -69,17 +71,18 @@ class AdminControllerTest {
     @Test
     void deleteCategoryAndExpectOk() throws Exception {
         assertTrue(categoryRepo.findAll().isEmpty());
-        categoryRepo.save(new CategoryEntity("someName", "somePic"));
+        categoryRepo.save(new CategoryEntity("someName73", "somePic"));
         assertTrue(categoryRepo.findAll().stream().anyMatch(category ->
-                category.getTitle().equals("someName")));
+                category.getTitle().equals("someName73")));
         RequestBuilder request = post("/categories/delete")
-                .param("title", "someName");
+                .param("title", "someName73");
         this.mockMvc
                 .perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/categories/all"));
-        assertTrue(categoryRepo.findAll().isEmpty());
+        assertFalse(categoryRepo.findAll().stream().anyMatch(category ->
+                category.getTitle().equals("someName73")));
     }
 
     @Test
