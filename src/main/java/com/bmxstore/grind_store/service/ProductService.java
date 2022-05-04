@@ -55,9 +55,10 @@ public class ProductService {
             if(category.getTitle().equals(newProduct.getCategoryTitle())) {
                 productEntity.setCategoryEntity(category);
                 break;
-            } else {
-                throw new ServiceError(HttpStatus.BAD_REQUEST, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
             }
+        }
+        if(productEntity.getCategoryEntity() == null){
+            throw new ServiceError(HttpStatus.BAD_REQUEST, ErrorMessage.valueOf("CATEGORY_NOT_EXIST"));
         }
         productRepo.save(productEntity);
         return new ResponseEntity<>(new ServerResponseDTO(true, "product added"), HttpStatus.CREATED);
@@ -67,7 +68,8 @@ public class ProductService {
         Optional<ProductEntity> productById = productRepo.findById(productId);
         ProductEntity oldProduct = productById.orElseThrow(() -> new ServiceError(HttpStatus.NOT_ACCEPTABLE, ErrorMessage.valueOf("PRODUCT_NOT_EXIST")));
         ProductEntity newProduct = objectMapper.convertValue(updatedProduct, ProductEntity.class);
-        if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty()){
+        if(updatedProduct.getCategoryTitle().replace(" ", "").isEmpty() ||
+                categoryRepo.findByTitle(updatedProduct.getCategoryTitle()) == null){
             newProduct.setCategoryEntity(oldProduct.getCategoryEntity());
         } else {
             newProduct.setCategoryEntity(categoryRepo.findByTitle(updatedProduct.getCategoryTitle()));
@@ -77,6 +79,7 @@ public class ProductService {
         }catch (JsonMappingException e){
             throw new ServiceError(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.valueOf("SERVER_ERROR"));
         }
+        oldProduct.setCategoryEntity(newProduct.getCategoryEntity());
         productRepo.save(oldProduct);
         return new ResponseEntity<>(new ServerResponseDTO(true, "product updated"), HttpStatus.OK);
     }

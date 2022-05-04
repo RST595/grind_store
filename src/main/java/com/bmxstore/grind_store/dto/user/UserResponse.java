@@ -16,5 +16,6 @@ public class UserResponse {
     private String lastName;
     private String email;
     private List<OrderEntity> orders;
+    private Boolean enabled;
 
 }

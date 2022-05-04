@@ -1,14 +1,14 @@
 package com.bmxstore.grind_store.service.user;
 
 import com.bmxstore.grind_store.data.entity.user.UserEntity;
-import com.bmxstore.grind_store.service.user.user_filtering.UserCriteriaRepo;
+import com.bmxstore.grind_store.service.user.user_filtering.ClientCriteriaRepo;
 import com.bmxstore.grind_store.data.repository.UserRepo;
 import com.bmxstore.grind_store.dto.user.*;
 import com.bmxstore.grind_store.exception_handler.ErrorMessage;
 import com.bmxstore.grind_store.exception_handler.ServiceError;
 import com.bmxstore.grind_store.dto.ServerResponseDTO;
 import com.bmxstore.grind_store.service.user.user_filtering.UserPage;
-import com.bmxstore.grind_store.service.user.user_filtering.UserSearchCriteria;
+import com.bmxstore.grind_store.service.user.user_filtering.ClientSearchCriteria;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
     private final ObjectMapper objectMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final UserCriteriaRepo clientCriteriaRepo;
+    private final ClientCriteriaRepo clientCriteriaRepo;
     private final UserValidation userValidation;
 
     @Override
@@ -61,8 +61,8 @@ public class UserService implements UserDetailsService {
     }
 
     public Page<UserResponse> getUserWithSortingANdFiltering(UserPage userPage,
-                                                             UserSearchCriteria userSearchCriteria) {
-        return clientCriteriaRepo.findAllWithFilters(userPage, userSearchCriteria);
+                                                             ClientSearchCriteria clientSearchCriteria) {
+        return clientCriteriaRepo.findAllWithFilters(userPage, clientSearchCriteria);
     }
 
     public ResponseEntity<ServerResponseDTO> addUser(UserRequest newUser) {

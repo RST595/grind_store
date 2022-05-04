@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserSearchCriteria {
+public class ClientSearchCriteria {
     private String firstName;
     private String lastName;
     private String email;

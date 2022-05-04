@@ -83,9 +83,11 @@ You should provide not null cardId, expiration date in future (from next month o
 - Delete - delete category (by title not id). For success deleting category should be empty (without products).
 
 #### Products
-- Add - you need to provide unique productCode, not empty string and not null.
+- Add - you need to provide unique productCode, not empty string and not null. Also not empty string and not null
+for product name.
 - Update - updating product info by product id. If you don't want to change category,
-you should leave category field with "", or type not existing category. If you don't want to update other fields
+you should leave category field with "". If you don't want to change price, weight or color,
+you should fill this fields with old data. If you don't want to update other fields
 you should fill them with null.
 - List - showing all products.
 - Delete - deleting product by id.

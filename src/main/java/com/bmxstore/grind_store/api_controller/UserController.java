@@ -5,7 +5,7 @@ import com.bmxstore.grind_store.dto.user.UserRequest;
 import com.bmxstore.grind_store.dto.user.UserResponse;
 import com.bmxstore.grind_store.service.user.UserService;
 import com.bmxstore.grind_store.service.user.user_filtering.UserPage;
-import com.bmxstore.grind_store.service.user.user_filtering.UserSearchCriteria;
+import com.bmxstore.grind_store.service.user.user_filtering.ClientSearchCriteria;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +43,8 @@ public class UserController {
             @RequestParam (value = "e-mail", required = false) String email,
             @RequestParam (value = "Address", required = false) String address) {
         UserPage userPage = new UserPage(pageNumber, pageSize, sortDirection, sortBy);
-        UserSearchCriteria userSearchCriteria = new UserSearchCriteria(firstName, lastName, email, address);
-        return userService.getUserWithSortingANdFiltering(userPage, userSearchCriteria);
+        ClientSearchCriteria clientSearchCriteria = new ClientSearchCriteria(firstName, lastName, email, address);
+        return userService.getUserWithSortingANdFiltering(userPage, clientSearchCriteria);
     }
 
     @Operation(summary = "Sign up new user (available roles: ADMIN, USER)")

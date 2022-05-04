@@ -18,22 +18,22 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class UserCriteriaRepo {
+public class ClientCriteriaRepo {
 
     private final EntityManager entityManager;
     private final CriteriaBuilder criteriaBuilder;
     private final ObjectMapper objectMapper;
 
-    public UserCriteriaRepo(EntityManager entityManager, ObjectMapper objectMapper) {
+    public ClientCriteriaRepo(EntityManager entityManager, ObjectMapper objectMapper) {
         this.entityManager = entityManager;
         this.criteriaBuilder = entityManager.getCriteriaBuilder();
         this.objectMapper = objectMapper;
     }
 
-    public Page<UserResponse> findAllWithFilters(UserPage userPage, UserSearchCriteria userSearchCriteria){
+    public Page<UserResponse> findAllWithFilters(UserPage userPage, ClientSearchCriteria clientSearchCriteria){
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         Root<UserEntity> userRoot = criteriaQuery.from(UserEntity.class);
-        Predicate predicate = getPredicate(userSearchCriteria, userRoot);
+        Predicate predicate = getPredicate(clientSearchCriteria, userRoot);
         criteriaQuery.where(predicate);
         setOrderForResult(userPage, criteriaQuery, userRoot);
 
@@ -53,26 +53,26 @@ public class UserCriteriaRepo {
         return new PageImpl<>(users, pageable, usersCount);
     }
 
-    private Predicate getPredicate(UserSearchCriteria userSearchCriteria, Root<UserEntity> userRoot) {
+    private Predicate getPredicate(ClientSearchCriteria clientSearchCriteria, Root<UserEntity> userRoot) {
         List<Predicate> predicates = new ArrayList<>();
-        if (Objects.nonNull(userSearchCriteria.getFirstName())){
+        if (Objects.nonNull(clientSearchCriteria.getFirstName())){
             predicates.add(
-                    criteriaBuilder.like(userRoot.get("firstName"), "%" + userSearchCriteria.getFirstName() + "%")
+                    criteriaBuilder.like(userRoot.get("firstName"), "%" + clientSearchCriteria.getFirstName() + "%")
             );
         }
-        if (Objects.nonNull(userSearchCriteria.getLastName())){
+        if (Objects.nonNull(clientSearchCriteria.getLastName())){
             predicates.add(
-                    criteriaBuilder.like(userRoot.get("lastName"), "%" + userSearchCriteria.getLastName() + "%")
+                    criteriaBuilder.like(userRoot.get("lastName"), "%" + clientSearchCriteria.getLastName() + "%")
             );
         }
-        if (Objects.nonNull(userSearchCriteria.getEmail())){
+        if (Objects.nonNull(clientSearchCriteria.getEmail())){
             predicates.add(
-                    criteriaBuilder.like(userRoot.get("email"), "%" + userSearchCriteria.getEmail() + "%")
+                    criteriaBuilder.like(userRoot.get("email"), "%" + clientSearchCriteria.getEmail() + "%")
             );
         }
-        if (Objects.nonNull(userSearchCriteria.getAddress())){
+        if (Objects.nonNull(clientSearchCriteria.getAddress())){
             predicates.add(
-                    criteriaBuilder.like(userRoot.get("address"), "%" + userSearchCriteria.getAddress() + "%")
+                    criteriaBuilder.like(userRoot.get("address"), "%" + clientSearchCriteria.getAddress() + "%")
             );
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
