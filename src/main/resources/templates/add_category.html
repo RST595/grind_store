@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>add category</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            /* The image used */
+            background-image: linear-gradient(to right, #e974a1, #f5f515);
+            color: #2c2c2c;
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            /*Color of text*/
+            color: #2c2c2c;
+        }
+    </style>
+</head>
+<body>
+<p class="container">
+    <form class="form-signin" method="post" action="/categories/add">
+        <h2 class="form-signin-heading" style="text-align: center">add category</h2>
+        <p>
+            <label for="title" class="sr-only">Category Title</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="title" minlength="3"
+                   required="" autofocus="">
+        </p>
+        <p>
+            <label for="picUrl" class="sr-only">Picture URL</label>
+            <input type="text" id="picUrl" name="picUrl" class="form-control" placeholder="picUrl" required=""
+                   autofocus="">
+        </p>
+        <button class="btn btn-lg btn-info btn-block" type="submit">add</button>
+    </form>
+    <form class="form-signin" method="get" action="/admin/panel">
+        <button class="btn btn-lg btn-info btn-block" type="submit">return</button>
+    </form>
+</div>
+</body>
+</html>

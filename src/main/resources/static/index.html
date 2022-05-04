@@ -4,20 +4,51 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>GrindStore</title>
     <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            /* The image used */
+            /*background-image: linear-gradient(to right, #e974a1, #f5f515);*/
+            background-image: url("background.png");
+
+
+            color: #2c2c2c;
+
+            /* Full height */
+            width: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            /*Color of text*/
+            color: #2c2c2c;
+        }
+        .logo{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 15%;
+            /*height: 100%;*/
+        }
         .btn {
-            background: #22d505; /* Цвет фона */
+            background: #00a9aa; /* Цвет фона */
             cursor: pointer;
-            color: #114e7c; /* Цвет текста */
-            padding: 7px 12px; /* Поля */
-            margin-bottom: 2em; /* Отступ снизу */
-            font: 16px/1 Arial, sans-serif; /* Рубленый шрифт */
+            color: #ffffff; /* Цвет текста */
+            padding: 12px 17px; /* Поля */
+            margin-bottom: 10em; /* Отступ снизу */
+            font: 20px/1 Arial, sans-serif; /* Рубленый шрифт */
         }
         .btn:hover {
-            background: #114e7c; /* Цвет фона при наведении курсора */
-            color: #22d505; /* Цвет текста при наведении курсора */
+            background: #007475; /* Цвет фона при наведении курсора */
+            color: #ffffff; /* Цвет текста при наведении курсора */
         }
         .btn-flat {
-            border: 2px solid #01040a; /* Рамка */
+            border: 0 solid #00a9aa; /* Рамка */
         }
         .btn-round {
             border-radius: 5px; /* Радиус скругления */
@@ -26,7 +57,7 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            width: 30%;
+            width: 70%;
         }
         #outer
         {
@@ -40,21 +71,25 @@
     </style>
 </head>
 <body>
+<br>
+<img class="logo" src="logo.png" alt="store logo">
 <h1 style="text-align: center">
-    <span style="font-family: Arial; color: #277227; ">Welcome to GrindStore</span></h1>
+    <span style="font-family: Arial; color: #2c2c2c; ">Welcome to GrindStore</span></h1>
 <h3 style="text-align: center">
-    <span style="font-family: Arial; color: #000000; ">Currently our new site is under construction.
+    <span style="font-family: Arial; color: #2c2c2c; ">Currently our new site is under construction.
 You could go to previous version, or try to test our new one.</span></h3>
-<img class="center" src="https://c.tenor.com/frFSVgY_mBAAAAAC/cycling-bike.gif" alt="Animation of rider" />
+<img class="center" src="pic.png" alt="main pic">
+<br>
+<br>
 <div id="outer">
     <div class="inner">
-        <form action="http://localhost:8080/swagger-ui/index.html">
-        <button type="submit" class="btn btn-flat btn-round">TEY NEW VERSION</button>
+            <form action="/login">
+        <button type="submit" class="btn btn-flat btn-round">Sign In for beta</button>
         </form>
     </div>
     <div class="inner">
         <form action="https://www.google.ru/">
-        <button class="btn btn-flat btn-round">HELP</button>
+        <button class="btn btn-flat btn-round">Leave</button>
         </form>
     </div>
 </div>
