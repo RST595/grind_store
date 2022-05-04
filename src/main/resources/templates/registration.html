@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SignUp</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            /* The image used */
+            background-image: linear-gradient(to right, #e974a1, #f5f515);
+            color: #2c2c2c;
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            /*Color of text*/
+            color: #2c2c2c;
+        }
+    </style>
+</head>
+<body>
+<p class="container">
+    <form class="form-signin" method="post" action="/admin/registration">
+        <h2 class="form-signin-heading" style="text-align: center">registration</h2>
+        <p>
+            <label for="firstName" class="sr-only">First Name</label>
+            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name" required=""
+               autofocus="">
+        </p>
+        <p>
+            <label for="lastName" class="sr-only">Last Name</label>
+            <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last Name" required=""
+                   autofocus="">
+        </p>
+        <p>
+            <label for="keyWord" class="sr-only">Key Word</label>
+            <input type="text" id="keyWord" name="keyWord" class="form-control"
+                   placeholder="Key Word (GRIND)" required="" autofocus="">
+        </p>
+         <p>
+            <label for="email" class="sr-only">email</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required=""
+                   minlength="5" autofocus="" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}">
+         </p>
+        <p>
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                   minlength="5" required="">
+        </p>
+        <p>
+            <label for="confirmPassword" class="sr-only">Confirm password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+               placeholder="Confirm Password" minlength="5" required="">
+        </p>
+        <button class="btn btn-lg btn-info btn-block" type="submit">register</button>
+    </form>
+    <form class="form-signin" method="get" action="/login">
+        <button class="btn btn-lg btn-info btn-block" type="submit">back to login</button>
+    </form>
+</div>
+</body>
+</html>

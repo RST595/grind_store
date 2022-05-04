@@ -1,8 +1,8 @@
 package com.bmxstore.grind_store.service;
 
 
-import com.bmxstore.grind_store.ex_handler.ErrorMessage;
-import com.bmxstore.grind_store.ex_handler.ServiceError;
+import com.bmxstore.grind_store.exception_handler.ErrorMessage;
+import com.bmxstore.grind_store.exception_handler.ServiceError;
 import com.bmxstore.grind_store.feign_client.Currency;
 import com.bmxstore.grind_store.feign_client.OutsideFeignClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,7 +29,7 @@ public class CurrencyService {
     private String currencyFrom;
 
     public Double getCurrencyRate(String currencyCode) throws JsonProcessingException {
-        List<Currency> currencies = objectMapper.readValue(outsideFeignClient.getCurrencyRate(), new TypeReference<List<Currency>>(){});
+        List<Currency> currencies = objectMapper.readValue(outsideFeignClient.getCurrencyRate(), new TypeReference<>(){});
         for (Currency currency : currencies) {
             if(currency.getCode().equals(currencyCode)){
                 this.requestedCurrency  = currency.getCb_price();

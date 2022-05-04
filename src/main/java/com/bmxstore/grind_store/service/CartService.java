@@ -1,14 +1,14 @@
 package com.bmxstore.grind_store.service;
 
-import com.bmxstore.grind_store.ex_handler.ErrorMessage;
-import com.bmxstore.grind_store.ex_handler.ServiceError;
-import com.bmxstore.grind_store.response_api.ResponseApi;
-import com.bmxstore.grind_store.db.entity.CartEntity;
-import com.bmxstore.grind_store.db.entity.product.ProductEntity;
-import com.bmxstore.grind_store.db.entity.user.UserEntity;
-import com.bmxstore.grind_store.db.repository.CartRepo;
-import com.bmxstore.grind_store.db.repository.ProductRepo;
-import com.bmxstore.grind_store.db.repository.UserRepo;
+import com.bmxstore.grind_store.exception_handler.ErrorMessage;
+import com.bmxstore.grind_store.exception_handler.ServiceError;
+import com.bmxstore.grind_store.dto.ServerResponseDTO;
+import com.bmxstore.grind_store.data.entity.CartEntity;
+import com.bmxstore.grind_store.data.entity.product.ProductEntity;
+import com.bmxstore.grind_store.data.entity.user.UserEntity;
+import com.bmxstore.grind_store.data.repository.CartRepo;
+import com.bmxstore.grind_store.data.repository.ProductRepo;
+import com.bmxstore.grind_store.data.repository.UserRepo;
 import com.bmxstore.grind_store.dto.cart.AddToCartRequest;
 import com.bmxstore.grind_store.dto.cart.CartResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +46,7 @@ public class CartService {
         return userCartItems;
     }
 
-    public ResponseEntity<ResponseApi> addToCart(AddToCartRequest addToCartRequest, Long userId) {
+    public ResponseEntity<ServerResponseDTO> addToCart(AddToCartRequest addToCartRequest, Long userId) {
         Optional<UserEntity> user = userRepo.findById(userId);
         UserEntity userEntity = user.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND")));
         Optional<ProductEntity> product = productRepo.findById(addToCartRequest.getProductId());
@@ -57,32 +57,32 @@ public class CartService {
             && cartItem.getUserEntity().getId().equals(newCartItem.getUserEntity().getId())){
                 cartItem.setQuantity(cartItem.getQuantity() + newCartItem.getQuantity());
                 cartRepo.save(cartItem);
-                return new ResponseEntity<>(new ResponseApi(true, "Added to cart"), HttpStatus.CREATED);
+                return new ResponseEntity<>(new ServerResponseDTO(true, "Added to cart"), HttpStatus.CREATED);
             }
         }
         cartRepo.save(newCartItem);
-        return new ResponseEntity<>(new ResponseApi(true, "Added to cart"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "Added to cart"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseApi> removeFromCart(Long cartId, Long userId) {
+    public ResponseEntity<ServerResponseDTO> removeFromCart(Long cartId, Long userId) {
         if(userRepo.findById(userId).isEmpty()){
             throw new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("USER_ID_NOT_FOUND"));
         }
         Optional<CartEntity> cartItem = cartRepo.findById(cartId);
         CartEntity cartEntity = cartItem.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND")));
         if(!cartEntity.getUserEntity().getId().equals(userId)) {
-            return new ResponseEntity<>(new ResponseApi(false, "User doesn't have this item"), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(new ServerResponseDTO(false, "User doesn't have this item"), HttpStatus.NOT_ACCEPTABLE);
         }
         cartRepo.delete(cartEntity);
-        return new ResponseEntity<>(new ResponseApi(true, "Item deleted"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "Item deleted"), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseApi> updateItemQuantity(Long cartId, int quantity) {
+    public ResponseEntity<ServerResponseDTO> updateItemQuantity(Long cartId, int quantity) {
         Optional<CartEntity> cartItem = cartRepo.findById(cartId);
         CartEntity cartEntity = cartItem.orElseThrow(() -> new ServiceError(HttpStatus.NOT_FOUND, ErrorMessage.valueOf("CART_ITEM_NOT_FOUND")));
         cartEntity.setQuantity(quantity);
         cartRepo.save(cartEntity);
-        return new ResponseEntity<>(new ResponseApi(true, "Quantity edited"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ServerResponseDTO(true, "Quantity edited"), HttpStatus.CREATED);
     }
 
 }

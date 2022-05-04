@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.dto.product;
 
-import com.bmxstore.grind_store.db.entity.product.ProductColor;
+import com.bmxstore.grind_store.data.entity.product.ProductColor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

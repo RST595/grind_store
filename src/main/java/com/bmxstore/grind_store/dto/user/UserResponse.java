@@ -1,6 +1,6 @@
 package com.bmxstore.grind_store.dto.user;
 
-import com.bmxstore.grind_store.db.entity.order.OrderEntity;
+import com.bmxstore.grind_store.data.entity.order.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +16,6 @@ public class UserResponse {
     private String lastName;
     private String email;
     private List<OrderEntity> orders;
+    private Boolean enabled;
 
 }

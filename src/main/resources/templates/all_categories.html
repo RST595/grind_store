@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>list of categories</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: linear-gradient(to right, #e974a1, #f5f515);
+            color: #2c2c2c;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: center;
+            padding: 15px; /*space between cells*/
+        }
+    </style>
+</head>
+<body>
+<h1 style="text-align: center">list of categories</h1>
+<div th:if="${ not#lists.isEmpty(categories)}">
+    <table style="width:50%; margin-left:auto;margin-right:auto;">
+        <caption></caption>
+        <tr>
+            <th style="width:10%">id</th>
+            <th style="width:30%">title</th>
+            <th style="width:60%">picture URL</th>
+        </tr>
+        <tr th:each="category : ${categories}" style="height:50px">
+            <td th:text="${category.id}"></td>
+            <td th:text="${category.title}"></td>
+            <td th:text="${category.picUrl}"></td>
+        </tr>
+        </table>
+        <form class="form-signin" method="get" action="/admin/panel">
+            <button class="btn btn-lg btn-info btn-block" type="submit">return</button>
+        </form>
+</div>
+</body>
+</html>
