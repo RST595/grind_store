@@ -2,6 +2,14 @@ server:
   port : 9191
 
 spring:
+
+#  to save remember me cookie in db
+  session:
+    store-type: jdbc
+    jdbc:
+      table-name: SPRING_SESSION
+      initialize-schema: always
+
   jpa:
     properties:
       hibernate:
