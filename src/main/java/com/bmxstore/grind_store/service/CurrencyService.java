@@ -32,10 +32,10 @@ public class CurrencyService {
         List<Currency> currencies = objectMapper.readValue(outsideFeignClient.getCurrencyRate(), new TypeReference<>(){});
         for (Currency currency : currencies) {
             if(currency.getCode().equals(currencyCode)){
-                this.requestedCurrency  = currency.getCb_price();
+                this.requestedCurrency  = currency.getCbPrice();
             }
             if(currency.getCode().equals(currencyFrom)){
-                this.rubCurrency  = currency.getCb_price();
+                this.rubCurrency  = currency.getCbPrice();
             }
         }
         if(requestedCurrency != null && rubCurrency != null){

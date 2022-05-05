@@ -1,5 +1,6 @@
 package com.bmxstore.grind_store.feign_client;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Currency {
-    String title;
-    String code;
-    double cb_price;
-    double nbu_buy_price;
-    double nbu_cell_price;
-    String date;
+    private String title;
+    private String code;
+    @JsonAlias("cb_price")
+    private double cbPrice;
+    @JsonAlias("nbu_buy_price")
+    private double nbuBuyPrice;
+    @JsonAlias("nbu_cell_price")
+    private double nbuCellPrice;
+    private String date;
 }
