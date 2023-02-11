@@ -16,7 +16,7 @@ and main with inMemory db (to provide application work on any machine).
 - Added pagination and sorting off result for categories of goods.
 - Added pagination, sorting and filtering to list of all users.
 - Added exception handler to ensure stable operation of the application.
-- Deployed application at aws instance with docker: http://ec2-13-48-124-150.eu-north-1.compute.amazonaws.com:9191/
+- Deployed application at aws instance with docker
 
 ## Available functions
 Bellow I described all available functions of application.
